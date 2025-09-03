@@ -2,6 +2,7 @@
 
 ## OOP
 Encapsulation, clear responsibilities, small public APIs.
+
 ## SOLID
 Interfaces + DI; open/closed; single responsibility.
 
