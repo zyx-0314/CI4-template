@@ -47,3 +47,27 @@ composer install
 ### Notes:
 - port: sets what port it will appear
 - environment: sets the initial datas and serves as the credentials
+
+## Test
+There is test commands added for testing Ci and Database.
+To test use the following commands
+- [ ] Make sure composer is working.
+```bash
+docker compose exec php composer dump-autoload
+```
+  - Expected result should be something similar to this
+  ```cmd
+  Generating optimized autoload files
+  Generated optimized autoload files containing 2460 classes
+  ```
+- [ ] Check if the both technology are working
+```bash
+docker compose exec php php spark health:check
+# or
+docker compose exec php composer health
+```
+  - Expected result
+  ```cmd
+  CodeIgniter: up (version 4.6.3)
+  Database: up (31.72 ms)
+  ```
