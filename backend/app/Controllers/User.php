@@ -18,4 +18,10 @@ class User extends BaseController
     {
         return view('user/roadmap');
     }
+
+    public function services(string $style = null): string
+    {
+        $data = ['style' => $style];
+        return view('user/service', $data);
+    }
 }
