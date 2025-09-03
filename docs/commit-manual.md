@@ -5,6 +5,7 @@
 * **feat** → Add a new feature or functionality.
 * **fix** → Correct a bug, error, or unintended behavior.
 * **docs** → Documentation updates (manuals, notes, diagrams, README, etc.).
+* **refactor** → Use this when you rename, restructure, simplify, or remove duplicate code, improve readability, or make non-behavioral performance improvements. 
 
 ---
 
@@ -96,6 +97,26 @@ docs(documents): add rollback steps to sop-manual.md
 Expanded the SOP manual to include rollback instructions
 after a failed migration. This helps ensure database
 consistency during staging releases.
+```
+
+---
+
+### **refactor**
+
+**Short only:**
+
+```
+refactor(backend): rename UserRepository to AccountRepository
+```
+
+**With body:**
+
+```
+refactor(backend): extract validation logic from UsersController
+
+Moved request validation into a new `UserValidator` service to
+decouple controller responsibilities and improve testability. No
+behavioral changes intended; updated unit tests accordingly.
 ```
 
 ---
