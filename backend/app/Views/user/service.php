@@ -7,6 +7,7 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-50 text-gray-900">
+  <?php echo view('components/header'); ?>
   <div class="mx-auto px-6 py-12 max-w-5xl">
     <header class="mb-6">
       <h1 class="font-bold text-2xl">Services</h1>
