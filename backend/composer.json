@@ -38,6 +38,7 @@
         "sort-packages": true
     },
     "scripts": {
-        "test": "phpunit"
+        "test": "phpunit",
+        "health": "php spark health:check"
     }
 }
