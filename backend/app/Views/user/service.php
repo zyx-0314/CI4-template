@@ -1,11 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Services — Sunset Funeral Homes</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
+<?= view('components/head', ['title' => 'Services — Sunset Funeral Homes']) ?>
 <body class="bg-gray-50 text-gray-900">
   <?php echo view('components/header'); ?>
   <div class="mx-auto px-6 py-12 max-w-5xl">
@@ -59,7 +54,7 @@
       </div>
     <?php endif; ?>
 
-    <footer class="mt-12 text-gray-500 text-sm">© Sunset Funeral Homes — Services (sample)</footer>
+    <?php echo view('components/footer'); ?>
   </div>
 </body>
 </html>
