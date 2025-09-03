@@ -16,10 +16,18 @@
           <p class="text-gray-500 text-sm">Compassionate care, every step of the way</p>
         </div>
       </div>
-      <nav class="space-x-4 text-sm">
+      <nav class="flex items-center space-x-4 text-sm">
         <a href="/" class="text-gray-700">Home</a>
         <a href="/mood-board" class="text-gray-700">Mood board</a>
         <a href="/roadmap" class="text-gray-700">Road map</a>
+        <div class="inline-block relative">
+          <button class="focus:outline-none text-gray-700">Services ▾</button>
+          <div class="hidden group-hover:block right-0 absolute bg-white shadow-lg mt-2 border rounded w-48" style="z-index:50;" aria-hidden="true">
+            <a class="block hover:bg-gray-100 px-4 py-2 text-gray-700" href="/services/traditional">Traditional Filipino</a>
+            <a class="block hover:bg-gray-100 px-4 py-2 text-gray-700" href="/services/cremation">Cremation</a>
+            <a class="block hover:bg-gray-100 px-4 py-2 text-gray-700" href="/services/green">Green burial</a>
+          </div>
+        </div>
       </nav>
     </div>
   </header>
@@ -32,6 +40,7 @@
         <div class="space-x-3">
           <a href="/mood-board" class="inline-block bg-indigo-600 px-5 py-3 rounded-md font-medium text-white">View mood board</a>
           <a href="/roadmap" class="inline-block px-5 py-3 border border-gray-300 rounded-md font-medium text-gray-700">See roadmap</a>
+          <a href="/services" class="inline-block bg-green-600 px-5 py-3 rounded-md font-medium text-white">Services</a>
         </div>
       </div>
       <div>
