@@ -37,13 +37,12 @@ jobs:
       - name: Show service health (debug)
         run: docker compose -f compose.yaml -f compose.test.yaml ps
 
-      - name: Run DB migrations (quiet)
-        working-directory: ./backend
-        run: |
-          docker compose -f ../compose.yaml -f ../compose.test.yaml run --rm php \
-            php spark migrate --all --quiet
+      # - name: Run DB migrations (quiet)
+      #   working-directory: ./backend
+      #   run: |
+      #     docker compose -f ../compose.yaml -f ../compose.test.yaml run --rm php \
+      #       php spark migrate --all --quiet
 
-      # OPTIONAL: seed test data
       # - name: Seed test data
       #   working-directory: ./backend
       #   run: |
