@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  test:
+  docker-test: 
     runs-on: ubuntu-latest
 
     steps:
@@ -16,15 +16,6 @@ jobs:
 
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
-
-      # (Optional) cache layers; needs a registry or gha cache.
-      # - name: Set up Docker layer cache
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: /tmp/.buildx-cache
-      #     key: ${{ runner.os }}-buildx-${{ github.sha }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-buildx-
 
       - name: Build images (php/nginx) with Compose
         run: |
@@ -69,3 +60,24 @@ jobs:
         if: always()
         run: |
           docker compose -f compose.yaml -f compose.test.yaml down -v
+
+  oop-check:
+    runs-on: ubuntu-latest
+    needs: docker-test   # run after tests succeed
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build PHP image only
+        run: |
+          docker compose -f compose.yaml -f compose.test.yaml build php
+
+      - name: Run PHPStan analysis
+        working-directory: ./backend
+        run: |
+          docker compose -f ../compose.yaml -f ../compose.test.yaml run --rm php \
+            vendor/bin/phpstan analyse app --level=max
