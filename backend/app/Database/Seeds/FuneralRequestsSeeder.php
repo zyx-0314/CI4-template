@@ -1,0 +1,148 @@
+<?php
+namespace App\Database\Seeds;
+
+use CodeIgniter\Database\Seeder;
+
+class FuneralRequestsSeeder extends Seeder
+{
+    public function run()
+    {
+        $date = '2025-09-05';
+        $now  = $date . ' 09:00:00';
+
+        $data = [
+            [
+                'name' => 'Maria Santos',
+                'email' => 'maria.santos@example.test',
+                'phone' => '+63 912 000 0001',
+                'service_type' => 'Traditional Filipino',
+                'preferred_date' => $date,
+                'preferred_time' => '09:00:00',
+                'address' => 'Brgy. 1, Makati',
+                'notes' => 'Family prefers morning service.',
+                'status' => 'scheduled',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'name' => 'Jose Delgado',
+                'email' => 'jose.delgado@example.test',
+                'phone' => '+63 912 000 0002',
+                'service_type' => 'Cremation',
+                'preferred_date' => $date,
+                'preferred_time' => '10:30:00',
+                'address' => 'Quezon City',
+                'notes' => 'Request for small family cremation.',
+                'status' => 'scheduled',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'name' => 'Ana Reyes',
+                'email' => 'ana.reyes@example.test',
+                'phone' => '+63 912 000 0003',
+                'service_type' => 'Green burial',
+                'preferred_date' => $date,
+                'preferred_time' => '11:00:00',
+                'address' => 'Taguig City',
+                'notes' => 'Eco-friendly burial requested.',
+                'status' => 'scheduled',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'name' => 'Carlos Mendoza',
+                'email' => 'carlos.mendoza@example.test',
+                'phone' => '+63 912 000 0004',
+                'service_type' => 'Traditional Filipino',
+                'preferred_date' => $date,
+                'preferred_time' => '13:00:00',
+                'address' => 'Pasig City',
+                'notes' => 'Open to family suggestions.',
+                'status' => 'completed',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'name' => 'Liza Cruz',
+                'email' => 'liza.cruz@example.test',
+                'phone' => '+63 912 000 0005',
+                'service_type' => 'Cremation',
+                'preferred_date' => $date,
+                'preferred_time' => '14:30:00',
+                'address' => 'Manila',
+                'notes' => 'Immediate arrangements',
+                'status' => 'completed',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'name' => 'Ramon Bautista',
+                'email' => 'ramon.bautista@example.test',
+                'phone' => '+63 912 000 0006',
+                'service_type' => 'Traditional Filipino',
+                'preferred_date' => $date,
+                'preferred_time' => '15:00:00',
+                'address' => 'Mandaluyong',
+                'notes' => 'Flowers: white roses',
+                'status' => 'canceled',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'name' => 'Sofia Villanueva',
+                'email' => 'sofia.v@example.test',
+                'phone' => '+63 912 000 0007',
+                'service_type' => 'Green burial',
+                'preferred_date' => $date,
+                'preferred_time' => '16:00:00',
+                'address' => 'Alabang',
+                'notes' => 'Family will bring the flowers.',
+                'status' => 'canceled',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'name' => 'Miguel Santos',
+                'email' => 'miguel.santos@example.test',
+                'phone' => '+63 912 000 0008',
+                'service_type' => 'Cremation',
+                'preferred_date' => $date,
+                'preferred_time' => '17:00:00',
+                'address' => 'Las Piñas',
+                'notes' => 'Prefer private viewing.',
+                'status' => 'scheduled',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'name' => 'Vanessa Garcia',
+                'email' => 'vanessa.garcia@example.test',
+                'phone' => '+63 912 000 0009',
+                'service_type' => 'Traditional Filipino',
+                'preferred_date' => $date,
+                'preferred_time' => '18:00:00',
+                'address' => 'Bacoor',
+                'notes' => 'Extended family to attend',
+                'status' => 'completed',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'name' => 'Ernesto Valdez',
+                'email' => 'ernesto.valdez@example.test',
+                'phone' => '+63 912 000 0010',
+                'service_type' => 'Green burial',
+                'preferred_date' => $date,
+                'preferred_time' => '19:00:00',
+                'address' => 'Cavite',
+                'notes' => 'Simple service requested',
+                'status' => 'canceled',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+        ];
+
+        $this->db->table('funeral_requests')->insertBatch($data);
+    }
+}
