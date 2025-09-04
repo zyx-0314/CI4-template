@@ -11,3 +11,6 @@ $routes->get('roadmap', 'User::roadmap');
 // Services pages (dynamic): /services and /services/{style}
 $routes->get('services', 'User::services');
 $routes->get('services/(:segment)', 'User::services/$1');
+// Admin dashboard
+$routes->get('admin', 'Admin::dashboard');
+$routes->get('admin/dashboard', 'Admin::dashboard');
