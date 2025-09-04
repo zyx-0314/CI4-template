@@ -22,7 +22,7 @@ jobs:
       - name: Build image (no push, just save)
         run: |
           docker build -t my-ci4:test ./backend -f ./backend/Dockerfile
-          docker save my-ci4:test -o ci4-image.tar
+          docker save my-ci4:test -o project.tar
 
       - name: Upload image as artifact
         uses: actions/upload-artifact@v4
