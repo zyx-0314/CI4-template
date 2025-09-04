@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: CI4 Tests via Docker Compose
 
 on:
   push:
@@ -7,13 +7,66 @@ on:
     branches: [ "main" ]
 
 jobs:
-
-  build:
-
+  test:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Build Docker images with Docker Compose
-      run: docker compose build
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # (Optional) cache layers; needs a registry or gha cache.
+      # - name: Set up Docker layer cache
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: /tmp/.buildx-cache
+      #     key: ${{ runner.os }}-buildx-${{ github.sha }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-buildx-
+
+      - name: Build images (php/nginx) with Compose
+        run: |
+          docker compose -f compose.yaml -f compose.test.yaml build
+
+      - name: Start only MySQL for tests (detached)
+        run: |
+          docker compose -f compose.yaml -f compose.test.yaml up -d mysql
+
+      - name: Show service health (debug)
+        run: docker compose -f compose.yaml -f compose.test.yaml ps
+
+      - name: Run DB migrations (quiet)
+        working-directory: ./backend
+        run: |
+          docker compose -f ../compose.yaml -f ../compose.test.yaml run --rm php \
+            php spark migrate --all --quiet
+
+      # OPTIONAL: seed test data
+      # - name: Seed test data
+      #   working-directory: ./backend
+      #   run: |
+      #     docker compose -f ../compose.yaml -f ../compose.test.yaml run --rm php \
+      #       php spark db:seed TestSeeder --quiet
+
+      - name: Run PHPUnit with coverage
+        working-directory: ./backend
+        run: |
+          mkdir -p build/logs
+          docker compose -f ../compose.yaml -f ../compose.test.yaml run --rm php \
+            ./vendor/bin/phpunit --colors=always --testdox \
+            --coverage-clover build/logs/clover.xml
+
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-clover
+          path: backend/build/logs/clover.xml
+          if-no-files-found: warn
+
+      - name: Tear down
+        if: always()
+        run: |
+          docker compose -f compose.yaml -f compose.test.yaml down -v
