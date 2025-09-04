@@ -69,8 +69,7 @@ jobs:
         run: docker load -i project.tar
         
       - name: Start CI4
-        run: |
-          docker compose -f compose.yaml -f compose.test.yaml build
+        run: docker compose -f compose.yaml -f compose.test.yaml up -d php
         
       - name: Upload coverage artifact
         if: always()
