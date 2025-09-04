@@ -10,8 +10,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      image-file: ci4-image.tar
-      image-tag: my-ci4:test
+      image-file: project.tar
+      image-tag: project:test
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,8 +21,8 @@ jobs:
 
       - name: Build image (no push, just save)
         run: |
-          docker build -t my-ci4:test ./backend -f ./backend/Dockerfile
-          docker save my-ci4:test -o project.tar
+          docker build -t project:test ./backend -f ./backend/Dockerfile
+          docker save project:test -o project.tar
 
       - name: Upload image as artifact
         uses: actions/upload-artifact@v4
