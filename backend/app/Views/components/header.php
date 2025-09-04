@@ -1,8 +1,8 @@
 <header class="bg-white shadow">
   <div class="flex justify-between items-center mx-auto py-6 max-w-5xl">
     <div class="flex items-center space-x-4">
-      <a href="/" class="flex items-center space-x-3">
-      <img src="/public/logo/main.svg" alt="Sunset Funeral Homes" class="h-11">
+  <a href="/" class="flex items-center space-x-3">
+  <img src="<?= esc(base_url('logo/main.svg')) ?>" alt="Sunset Funeral Homes" class="h-11">
         <div class="hidden sm:block">
           <h1 class="font-semibold text-xl">Sunset Funeral Homes</h1>
           <p class="text-gray-500 text-sm">Compassionate care, every step of the way</p>

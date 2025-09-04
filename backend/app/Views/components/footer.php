@@ -3,7 +3,7 @@
   <div class="mx-auto px-6 py-8 max-w-5xl text-gray-600 text-sm">
     <div class="flex md:flex-row flex-col md:justify-between md:items-start gap-6">
       <div>
-  <img src="/public/logo/main.svg" alt="Sunset Funeral Homes" class="mb-2 h-11">
+  <img src="<?= esc(base_url('logo/main.svg')) ?>" alt="Sunset Funeral Homes" class="mb-2 h-11">
         <p>Compassionate care, every step of the way</p>
       </div>
       <div class="gap-6 grid grid-cols-1 sm:grid-cols-3">
