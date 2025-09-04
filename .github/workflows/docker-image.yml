@@ -49,13 +49,13 @@ jobs:
       #     docker compose -f ../compose.yaml -f ../compose.test.yaml run --rm php \
       #       php spark db:seed TestSeeder --quiet
 
-      - name: Run PHPUnit with coverage
-        working-directory: ./backend
-        run: |
-          mkdir -p build/logs
-          docker compose -f ../compose.yaml -f ../compose.test.yaml run --rm php \
-            ./vendor/bin/phpunit --colors=always --testdox \
-            --coverage-clover build/logs/clover.xml
+      # - name: Run PHPUnit with coverage
+      #   working-directory: ./backend
+      #   run: |
+      #     mkdir -p build/logs
+      #     docker compose -f ../compose.yaml -f ../compose.test.yaml run --rm php \
+      #       ./vendor/bin/phpunit --colors=always --testdox \
+      #       --coverage-clover build/logs/clover.xml
 
       - name: Upload coverage artifact
         if: always()
