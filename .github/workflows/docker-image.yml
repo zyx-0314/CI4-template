@@ -2,9 +2,9 @@ name: Testing
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "Funeral-Homes-Demo/main" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "Funeral-Homes-Demo/main" ]
 
 jobs:
   build:
