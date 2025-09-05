@@ -10,10 +10,10 @@ class CreateUsersTable extends Migration
     {
         $this->forge->addField([
             'id' => [
-                'type'       => 'CHAR',
-                'constraint' => 36,
-                'null'       => false,
-                'comment'    => 'UUID v4 string',
+                'type'           => 'INT',
+                'constraint'     => 11,
+                'unsigned'       => true,
+                'auto_increment' => true,
             ],
             'first_name' => [
                 'type'       => 'VARCHAR',
@@ -89,7 +89,8 @@ class CreateUsersTable extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addKey('email');
+        // Make email unique
+        $this->forge->addUniqueKey('email');
         $this->forge->createTable('users', true);
     }
 
