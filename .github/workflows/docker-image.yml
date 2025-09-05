@@ -47,10 +47,10 @@ jobs:
         run: docker load -i project.tar
 
       - name: Start MySQL
-        run: docker compose -f compose.yaml -f compose.test.yaml up -d mysql
+        run: docker compose -f compose.yaml -f compose.yaml up -d mysql
 
       - name: Show service health (debug)
-        run: docker compose -f compose.yaml -f compose.test.yaml ps
+        run: docker compose -f compose.yaml -f compose.yaml ps
 
   ci4-docker-test:
     runs-on: ubuntu-latest
@@ -69,7 +69,7 @@ jobs:
         run: docker load -i project.tar
         
       - name: Start CI4
-        run: docker compose -f compose.yaml -f compose.test.yaml up -d php
+        run: docker compose -f compose.yaml -f compose.yaml up -d php
         
       - name: Upload coverage artifact
         if: always()
@@ -81,7 +81,7 @@ jobs:
 
       - name: Tear down
         if: always()
-        run: docker compose -f compose.yaml -f compose.test.yaml down -v
+        run: docker compose -f compose.yaml -f compose.yaml down -v
 
   composer-checks:
     name: Composer checks (health)
@@ -101,14 +101,14 @@ jobs:
         run: docker load -i project.tar
 
       - name: Start php service
-        run: docker compose -f compose.yaml -f compose.test.yaml up -d php
+        run: docker compose -f compose.yaml -f compose.yaml up -d php
 
       - name: Run composer health inside php container
         run: docker compose -f compose.yaml exec php composer health
 
       - name: Tear down
         if: always()
-        run: docker compose -f compose.yaml -f compose.test.yaml down -v
+        run: docker compose -f compose.yaml -f compose.yaml down -v
 
   db-migration-seed-checks:
     name: DB migration & seed checks
@@ -129,7 +129,7 @@ jobs:
         run: docker load -i project.tar
 
       - name: Start php + mysql services
-        run: docker compose -f compose.yaml -f compose.test.yaml up -d php mysql
+        run: docker compose -f compose.yaml -f compose.yaml up -d php mysql
 
       - name: Run migrations (composer)
         run: docker compose -f compose.yaml exec php composer migrate || true
@@ -171,4 +171,4 @@ jobs:
 
       - name: Tear down
         if: always()
-        run: docker compose -f compose.yaml -f compose.test.yaml down -v
+        run: docker compose -f compose.yaml -f compose.yaml down -v
