@@ -14,9 +14,9 @@ class FuneralRequestModel extends Model
     protected $useTimestamps = true;
     protected $returnType = 'App\Entities\FuneralRequest';
     protected $validationRules = [
-    'first_name' => 'required|min_length[2]|max_length[191]',
-    'last_name'  => 'permit_empty|max_length[191]',
-        'service_type' => 'required|max_length[100]',
+        'first_name' => 'required|min_length[2]|max_length[191]',
+        'last_name'  => 'permit_empty|max_length[191]',
+        'service_type' => 'required|max_length[191]',
         'email' => 'valid_email|max_length[191]',
         'phone' => 'max_length[50]'
     ];
