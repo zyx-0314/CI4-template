@@ -97,13 +97,13 @@ Step-by-step:
 How to preview locally using Docker Compose (your project maps nginx to port 8080):
 
 ```cmd
-docker compose -f "compose.yaml" up -d nginx php mysql
+docker compose  up -d nginx php mysql
 ```
 
 Open: http://localhost:8080/  (or your Docker host IP)
 
 Tips:
-- Use `docker compose -f "compose.yaml" logs -f nginx` to watch for errors.
+- Use `docker compose  logs -f nginx` to watch for errors.
 - If routes return 404, confirm `app/Config/Routes.php` is saved and the container has the latest files mounted.
 
 ---

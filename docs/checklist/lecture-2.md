@@ -21,7 +21,7 @@ Why: migrations are the single source of truth for DB schema and allow reproduci
 How (inside Docker): prefer using Spark commands inside the `php` container so generated files end up in the project workspace:
 
 ```cmd
-docker compose -f "compose.yaml" exec php php spark make:migration CreateFuneralRequestsTable
+docker compose  exec php php spark make:migration CreateFuneralRequestsTable
 ```
 
 Edit the generated file under `backend/app/Database/Migrations/` and add fields with `$this->forge->addField([...])` and `$this->forge->createTable('funeral_requests')`.
@@ -29,13 +29,13 @@ Edit the generated file under `backend/app/Database/Migrations/` and add fields 
 Run migrations:
 
 ```cmd
-docker compose -f "compose.yaml" exec php composer migrate
+docker compose  exec php composer migrate
 ```
 
 Check status:
 
 ```cmd
-docker compose -f "compose.yaml" exec php composer migrate:status
+docker compose  exec php composer migrate:status
 ```
 
 Tips:
@@ -96,7 +96,7 @@ Why: Seeders add sample data for development and tests. Use them to populate rea
 How (example): create `app/Database/Seeds/FuneralRequestsSeeder.php` that inserts multiple rows. Run it with:
 
 ```cmd
-docker compose -f "compose.yaml" exec php php spark db:seed FuneralRequestsSeeder
+docker compose  exec php php spark db:seed FuneralRequestsSeeder
 ```
 
 Notes:
@@ -115,7 +115,7 @@ Create `app/Database/Seeds/ClearDatabaseSeeder.php` and in `run()` call `$db->ta
 Run:
 
 ```cmd
-docker compose -f "compose.yaml" exec php composer truncate
+docker compose  exec php composer truncate
 ```
 
 Warning: only run truncate/clear in non-production environments.
@@ -129,19 +129,19 @@ Why: never edit migrations that have already been applied in shared (or producti
 Example — add an index or new column:
 
 ```cmd
-docker compose -f "compose.yaml" exec php php spark make:migration AddStatusIndexToFuneralRequests
+docker compose  exec php php spark make:migration AddStatusIndexToFuneralRequests
 ```
 
 Run migrations:
 
 ```cmd
-docker compose -f "compose.yaml" exec php composer migrate
+docker compose  exec php composer migrate
 ```
 
 Check status:
 
 ```cmd
-docker compose -f "compose.yaml" exec php composer migrate:status
+docker compose  exec php composer migrate:status
 ```
 
 Edit the new migration to call `$this->forge->addColumn()` or `$this->forge->addKey()` and run `php spark migrate`.
@@ -154,23 +154,23 @@ Appendix — Quick Docker commands + Composer script usage
 Start the stack:
 
 ```cmd
-docker compose -f "compose.yaml" up -d mysql php nginx
+docker compose  up -d mysql php nginx
 ```
 
 Direct Spark commands inside the `php` container (recommended):
 
 ```cmd
-docker compose -f "compose.yaml" exec php php spark migrate:status
-docker compose -f "compose.yaml" exec php php spark migrate
-docker compose -f "compose.yaml" exec php php spark db:seed FuneralRequestsSeeder
-docker compose -f "compose.yaml" exec php php spark db:seed ClearDatabaseSeeder
+docker compose  exec php php spark migrate:status
+docker compose  exec php php spark migrate
+docker compose  exec php php spark db:seed FuneralRequestsSeeder
+docker compose  exec php php spark db:seed ClearDatabaseSeeder
 ```
 
 Equivalent Composer script usage (if you added scripts to `backend/composer.json`). Running Composer inside the `php` container will execute the configured spark commands:
 
 ```cmd
-docker compose -f "compose.yaml" exec php composer migrate
-docker compose -f "compose.yaml" exec php composer migrate:status
-docker compose -f "compose.yaml" exec php composer seed
-docker compose -f "compose.yaml" exec php composer truncate
+docker compose  exec php composer migrate
+docker compose  exec php composer migrate:status
+docker compose  exec php composer seed
+docker compose  exec php composer truncate
 ```
