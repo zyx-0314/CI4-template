@@ -169,37 +169,65 @@ jobs:
       - name: Show migrations status (composer)
         run: docker compose exec php composer migrate:status || true
 
-      - name: Ensure more than 1 migration file exists
+      - name: Assert there are >1 migration files
         run: |
-          docker compose exec php sh -lc "php -r \"echo count(glob('app/Database/Migrations/*.php')) . PHP_EOL;\"" | awk '{if ($1<=1) {print \"Need >1 migration files; found:\",$1; exit 1} else {print \"Migration files:\",$1}}'
+          set -euo pipefail
+          COUNT=$(docker compose exec -T php sh -lc 'php -r '\''echo count(glob("app/Database/Migrations/*.php")), PHP_EOL;'\''')
+          echo "Detected migration files: $COUNT"
+          if [ "${COUNT:-0}" -le 1 ]; then
+            echo "Need >1 migration files; found: $COUNT"
+            exit 1
+          fi
 
       - name: Run seeders (composer)
         run: docker compose exec php composer seed || true
 
-      - name: Verify at least one table has data (no hard-coded names)
+      - name: Verify at least one table has data
         run: |
-          docker compose exec mysql sh -lc "\
-          total=0; \
-          for t in $(mysql -u root -proot -N -e \"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='app' AND TABLE_TYPE='BASE TABLE'\"); do \
-            c=$(mysql -u root -proot -N -e \"SELECT COUNT(*) FROM app.\\\\\`$t\\\\`\"); \
-            total=$((total + c)); \
-          done; \
-          echo \"Total rows across tables: $total\"; \
-          if [ $total -eq 0 ]; then echo \"No seeded data found in any table\"; exit 1; fi"
+          set -euo pipefail
+          TABLES=$(docker compose exec -T mysql \
+            mysql -uapp -papp app_test -N -e "SHOW TABLES;")
+          FOUND=0
+          for T in $TABLES; do
+            COUNT=$(docker compose exec -T mysql \
+              mysql -uapp -papp app_test -N -e "SELECT COUNT(*) FROM \`$T\`;")
+            if [ "$COUNT" -gt 0 ]; then
+              echo "Table $T has $COUNT rows"
+              FOUND=1
+              break
+            fi
+          done
+          if [ "$FOUND" -eq 0 ]; then
+            echo "❌ No tables contain data"
+            exit 1
+          else
+            echo "✅ At least one table has data"
+          fi
+
 
       - name: Run truncate seeder (composer)
         run: docker compose exec php composer truncate || true
 
-      - name: Verify all tables are empty (no hard-coded names)
+      - name: Verify all tables are empty
         run: |
-          docker compose exec mysql sh -lc "\
-          total=0; \
-          for t in $(mysql -u root -proot -N -e \"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='app' AND TABLE_TYPE='BASE TABLE'\"); do \
-            c=$(mysql -u root -proot -N -e \"SELECT COUNT(*) FROM app.\\\\\`$t\\\\`\"); \
-            total=$((total + c)); \
-          done; \
-          echo \"Total rows after truncate: $total\"; \
-          if [ $total -ne 0 ]; then echo \"Some tables still contain data\"; exit 1; fi"
+          set -euo pipefail
+          TABLES=$(docker compose exec -T mysql \
+            mysql -uapp -papp app_test -N -e "SHOW TABLES;")
+          FAIL=0
+          for T in $TABLES; do
+            COUNT=$(docker compose exec -T mysql \
+              mysql -uapp -papp app_test -N -e "SELECT COUNT(*) FROM \`$T\`;")
+            if [ "$COUNT" -gt 0 ]; then
+              echo "❌ Table $T is not empty ($COUNT rows)"
+              FAIL=1
+            fi
+          done
+          if [ "$FAIL" -eq 1 ]; then
+            echo "One or more tables are not empty"
+            exit 1
+          else
+            echo "✅ All tables are empty"
+          fi
 
       - name: Tear down
         if: always()
