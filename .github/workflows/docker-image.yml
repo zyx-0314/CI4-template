@@ -82,3 +82,33 @@ jobs:
       - name: Tear down
         if: always()
         run: docker compose -f compose.yaml -f compose.test.yaml down -v
+
+  composer-checks:
+    name: Composer checks (test & health)
+    runs-on: ubuntu-latest
+    needs: ci4-docker-test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download built image
+        uses: actions/download-artifact@v4
+        with:
+          name: project
+          path: .
+
+      - name: Load Docker image
+        run: docker load -i project.tar
+
+      - name: Start php service
+        run: docker compose -f compose.yaml -f compose.test.yaml up -d php
+
+      - name: Run composer tests inside php container
+        run: docker compose -f compose.yaml exec php composer test
+
+      - name: Run composer health inside php container
+        run: docker compose -f compose.yaml exec php composer health
+
+      - name: Tear down
+        if: always()
+        run: docker compose -f compose.yaml -f compose.test.yaml down -v
