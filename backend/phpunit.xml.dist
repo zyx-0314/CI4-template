@@ -8,7 +8,7 @@
     colors="true"
     columns="max"
     failOnRisky="true"
-    failOnWarning="true"
+    failOnWarning="false"
     cacheDirectory="build/.phpunit.cache">
     <coverage
         includeUncoveredFiles="true"

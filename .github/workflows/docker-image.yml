@@ -84,7 +84,7 @@ jobs:
         run: docker compose down -v
 
   composer-checks:
-    name: Composer checks (health)
+    name: Composer checks (health and test)
     runs-on: ubuntu-latest
     needs: ci4-docker-test
     steps:
@@ -105,6 +105,9 @@ jobs:
 
       - name: Run composer health inside php container
         run: docker compose exec php composer health
+
+      - name: Run composer test inside php container
+        run: docker compose exec php composer test
 
       - name: Tear down
         if: always()

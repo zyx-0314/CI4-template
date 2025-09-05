@@ -24,8 +24,11 @@ COPY composer.json composer.lock* ./
 # For dev you usually want dev deps; for prod use --no-dev. Keeping dev-friendly by default:
 RUN composer install --prefer-dist --no-interaction --no-progress
 
-# Copy the rest of the app
-COPY ./ ./
+# Copy app source code
+COPY . .
+
+# Copy vendor from builder stage
+COPY --from=vendor /app/vendor ./vendor
 
 # Dev PHP settings
 RUN { \
@@ -34,3 +37,11 @@ RUN { \
     echo "upload_max_filesize=32M"; \
     echo "post_max_size=32M"; \
     } > /usr/local/etc/php/conf.d/dev.ini
+
+# Install PCOV for code coverage in CI/tests
+RUN pecl install pcov \
+    && docker-php-ext-enable pcov \
+    && { \
+    echo "pcov.enabled=1"; \
+    echo "pcov.directory=/var/www/html"; \
+    } > /usr/local/etc/php/conf.d/pcov.ini
