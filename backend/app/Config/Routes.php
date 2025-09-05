@@ -12,6 +12,9 @@ $routes->get('roadmap', 'User::roadmap');
 $routes->get('login', 'Auth::showLogin');
 $routes->post('login', 'Auth::login');
 $routes->get('logout', 'Auth::logout');
+// Signup
+$routes->get('signup', 'Auth::showSignup');
+$routes->post('signup', 'Auth::signup');
 // Services pages (dynamic): /services and /services/{style}
 $routes->get('services', 'User::services');
 $routes->get('services/(:segment)', 'User::services/$1');
