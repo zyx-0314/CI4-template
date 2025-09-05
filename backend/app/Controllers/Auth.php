@@ -90,13 +90,45 @@ class Auth extends BaseController
             return redirect()->back()->withInput();
         }
 
-        // Demo behaviour: create session user. Replace with user creation in DB.
-        $session->set('user', [
-            'email' => $post['email'],
+        // Persist user to database using UserModel
+        $userModel = new \App\Models\UserModel();
+
+        // Prevent duplicate emails
+        if ($userModel->where('email', $post['email'])->first()) {
+            $session->setFlashdata('errors', ['email' => 'Email already registered']);
+            $session->setFlashdata('old', $post);
+            return redirect()->back()->withInput();
+        }
+
+        $data = [
             'first_name' => $post['first_name'],
             'middle_name' => $post['middle_name'] ?? null,
             'last_name' => $post['last_name'],
-            'display_name' => trim($post['first_name'] . ' ' . ($post['middle_name'] ?? '') . ' ' . $post['last_name'])
+            'email' => $post['email'],
+            'password_hash' => password_hash($post['password'], PASSWORD_DEFAULT),
+            'type' => 'client',
+            'account_status' => 1,
+            'email_activated' => 0,
+            'newsletter' => 1,
+        ];
+
+        $inserted = $userModel->insert($data);
+
+        if ($inserted === false) {
+            $session->setFlashdata('errors', ['general' => 'Could not create account']);
+            $session->setFlashdata('old', $post);
+            return redirect()->back()->withInput();
+        }
+
+        // Get inserted user (model may have set id via beforeInsert callback)
+        $user = $userModel->find($inserted);
+
+        $session->set('user', [
+            'id' => $user['id'] ?? $inserted,
+            'email' => $user['email'],
+            'first_name' => $user['first_name'],
+            'last_name' => $user['last_name'],
+            'display_name' => trim($user['first_name'] . ' ' . ($user['middle_name'] ?? '') . ' ' . $user['last_name'])
         ]);
 
         return redirect()->to('/admin');
