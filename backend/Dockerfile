@@ -27,9 +27,6 @@ RUN composer install --prefer-dist --no-interaction --no-progress
 # Copy app source code
 COPY . .
 
-# Copy vendor from builder stage
-COPY --from=vendor /app/vendor ./vendor
-
 # Dev PHP settings
 RUN { \
     echo "display_errors=On"; \
