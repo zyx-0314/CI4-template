@@ -42,7 +42,7 @@
         "health": "php spark health:check",
         "migrate": "php spark migrate",
         "migrate:status": "php spark migrate:status",
-        "seed": "php spark db:seed FuneralRequestSeeder",
+        "seed": "php spark db:seed FuneralRequestsSeeder",
         "truncate": "php spark db:seed ClearDatabaseSeeder"
     }
 }
