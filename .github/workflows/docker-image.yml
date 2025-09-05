@@ -2,9 +2,9 @@ name: Testing
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "Funeral-Homes-Demo/main" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "Funeral-Homes-Demo/main" ]
 
 jobs:
   build:
@@ -47,10 +47,10 @@ jobs:
         run: docker load -i project.tar
 
       - name: Start MySQL
-        run: docker compose -f compose.yaml -f compose.test.yaml up -d mysql
+        run: docker compose up -d mysql
 
       - name: Show service health (debug)
-        run: docker compose -f compose.yaml -f compose.test.yaml ps
+        run: docker compose ps
 
   ci4-docker-test:
     runs-on: ubuntu-latest
@@ -69,7 +69,7 @@ jobs:
         run: docker load -i project.tar
         
       - name: Start CI4
-        run: docker compose -f compose.yaml -f compose.test.yaml up -d php
+        run: docker compose up -d php
         
       - name: Upload coverage artifact
         if: always()
@@ -81,4 +81,146 @@ jobs:
 
       - name: Tear down
         if: always()
-        run: docker compose -f compose.yaml -f compose.test.yaml down -v
+        run: docker compose down -v
+
+  composer-checks:
+  #   name: Composer checks (health and test)
+  #   runs-on: ubuntu-latest
+  #   needs: [ ci4-docker-test, mysql-docker-test ]
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+
+  #     - name: Download built image
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: project
+  #         path: .
+
+  #     - name: Load Docker image
+  #       run: docker load -i project.tar
+
+  #     - name: Use testing environment config
+  #       run: cp backend/.env.testing backend/.env
+
+  #     - name: Start php + mysql + nginx services
+  #       run: docker compose -f compose.yaml up -d mysql php nginx
+
+  #     - name: Wait for services (health check)
+  #       run: |
+  #         echo "Waiting for containers to be healthy..."
+  #         docker compose -f compose.yaml ps
+  #         # Wait until MySQL responds
+  #         until docker compose -f compose.yaml exec -T mysql sh -lc "mysqladmin ping -h 127.0.0.1 -proot --silent"; do
+  #           echo "MySQL not ready yet..."
+  #           sleep 2
+  #         done
+  #         # List containers for debug
+  #         docker compose -f compose.yaml ps
+
+  #     - name: Run composer health inside php container
+  #       run: docker compose exec php composer health
+
+  #     - name: Run composer test inside php container
+  #       run: docker compose exec php composer test
+
+  #     - name: Tear down
+  #       if: always()
+  #       run: docker compose down -v
+
+  db-migration-seed-checks:
+    name: DB migration & seed checks
+    runs-on: ubuntu-latest
+    needs: composer-checks
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download built image
+        uses: actions/download-artifact@v4
+        with:
+          name: project
+          path: .
+
+      - name: Load Docker image
+        run: docker load -i project.tar
+      
+      - name: Use testing environment config
+        run: cp backend/.env.testing backend/.env
+
+      - name: Start php + mysql services
+        run: docker compose up -d
+
+      - name: Wait for services (health check)
+        run: |
+          echo "Waiting for containers to be healthy..."
+          docker compose -f compose.yaml ps
+          # Wait until MySQL responds
+          until docker compose -f compose.yaml exec -T mysql sh -lc "mysqladmin ping -h 127.0.0.1 -proot --silent"; do
+            echo "MySQL not ready yet..."
+            sleep 2
+          done
+          # List containers for debug
+          docker compose -f compose.yaml ps
+
+      - name: Run migrations (composer)
+        run: docker compose exec php composer migrate || true
+
+      - name: Show migrations status (composer)
+        run: docker compose exec php composer migrate:status || true
+
+      - name: Assert there are >1 migration files
+        run: |
+          set -euo pipefail
+          COUNT=$(docker compose exec -T php sh -lc 'php -r '\''echo count(glob("app/Database/Migrations/*.php")), PHP_EOL;'\''')
+          echo "Detected migration files: $COUNT"
+          if [ "${COUNT:-0}" -le 1 ]; then
+            echo "Need >1 migration files; found: $COUNT"
+            exit 1
+          fi
+
+      - name: Run seeders (composer)
+        run: docker compose exec php composer seed || true
+
+      - name: Verify at least one table has data
+        run: |
+          set -euo pipefail
+          export MYSQL_PWD=root
+          TABLES=$(docker compose exec -T mysql mysql -uroot -proot app -N -e "SHOW TABLES;")
+          FOUND=0
+          for T in $TABLES; do
+            if [ "$T" = "migrations" ]; then
+              continue
+            fi
+            COUNT=$(docker compose exec -T mysql mysql -uroot -proot app -N -e "SELECT COUNT(*) FROM ${T};")
+            if [ "${COUNT:-0}" -gt 0 ]; then
+              echo "Table $T has $COUNT rows"
+              FOUND=1
+              break
+            fi
+          done
+
+
+      - name: Run truncate (composer)
+        run: docker compose exec php composer truncate || true
+
+      - name: Verify all tables are empty
+        run: |
+          set -euo pipefail
+          export MYSQL_PWD=root
+          TABLES=$(docker compose exec -T mysql mysql -uroot -proot app -N -e "SHOW TABLES;")
+          FAIL=0
+          for T in $TABLES; do
+            if [ "$T" = "migrations" ]; then
+              continue
+            fi
+            COUNT=$(docker compose exec -T mysql mysql -uroot -proot app -N -e "SELECT COUNT(*) FROM ${T};")
+            if [ "${COUNT:-0}" -gt 0 ]; then
+              echo "❌ Table $T is not empty ($COUNT rows)"
+              FAIL=1
+            fi
+          done
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v
