@@ -124,6 +124,12 @@ jobs:
       - name: Run composer test inside php container
         run: docker compose exec php composer test
 
+      - name: Run composer check:tests inside php container
+        run: docker compose exec php composer check:tests
+
+      - name: Run composer check:lint inside php container
+        run: docker compose exec php composer check:lint
+
       - name: Tear down
         if: always()
         run: docker compose down -v

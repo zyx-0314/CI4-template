@@ -30,3 +30,21 @@ class Services extends BaseService
      * }
      */
 }
+
+// Application-specific services
+if (! function_exists('dbHealth')) {
+    /**
+     * Return a shared instance of the DbHealthService implementing the interface.
+     *
+     * @param bool $getShared
+     * @return \App\Services\Contracts\DbHealthServiceInterface
+     */
+    function dbHealth(bool $getShared = true)
+    {
+        if ($getShared) {
+            return Services::getSharedInstance('dbHealth');
+        }
+
+        return new \App\Services\DbHealthService();
+    }
+}

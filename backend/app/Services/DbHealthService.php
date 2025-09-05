@@ -2,8 +2,9 @@
 namespace App\Services;
 
 use Config\Database;
+use App\Services\Contracts\DbHealthServiceInterface;
 
-class DbHealthService
+class DbHealthService implements DbHealthServiceInterface
 {
     /**
      * Returns DB health information for a given DB group.

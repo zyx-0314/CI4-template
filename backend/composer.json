@@ -39,6 +39,8 @@
     },
     "scripts": {
         "test": "phpunit",
+        "check:tests": "phpunit --testsuite default",
+        "check:lint": "php -l $(git ls-files '*.php' | tr '\n' ' ')",
         "health": "php spark health:check",
         "migrate": "php spark migrate",
         "migrate:status": "php spark migrate:status",
