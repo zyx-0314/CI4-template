@@ -23,11 +23,11 @@ $old = $old ?? [];
 <html lang="en">
 <?= view('components/head', ['title' => 'Sunset Funeral Homes — Compassionate Care']) ?>
 
-<body class="bg-gray-50 font-sans text-slate-900">
+<body class="bg-gray-50 min-h-screen font-sans text-slate-900">
   <?= view('components/header'); ?>
 
 
-  <main class="flex justify-center items-center bg-gray-50 px-4 sm:px-6 lg:px-8 py-12 min-h-screen">
+  <main class="flex justify-center items-center bg-gray-50 px-4 sm:px-6 lg:px-8 py-12">
     <div class="space-y-8 w-full max-w-md">
       <div>
         <img class="mx-auto w-auto h-12" src="<?= esc(base_url('logo/main.svg')) ?>" alt="<?= esc($brandTitle ?? 'Sunset Funeral Homes') ?>">
