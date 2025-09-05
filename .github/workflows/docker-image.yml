@@ -86,7 +86,7 @@ jobs:
   composer-checks:
     name: Composer checks (health and test)
     runs-on: ubuntu-latest
-    needs: ci4-docker-test
+    needs: [ ci4-docker-test, mysql-docker-test ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -131,7 +131,7 @@ jobs:
   db-migration-seed-checks:
     name: DB migration & seed checks
     runs-on: ubuntu-latest
-    needs: [ mysql-docker-test, composer-checks ]
+    needs: composer-checks
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -182,52 +182,56 @@ jobs:
       - name: Run seeders (composer)
         run: docker compose exec php composer seed || true
 
-      - name: Verify at least one table has data
+      - name: Verify at least one table has data (root)
         run: |
           set -euo pipefail
+          export MYSQL_PWD=root
           TABLES=$(docker compose exec -T mysql \
-            mysql -uapp -papp app_test -N -e "SHOW TABLES;")
+            mysql -uroot app -N -e "SHOW TABLES;")
           FOUND=0
           for T in $TABLES; do
             COUNT=$(docker compose exec -T mysql \
-              mysql -uapp -papp app_test -N -e "SELECT COUNT(*) FROM \`$T\`;")
-            if [ "$COUNT" -gt 0 ]; then
+              mysql -uroot app -N -e "SELECT COUNT(*) FROM \`$T\`;")
+            if [ "${COUNT:-0}" -gt 0 ]; then
               echo "Table $T has $COUNT rows"
               FOUND=1
               break
             fi
           done
           if [ "$FOUND" -eq 0 ]; then
-            echo "❌ No tables contain data"
+            echo "❌ No tables contain data in 'app'"
             exit 1
           else
-            echo "✅ At least one table has data"
+            echo "✅ At least one table has data in 'app'"
           fi
 
 
-      - name: Run truncate seeder (composer)
+
+      - name: Run truncate (composer)
         run: docker compose exec php composer truncate || true
 
-      - name: Verify all tables are empty
+      - name: Verify all tables are empty (root)
         run: |
           set -euo pipefail
+          export MYSQL_PWD=root
           TABLES=$(docker compose exec -T mysql \
-            mysql -uapp -papp app_test -N -e "SHOW TABLES;")
+            mysql -uroot app -N -e "SHOW TABLES;")
           FAIL=0
           for T in $TABLES; do
             COUNT=$(docker compose exec -T mysql \
-              mysql -uapp -papp app_test -N -e "SELECT COUNT(*) FROM \`$T\`;")
-            if [ "$COUNT" -gt 0 ]; then
+              mysql -uroot app -N -e "SELECT COUNT(*) FROM \`$T\`;")
+            if [ "${COUNT:-0}" -gt 0 ]; then
               echo "❌ Table $T is not empty ($COUNT rows)"
               FAIL=1
             fi
           done
-          if [ "$FAIL" -eq 1 ]; then
+          if [ "$FAIL" -eq 1"; then
             echo "One or more tables are not empty"
             exit 1
           else
             echo "✅ All tables are empty"
           fi
+
 
       - name: Tear down
         if: always()
