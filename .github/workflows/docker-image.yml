@@ -103,7 +103,6 @@ jobs:
       - name: Use testing environment config
         run: cp backend/.env.testing backend/.env
 
-
       - name: Start php + mysql + nginx services
         run: docker compose -f compose.yaml up -d mysql php nginx
 
@@ -143,12 +142,26 @@ jobs:
           name: project
           path: .
 
-
       - name: Load Docker image
         run: docker load -i project.tar
+      
+      - name: Use testing environment config
+        run: cp backend/.env.testing backend/.env
 
       - name: Start php + mysql services
         run: docker compose up -d
+
+      - name: Wait for services (health check)
+        run: |
+          echo "Waiting for containers to be healthy..."
+          docker compose -f compose.yaml ps
+          # Wait until MySQL responds
+          until docker compose -f compose.yaml exec -T mysql sh -lc "mysqladmin ping -h 127.0.0.1 -proot --silent"; do
+            echo "MySQL not ready yet..."
+            sleep 2
+          done
+          # List containers for debug
+          docker compose -f compose.yaml ps
 
       - name: Run migrations (composer)
         run: docker compose exec php composer migrate || true
