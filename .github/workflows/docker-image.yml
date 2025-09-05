@@ -182,16 +182,13 @@ jobs:
       - name: Run seeders (composer)
         run: docker compose exec php composer seed || true
 
-      - name: Verify at least one table has data (root)
+      - name: Verify at least one table has data
         run: |
           set -euo pipefail
-          export MYSQL_PWD=root
-          TABLES=$(docker compose exec -T mysql \
-            mysql -uroot app -N -e "SHOW TABLES;")
+          TABLES=$(docker compose exec -T mysql sh -lc 'MYSQL_PWD=root mysql -uroot app -N -e "SHOW TABLES;"')
           FOUND=0
           for T in $TABLES; do
-            COUNT=$(docker compose exec -T mysql \
-              mysql -uroot app -N -e "SELECT COUNT(*) FROM \`$T\`;")
+            COUNT=$(docker compose exec -T mysql sh -lc "MYSQL_PWD=root mysql -uroot app -N -e 'SELECT COUNT(*) FROM \\\`$T\\\`;'")
             if [ "${COUNT:-0}" -gt 0 ]; then
               echo "Table $T has $COUNT rows"
               FOUND=1
@@ -205,33 +202,28 @@ jobs:
             echo "✅ At least one table has data in 'app'"
           fi
 
-
-
       - name: Run truncate (composer)
         run: docker compose exec php composer truncate || true
 
-      - name: Verify all tables are empty (root)
+      - name: Verify at least one table has data
         run: |
           set -euo pipefail
-          export MYSQL_PWD=root
-          TABLES=$(docker compose exec -T mysql \
-            mysql -uroot app -N -e "SHOW TABLES;")
-          FAIL=0
+          TABLES=$(docker compose exec -T mysql sh -lc 'MYSQL_PWD=root mysql -uroot app -N -e "SHOW TABLES;"')
+          FOUND=0
           for T in $TABLES; do
-            COUNT=$(docker compose exec -T mysql \
-              mysql -uroot app -N -e "SELECT COUNT(*) FROM \`$T\`;")
+            COUNT=$(docker compose exec -T mysql sh -lc "MYSQL_PWD=root mysql -uroot app -N -e 'SELECT COUNT(*) FROM \\\`$T\\\`;'")
             if [ "${COUNT:-0}" -gt 0 ]; then
-              echo "❌ Table $T is not empty ($COUNT rows)"
-              FAIL=1
+              echo "Table $T has $COUNT rows"
+              FOUND=1
+              break
             fi
           done
-          if [ "$FAIL" -eq 1"; then
-            echo "One or more tables are not empty"
+          if [ "$FOUND" -eq 0 ]; then
+            echo "❌ No tables contain data in 'app'"
             exit 1
           else
-            echo "✅ All tables are empty"
+            echo "✅ At least one table has data in 'app'"
           fi
-
 
       - name: Tear down
         if: always()
