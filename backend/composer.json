@@ -38,7 +38,6 @@
         "sort-packages": true
     },
     "scripts": {
-        "test": "phpunit",
         "health": "php spark health:check",
         "migrate": "php spark migrate",
         "migrate:status": "php spark migrate:status",
