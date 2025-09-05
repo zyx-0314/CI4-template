@@ -129,7 +129,7 @@ jobs:
         run: docker load -i project.tar
 
       - name: Start php + mysql services
-        run: docker compose -f compose.yaml -f compose.yaml up -d php mysql
+        run: docker compose -f compose.yaml -f compose.yaml up -d
 
       - name: Run migrations (composer)
         run: docker compose -f compose.yaml exec php composer migrate || true
