@@ -101,7 +101,7 @@ jobs:
         run: docker load -i project.tar
 
       - name: Start php service
-        run: docker compose -f compose.yaml -f compose.yaml up -d php
+        run: docker compose -f compose.yaml -f compose.yaml up -d php nginx
 
       - name: Run composer health inside php container
         run: docker compose -f compose.yaml exec php composer health
