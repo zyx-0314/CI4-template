@@ -25,8 +25,8 @@
     </div>
     <nav class="flex items-center space-x-4 text-sm" aria-label="Primary navigation">
       <a href="/" class="text-gray-700">Home</a>
-      <a href="/mood-board" class="text-gray-700">Mood board</a>
-      <a href="/roadmap" class="text-gray-700">Road map</a>
+  <a href="/roadmap" class="text-gray-700">Road map</a>
+  <a href="/login" class="text-gray-700">Login</a>
       <a href="/services" class="inline-block bg-emerald-400 hover:bg-emerald-500 px-4 py-2 rounded text-white" role="button">Request Assistance</a>
   </div>
     </nav>
