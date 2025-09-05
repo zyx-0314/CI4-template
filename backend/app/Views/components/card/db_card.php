@@ -21,9 +21,9 @@ $title   = $title   ?? 'Database tables';
 $logo    = $logo    ?? base_url('logo/main.svg');
 
 // Use the DbHealthService to fetch DB status
-// Obtain service via CodeIgniter service locator / DI factory so implementations
-// can be swapped easily in testing or via a container.
-$service = service('dbHealth');
+use App\Services\DbHealthService;
+
+$service = new DbHealthService();
 $result = $service->getHealth($dbGroup);
 
 $connected = $result['connected'] ?? null;
