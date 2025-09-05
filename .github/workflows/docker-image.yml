@@ -100,8 +100,20 @@ jobs:
       - name: Load Docker image
         run: docker load -i project.tar
 
-      - name: Start php service
-        run: docker compose up -d
+      - name: Start php + mysql + nginx services
+        run: docker compose -f compose.yaml up -d mysql php nginx
+
+      - name: Wait for services (health check)
+        run: |
+          echo "Waiting for containers to be healthy..."
+          docker compose -f compose.yaml ps
+          # Wait until MySQL responds
+          until docker compose -f compose.yaml exec -T mysql sh -lc "mysqladmin ping -h 127.0.0.1 -proot --silent"; do
+            echo "MySQL not ready yet..."
+            sleep 2
+          done
+          # List containers for debug
+          docker compose -f compose.yaml ps
 
       - name: Run composer health inside php container
         run: docker compose exec php composer health
