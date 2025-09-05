@@ -1,70 +1,208 @@
-# Lecture 1 — Views, Routing, Fragments, and CDNJS (Tailwind)
+# Lecture 1 — Step-by-step: Routes, Controllers, Views, and Tailwind via CDN
 
-This checklist collects the practical notes and action items from Lecture 1: building a simple site with server-rendered views, routing, small fragments/components, and using CDN-hosted assets (Tailwind via CDN).
+This document is a short, practical step-by-step guide to build the first pieces of the application: routing, controllers, views, previewing in the browser, small activities (mood board & roadmap), dynamic routes, fragmentation (components), and adding Tailwind via CDNJS.
 
-## Quick checklist
+Checklist (ordered)
 
-- [ ] Create a View (presentation layer) under `app/Views/` for each page.
-- [ ] Create a Controller method in `app/Controllers/` to prepare data and render the view.
-- [ ] Register routes in `app/Config/Routes.php` (static and dynamic routes).
-- [ ] Use dynamic routes for parameterized content (e.g., `/services/(:segment)`).
-- [ ] Fragment your UI into reusable partials/components under `app/Views/components/` (head, header, footer, cards).
-- [ ] Prefer Tailwind utilities for styling; consider CDN vs compiled CSS tradeoffs.
+- [ ] 1. Routes
+- [ ] 2. Controller
+- [ ] 3. Views
+- [ ] 4. Preview in the browser
+- [ ] 5. Activity: create Mood Board page
+- [ ] 6. Activity: create Roadmap page
+- [ ] 7. Dynamic routes
+- [ ] 8. Fragmentation (head, header, footer, cards)
+- [ ] 9. Add Tailwind via CDNJS
 
-## Views
+---
 
-- Purpose: render HTML. Keep logic minimal in views — controllers/services should supply data.
-- File location: `app/Views/<your-page>.php` or `app/Views/components/<fragment>.php`.
+1) Routes
 
-## Controllers
+Purpose: map URLs to controller methods. Routes are declared in `app/Config/Routes.php`.
 
-- Purpose: gather data, validate input, call models/services, and return a view.
-- Keep controllers thin: move business logic into services.
+Step-by-step:
 
-## Routes
+- Open `app/Config/Routes.php` and add static routes for the pages you need:
 
-- Static example:
+```php
+$routes->get('/', 'User::index');
+$routes->get('/mood-board', 'User::moodBoard');
+$routes->get('/roadmap', 'User::roadmap');
+```
 
-	- `$routes->get('/mood-board', 'Home::moodBoard');`
+- Save and reload the app after adding routes.
 
-- Dynamic example:
+Notes:
+- Use named groups or prefixes for APIs or admin sections when the app grows.
 
-	- `$routes->get('/services/(:segment)', 'Home::service/$1');`
+---
 
-## Fragmentation (Components)
+2) Controller
 
-- Common fragments: `head.php`, `header.php`, `footer.php`, and small card/list components.
-- Use `<?= view('components/header') ?>` to include fragments and pass data explicitly.
+Purpose: prepare data and return views.
 
-## Tailwind via CDN (notes)
+Step-by-step:
 
-- Quick include (CDN):
+- Create or update `app/Controllers/User.php` with methods used in routes:
 
-	```html
-	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-	```
+```php
+namespace App\Controllers;
+use App\Controllers\BaseController;
 
-## Accessibility & Performance
+class User extends BaseController
+{
+    public function index(): string
+    {
+        return view('user/landing');
+    }
 
-- Use semantic HTML, aria-* attributes for interactive fragments (menus, dialogs).
-- Avoid heavy JS where CSS-only solutions suffice. Respect `prefers-reduced-motion` when adding animations.
-- For performance, loading large CDN JS (Tailwind CDN, ScrollReveal) adds network cost. Consider self-hosting compiled assets for production.
+    public function moodBoard(): string
+    {
+        return view('user/mood_board');
+    }
 
-## Small examples
+    public function roadmap(): string
+    {
+        return view('user/roadmap');
+    }
+}
+```
 
-- Include a fragment:
+---
 
-	```php
-	<?= view('components/head', ['title' => 'Landing']) ?>
-	<?= view('components/header') ?>
-	```
+3) Views
 
-- Minimal dynamic route controller method:
+Purpose: render HTML using the data provided by controllers.
 
-	```php
-	public function service($slug)
-	{
-			$data['service'] = $this->serviceModel->findBySlug($slug);
-			return view('user/service', $data);
-	}
-	```
+Step-by-step:
+
+- Create `app/Views/user/landing.php`, `app/Views/user/mood_board.php`, and `app/Views/user/roadmap.php`.
+- Keep presentation-only logic in views; heavy logic belongs in controllers or services.
+- Example include pattern at top of each view:
+
+```php
+<?= view('components/head', ['title' => $title ?? 'Site']) ?>
+<?= view('components/header') ?>
+<main class="mx-auto max-w-5xl px-6 py-8">
+  <h1 class="text-3xl font-bold"><?= esc($title ?? 'Landing') ?></h1>
+  <!-- page content -->
+</main>
+<?= view('components/footer') ?>
+```
+
+---
+
+4) Preview in the browser
+
+How to preview locally using Docker Compose (your project maps nginx to port 8080):
+
+```cmd
+docker compose -f "compose.yaml" up -d nginx php mysql
+```
+
+Open: http://localhost:8080/  (or your Docker host IP)
+
+Tips:
+- Use `docker compose -f "compose.yaml" logs -f nginx` to watch for errors.
+- If routes return 404, confirm `app/Config/Routes.php` is saved and the container has the latest files mounted.
+
+---
+
+<!-- [ ] Actvity 1.1 -->
+5) Activity — create Mood Board page
+
+Goal: create a simple mood-board view that shows images, color swatches, and a short copy.
+
+Files to create/update:
+- `app/Views/mood_board.php` — main content
+- `app/Views/components/cards/mood_card.php` — small reusable card component (optional)
+
+Implementation notes:
+- Use Tailwind utilities for layout (grid, gap, rounded images).
+- Keep images in `public/images/mood/` and reference via `<?= esc(base_url('images/mood/your.png')) ?>`.
+
+---
+
+<!-- [ ] Actvity 1.2 -->
+6) Activity — create Roadmap page
+
+Goal: create a roadmap with timeline rows or cards.
+
+Files to create/update:
+- `app/Views/roadmap.php`
+- `app/Views/components/roadmap_item.php` (optional)
+
+Implementation notes:
+- Use semantic lists or definition lists for timeline items.
+- Consider a small grid of quarters or milestones.
+
+---
+
+7) Dynamic routes
+
+Purpose: serve parameterized pages like service detail pages.
+
+Example route and controller method:
+
+```php
+// in routes
+$routes->get('services/(:segment)', 'User::services/$1');
+
+// in controllers
+public function services(?string $style = null): string
+{
+	$data = ['style' => $style];
+	return view('user/service', $data);
+}
+```
+
+Notes:
+- Validate the parameter and return 404 if the resource is not found.
+
+---
+
+8) Fragmentation (components)
+
+Purpose: keep head, header, footer, and small UI parts as reusable fragments under `app/Views/components/`.
+
+Common fragments:
+
+- `components/head.php` — meta tags, fonts, and CDN includes.
+- `components/header.php` — logo, navigation.
+- `components/footer.php` — footer links and copyright.
+- `components/cards/*` — small UI cards (mood card, db health card, etc).
+
+Include fragments with:
+
+```php
+<?= view('components/header') ?>
+```
+
+---
+
+9) Add Tailwind via CDNJS
+
+Quick add: place this in `components/head.php` before your page styles:
+
+```html
+<script src="https://cdn.tailwindcss.com"></script>
+```
+
+Optional: configure the CDN-based Tailwind with a small inline `tailwind.config` script if you need theme extensions. For production, prefer compiled CSS.
+
+---
+
+Small examples and tips
+
+- Minimal route + controller + view flow:
+
+```php
+// routes
+$routes->get('/mood-board', 'Home::moodBoard');
+
+// controller (Home::moodBoard)
+return view('mood_board', ['title' => 'Mood board']);
+
+// view
+<?= view('components/head', ['title' => 'Mood board']) ?>
+```
