@@ -187,10 +187,10 @@ jobs:
         run: |
           set -euo pipefail
           export MYSQL_PWD=root
-          TABLES=$(docker compose exec -T mysql mysql -uroot app -N -e "SHOW TABLES;")
+          TABLES=$(docker compose exec -T mysql mysql -uroot -proot app -N -e "SHOW TABLES;")
           FOUND=0
           for T in $TABLES; do
-            COUNT=$(docker compose exec -T mysql mysql -uroot app -N -e "SELECT COUNT(*) FROM ${T};")
+            COUNT=$(docker compose exec -T mysql mysql -uroot -proot app -N -e "SELECT COUNT(*) FROM ${T};")
             if [ "${COUNT:-0}" -gt 0 ]; then
               echo "Table $T has $COUNT rows"
               FOUND=1
@@ -211,10 +211,10 @@ jobs:
         run: |
           set -euo pipefail
           export MYSQL_PWD=root
-          TABLES=$(docker compose exec -T mysql mysql -uroot app -N -e "SHOW TABLES;")
+          TABLES=$(docker compose exec -T mysql mysql -uroot -proot app -N -e "SHOW TABLES;")
           FAIL=0
           for T in $TABLES; do
-            COUNT=$(docker compose exec -T mysql mysql -uroot app -N -e "SELECT COUNT(*) FROM ${T};")
+            COUNT=$(docker compose exec -T mysql mysql -uroot -proot app -N -e "SELECT COUNT(*) FROM ${T};")
             if [ "${COUNT:-0}" -gt 0 ]; then
               echo "❌ Table $T is not empty ($COUNT rows)"
               FAIL=1
