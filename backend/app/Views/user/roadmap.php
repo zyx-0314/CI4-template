@@ -1,43 +1,45 @@
 <!doctype html>
 <html lang="en">
 <?= view('components/head', ['title' => 'Road map — Sunset Funeral Homes']) ?>
+
 <body class="bg-gray-50 text-gray-900">
-  <?php echo view('components/header'); ?>
-  <div class="mx-auto px-6 py-12 max-w-4xl">
-    <header class="mb-8">
+  <?= view('components/header'); ?>
+  <div class="mx-auto px-6 py-12 max-w-5xl">
+    <header class="mb-6">
       <h1 class="font-bold text-2xl">Road map</h1>
-      <p class="text-gray-600">High-level plan toward a Minimal Viable Product (MVP)</p>
+      <p class="text-gray-600">High-level plan and status for upcoming features.</p>
     </header>
 
-    <section class="bg-white shadow p-6 rounded-lg">
-      <h2 class="mb-4 font-semibold text-lg">MVP — Core features</h2>
-      <ol class="space-y-3 text-gray-700 list-decimal list-inside">
-        <li><strong>Service listings:</strong> Display available service packages and pricing (simple CMS).</li>
-        <li><strong>Contact/arrangement form:</strong> A form to request assistance or speak with staff (email notifications).</li>
-        <li><strong>Obituary & memorial page:</strong> Simple page to publish obituary details and guestbook.</li>
-        <li><strong>Admin dashboard:</strong> Basic admin to manage services, obituaries, and inquiries.</li>
-      </ol>
-
-      <h3 class="mt-6 font-semibold">Timeline (example)</h3>
-      <div class="mt-4">
-        <div class="mb-4">
-          <div class="font-medium">Day 1–2</div>
-          <div class="text-gray-600 text-sm">Design mood board, landing page, and basic brand assets.</div>
-        </div>
-        <div class="mb-4">
-          <div class="font-medium">Day 3–5</div>
-          <div class="text-gray-600 text-sm">Implement service listings, contact form, and admin scaffold.</div>
-        </div>
-        <div class="mb-4">
-          <div class="font-medium">Day 6–8</div>
-          <div class="text-gray-600 text-sm">Finalize obituary pages, basic SEO, and deploy staging.</div>
-        </div>
+    <div class="flex justify-between items-center mb-4">
+      <div class="flex items-center space-x-3">
+        <label class="text-gray-600 text-sm">Filter:</label>
+        <select id="statusFilter" class="border-gray-300 rounded text-sm">
+          <option value="all">All</option>
+          <option value="Backlog">Backlog</option>
+          <option value="Planned">Planned</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Done">Done</option>
+        </select>
       </div>
+      <div class="text-gray-500 text-sm">This is a UI-only roadmap for planning.</div>
+    </div>
 
-      <p class="mt-6 text-gray-500 text-sm">This roadmap is intentionally minimal — focused on delivering value quickly to families and funeral home staff.</p>
+    <section id="roadmapList" class="space-y-4">
+      <?= view('staticData/roadmap') ?>
     </section>
 
   </div>
-  <?php echo view('components/footer'); ?>
+  <?= view('components/footer'); ?>
+
+  <script>
+    document.getElementById('statusFilter').addEventListener('change', function(e) {
+      const v = e.target.value;
+      document.querySelectorAll('#roadmapList article').forEach(function(el) {
+        if (v === 'all' || el.dataset.status === v) el.style.display = '';
+        else el.style.display = 'none';
+      });
+    });
+  </script>
 </body>
+
 </html>
