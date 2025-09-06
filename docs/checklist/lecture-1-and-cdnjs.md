@@ -46,6 +46,7 @@ feat(landing page): Added a new landing page
 - [ ] Once `PR` is created if there is other member who need to review it you can set them to review and click `merge` if all goods, else you can comment and provide feedback.
 
 [ ] 3. Activity
+Create the following
 - [ ] Create Login Page
 - [ ] Create Sign Up Page
 - [ ] Create Mood Board Page. It must contain the following
@@ -57,3 +58,14 @@ feat(landing page): Added a new landing page
 - [ ] Create Road Map Page
     - [ ] List of Functionalities
 > Keep in mind to follow the Step 2 to familiarize
+
+[ ] 4. Fragmentation
+Fragment the following
+- [ ] Header
+- [ ] Footer
+- [ ] The 3 Cards
+- [ ] CTA Section
+- [ ] The 4 Buttons
+
+[ ] 5. Complete Project
+- [ ] Propose 3 Functionality with CRUD add to the road map
