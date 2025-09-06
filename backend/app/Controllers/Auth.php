@@ -15,11 +15,12 @@ class Auth extends BaseController
             return redirect()->to('/admin');
         }
 
-        // Pull flashdata errors/old if present
+        // Pull flashdata errors/old/success if present
         $errors = $session->getFlashdata('errors') ?? [];
         $old = $session->getFlashdata('old') ?? [];
+        $success = $session->getFlashdata('success') ?? null;
 
-        return view('auth/login', ['errors' => $errors, 'old' => $old]);
+        return view('auth/login', ['errors' => $errors, 'old' => $old, 'success' => $success]);
     }
 
     public function login()
@@ -43,10 +44,43 @@ class Auth extends BaseController
 
         $email = $request->getPost('email');
 
-        // NOTE: Demo behaviour — accept any credentials. Replace with real auth.
-        $session->set('user', ['email' => $email]);
+        // Authenticate against users table
+        $userModel = new \App\Models\UserModel();
+        $user = $userModel->where('email', $email)->first();
 
-        return redirect()->to('/admin');
+        if (! $user || ! password_verify($request->getPost('password'), $user['password_hash'])) {
+            $session->setFlashdata('errors', ['credentials' => 'Invalid email or password']);
+            $session->setFlashdata('old', ['email' => $email]);
+            return redirect()->back()->withInput();
+        }
+
+        if (isset($user['account_status']) && ! (int) $user['account_status']) {
+            $session->setFlashdata('errors', ['account' => 'Account is inactive']);
+            return redirect()->back()->withInput();
+        }
+
+        // Set session (minimal safe payload)
+        $session->set('user', [
+            'id' => $user['id'],
+            'email' => $user['email'],
+            'first_name' => $user['first_name'] ?? null,
+            'last_name' => $user['last_name'] ?? null,
+            'type' => $user['type'] ?? 'client',
+            'display_name' => trim(($user['first_name'] ?? '') . ' ' . ($user['middle_name'] ?? '') . ' ' . ($user['last_name'] ?? '')),
+        ]);
+
+        // Redirect based on role
+        $type = strtolower($user['type'] ?? 'client');
+        if ($type === 'manager') {
+            return redirect()->to('/admin/dashboard');
+        }
+
+        if ($type === 'client') {
+            return redirect()->to('/');
+        }
+
+        // default for other staff types: calendar/dashboard (to be implemented)
+        return redirect()->to('/employee/dashboard');
     }
 
     public function logout()
@@ -120,17 +154,8 @@ class Auth extends BaseController
             return redirect()->back()->withInput();
         }
 
-        // Get inserted user (model may have set id via beforeInsert callback)
-        $user = $userModel->find($inserted);
-
-        $session->set('user', [
-            'id' => $user['id'] ?? $inserted,
-            'email' => $user['email'],
-            'first_name' => $user['first_name'],
-            'last_name' => $user['last_name'],
-            'display_name' => trim($user['first_name'] . ' ' . ($user['middle_name'] ?? '') . ' ' . $user['last_name'])
-        ]);
-
-        return redirect()->to('/admin');
+        // Account created — redirect user to login page (no auto-login)
+        $session->setFlashdata('success', 'Account created. Please sign in.');
+        return redirect()->to('/login');
     }
 }
