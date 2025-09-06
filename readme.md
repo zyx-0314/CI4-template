@@ -129,6 +129,32 @@ docker compose exec php composer seed
 docker compose exec php composer test
 ```
 
+- Create a migration (using CodeIgniter's spark tool):
+```cmd
+docker compose exec php php spark make:migration CreateUsersTable
+```
+
+- Create a model (using CodeIgniter's spark tool):
+
+```cmd
+docker compose exec php php spark make:model UserModel
+```
+
+- Create an entity (value object for a single record) (using CodeIgniter's spark tool):
+```cmd
+docker compose exec php php spark make:entity User
+```
+
+- Create a controller (add --resource to scaffold resourceful methods if you like) (using CodeIgniter's spark tool):
+```cmd
+docker compose exec php php spark make:controller Users
+```
+
+- Create a seeder (for test/dev data) (using CodeIgniter's spark tool):
+```cmd
+docker compose exec php php spark make:seeder UsersSeeder
+```
+
 If you prefer, you can include `-f "compose.yaml"` explicitly; the shorter commands above work when running from the repo root.
 
 ## Ports & Database

@@ -19,5 +19,4 @@ $routes->post('signup', 'Auth::signup');
 $routes->get('services', 'User::services');
 $routes->get('services/(:segment)', 'User::services/$1');
 // Admin dashboard
-$routes->get('admin', 'Admin::dashboard');
-$routes->get('admin/dashboard', 'Admin::dashboard');
+$routes->get('/admin/dashboard', 'Admin::dashboard');
