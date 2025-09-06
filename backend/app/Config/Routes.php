@@ -21,6 +21,11 @@ $routes->get('services/(:segment)', 'Services::show/$1');
 // Admin
 $routes->get('/admin/dashboard', 'Admin::dashboard');
 $routes->get('/admin/services', 'Admin::services');
+// Admin services API (backend)
+$routes->get('/admin/api/services', 'Admin::servicesList');
+$routes->post('/admin/api/services', 'Admin::storeService');
+$routes->post('/admin/api/services/(:num)', 'Admin::updateService/$1');
+$routes->delete('/admin/api/services/(:num)', 'Admin::deleteService/$1');
 // Settings
 $routes->get('settings/profile', 'Settings::profile');
 // Employee

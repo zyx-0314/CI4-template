@@ -18,7 +18,7 @@
           <h3 class="font-semibold">Services management</h3>
           <p class="mt-2 text-gray-600 text-sm">Open the services management page to edit available funeral services or add new ones.</p>
           <div class="mt-3">
-            <a href="/admin/services" class="bg-blue-600 text-white px-3 py-2 rounded">Manage services</a>
+            <a href="/admin/services" class="bg-blue-600 px-3 py-2 rounded text-white">Manage services</a>
           </div>
         </div>
 
