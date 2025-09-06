@@ -1,70 +1,59 @@
-# Lecture 1 — Views, Routing, Fragments, and CDNJS (Tailwind)
+# View -> Controller -> Routes
 
-This checklist collects the practical notes and action items from Lecture 1: building a simple site with server-rendered views, routing, small fragments/components, and using CDN-hosted assets (Tailwind via CDN).
+[ ] 1. Setup Environment
+- [ ] Create project from template
+- [ ] Clone to your local
+- [ ] Make sure `Docker`, `php` and `composer` is installed to you pc. Your goof even you only using `Docker` but if youre orrotated in red lines install all
+- [ ] (optional) If you have `php` and `composer` do this. After clone inside the `backend` folder use command 
+```bash
+composer install
+```
+- [ ] Start with updating `readme`
+- [ ] Once all done you can start adding your `label` in your source control.
+    - [ ] Since we updated the `readme`. since `readme` is document then we will automatically use `docs`
+```bash
+docs(readme): Updated the `readme`
+```
+- [ ] Start pushing directly to `main` or from a `branch` in `stagging`. Possible branch name `docs/readme`
+- [ ] Once satisfied a `publish` or `sync` click it to push from `stagged` to the `remote`
+- [ ] Create `Branch` name it `development` so you can safely develop without triggering auto checker
 
-## Quick checklist
 
-- [ ] Create a View (presentation layer) under `app/Views/` for each page.
-- [ ] Create a Controller method in `app/Controllers/` to prepare data and render the view.
-- [ ] Register routes in `app/Config/Routes.php` (static and dynamic routes).
-- [ ] Use dynamic routes for parameterized content (e.g., `/services/(:segment)`).
-- [ ] Fragment your UI into reusable partials/components under `app/Views/components/` (head, header, footer, cards).
-- [ ] Prefer Tailwind utilities for styling; consider CDN vs compiled CSS tradeoffs.
+[ ] 2. Create your personal landing page
+- [ ] Create `Issue` named Landing Page, can add description if you want to.
+- [ ] Create `Branch` name it `frontend/landingPage`
+- [ ] Add new `View` with basics html requirements under the `Views/user`
+- [ ] Add new `Controller` named `Users` using command found on templates readme
+    - [ ] Add `return view('user/landing');` inside `index()` to show the page
+- [ ] Update `Routes.php` under `Config`
+    - [ ] Update `Home::index` to `Users::index` reflecting the `User` Controller and `index` as one of its function
+- [ ] Now visit your site for manual checking, [live](http://localhost:8090/).
+    - This wont pose issue if you didnt change the port or the port is not in use
+- [ ] Once all working you can start adding your `label` in your source control.
+    - [ ] Since we created landing page view, controller and updated the routes. We could say we added a new feature
+```bash
+feat(landing page): Added a new landing page
 
-## Views
+- added new `view`
+- added new `controller`
+- updated routes to route the landing page
+- deleted unecessary files
+```
+- [ ] Start `pushing` directly to the `branch` in `stagged`. If any changes is needed then add another `push`.
+- [ ] Once satisfied a `publish` or `sync`, click it to push from `stagged` to the `remote`
+- [ ] Once in `remote` you can create `PR` or `Pull Request`.
+    - [ ] Make sure `PR` is from your completed branch which this time is `frontend/landingPage` and going to `development`
+- [ ] Once `PR` is created if there is other member who need to review it you can set them to review and click `merge` if all goods, else you can comment and provide feedback.
 
-- Purpose: render HTML. Keep logic minimal in views — controllers/services should supply data.
-- File location: `app/Views/<your-page>.php` or `app/Views/components/<fragment>.php`.
-
-## Controllers
-
-- Purpose: gather data, validate input, call models/services, and return a view.
-- Keep controllers thin: move business logic into services.
-
-## Routes
-
-- Static example:
-
-	- `$routes->get('/mood-board', 'Home::moodBoard');`
-
-- Dynamic example:
-
-	- `$routes->get('/services/(:segment)', 'Home::service/$1');`
-
-## Fragmentation (Components)
-
-- Common fragments: `head.php`, `header.php`, `footer.php`, and small card/list components.
-- Use `<?= view('components/header') ?>` to include fragments and pass data explicitly.
-
-## Tailwind via CDN (notes)
-
-- Quick include (CDN):
-
-	```html
-	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-	```
-
-## Accessibility & Performance
-
-- Use semantic HTML, aria-* attributes for interactive fragments (menus, dialogs).
-- Avoid heavy JS where CSS-only solutions suffice. Respect `prefers-reduced-motion` when adding animations.
-- For performance, loading large CDN JS (Tailwind CDN, ScrollReveal) adds network cost. Consider self-hosting compiled assets for production.
-
-## Small examples
-
-- Include a fragment:
-
-	```php
-	<?= view('components/head', ['title' => 'Landing']) ?>
-	<?= view('components/header') ?>
-	```
-
-- Minimal dynamic route controller method:
-
-	```php
-	public function service($slug)
-	{
-			$data['service'] = $this->serviceModel->findBySlug($slug);
-			return view('user/service', $data);
-	}
-	```
+[ ] 3. Activity
+- [ ] Create Login Page
+- [ ] Create Sign Up Page
+- [ ] Create Mood Board Page. It must contain the following
+    - [ ] Color palette: min of 3
+    - [ ] Typography: 2 fonts
+    - [ ] Buttons set: Primary, secondary, borderm, disabled
+    - [ ] Card set: Card Sample
+    - [ ] Logos: Circle and Square format
+- [ ] Create Road Map Page
+    - [ ] List of Functionalities
+> Keep in mind to follow the Step 2 to familiarize
