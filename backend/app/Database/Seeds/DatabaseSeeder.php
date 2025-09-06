@@ -8,6 +8,8 @@ class DatabaseSeeder extends Seeder
 {
     public function run()
     {
+        $this->call('App\\Database\\Seeds\\ClearDatabaseSeeder');
+
         $this->call('App\\Database\\Seeds\\UsersSeeder');
     }
 }
