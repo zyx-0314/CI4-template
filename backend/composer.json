@@ -39,6 +39,7 @@
     },
     "scripts": {
         "test": "phpunit",
-        "health": "php spark health:check"
+        "health": "php spark health:check",
+        "migrate": "php spark migrate"
     }
 }
