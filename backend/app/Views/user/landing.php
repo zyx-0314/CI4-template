@@ -124,7 +124,7 @@
             </div>
             <nav class="flex items-center space-x-4 text-sm" aria-label="Primary navigation">
                 <a href="/" class="text-gray-700">Home</a>
-                <a href="/roadmap" class="text-gray-700">Road map</a>
+                <a href="/road-map" class="text-gray-700">Road map</a>
                 <a href="/login" class="text-gray-700">Login</a>
                 <a href="/services" class="inline-block px-4 py-2 rounded header-cta" role="button">Request Assistance</a>
             </nav>
@@ -235,11 +235,11 @@
         <section class="mt-12 rounded-lg overflow-hidden">
             <div class="md:flex md:justify-between md:items-center bg-sage-light px-6 py-10 text-sage-dark">
                 <div>
-                    <h3 class="font-serif font-bold text-2xl text-sage-dark">Can we help?</h3>
-                    <p class="mt-2 text-sage-dark opacity-90">Our Care Team is available 24 hours a day by phone and live-chat.</p>
+                    <h3 class="font-serif font-bold text-sage-dark text-2xl">Can we help?</h3>
+                    <p class="opacity-90 mt-2 text-sage-dark">Our Care Team is available 24 hours a day by phone and live-chat.</p>
                 </div>
                 <div class="mt-4 md:mt-0">
-                    <a href="tel:5551234567" class="inline-block header-cta px-5 py-3 rounded-md font-semibold">Call (555) 123-4567</a>
+                    <a href="tel:5551234567" class="inline-block px-5 py-3 rounded-md font-semibold header-cta">Call (555) 123-4567</a>
                 </div>
             </div>
         </section>

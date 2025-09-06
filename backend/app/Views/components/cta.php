@@ -1,0 +1,26 @@
+<?php
+// Component: CTA section
+// Data contract:
+// $heading: string
+// $sub: string|null
+// $primary: ['label'=>string,'href'=>string]
+// $secondary: ['label'=>string,'href'=>string]
+?>
+<section class="bg-blue-600 text-white py-12 rounded-lg my-8">
+  <div class="container mx-auto px-4 text-center">
+    <?php if (!empty($heading)): ?>
+      <h2 class="text-2xl font-bold mb-2"><?= esc($heading) ?></h2>
+    <?php endif; ?>
+    <?php if (!empty($sub)): ?>
+      <p class="mb-4 text-blue-100"><?= esc($sub) ?></p>
+    <?php endif; ?>
+    <div class="flex justify-center gap-4">
+      <?php if (!empty($primary)): ?>
+        <?= view('components/buttons/button_primary', ['label' => $primary['label'], 'href' => $primary['href']]) ?>
+      <?php endif; ?>
+      <?php if (!empty($secondary)): ?>
+        <?= view('components/buttons/button_secondary', ['label' => $secondary['label'], 'href' => $secondary['href']]) ?>
+      <?php endif; ?>
+    </div>
+  </div>
+</section>
