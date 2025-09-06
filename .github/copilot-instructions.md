@@ -9,6 +9,8 @@ This file defines how Copilot (and similar AI assistants) should generate, sugge
 ## Golden Rules
 
 - ✅ Always follow [Core Engineering Principles](../docs/core-engineering-principles.md).
+- ✅ Always follow [SOP Manual](../docs/sop-manual.md).
+- ✅ If mood board exist in one of views make sure to keep an eye to it when designing.
 - ✅ Prefer **simple, working examples first** (KISS).
 - ✅ Suggest **tests alongside code**.
 - ✅ Keep code **small and modular** (OOP + SOLID).

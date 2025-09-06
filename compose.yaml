@@ -9,6 +9,7 @@ services:
     init: true
     volumes:
       - ./backend:/var/www/html:cached
+      - /var/www/html/vendor
     environment:
       CI_ENVIRONMENT: development
     depends_on:

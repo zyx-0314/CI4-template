@@ -1,12 +1,8 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Road map — Sunset Funeral Homes</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
+<?= view('components/head', ['title' => 'Road map — Sunset Funeral Homes']) ?>
 <body class="bg-gray-50 text-gray-900">
+  <?php echo view('components/header'); ?>
   <div class="mx-auto px-6 py-12 max-w-4xl">
     <header class="mb-8">
       <h1 class="font-bold text-2xl">Road map</h1>
@@ -41,7 +37,7 @@
       <p class="mt-6 text-gray-500 text-sm">This roadmap is intentionally minimal — focused on delivering value quickly to families and funeral home staff.</p>
     </section>
 
-    <footer class="mt-12 text-gray-500 text-sm">© Sunset Funeral Homes — Roadmap (sample)</footer>
   </div>
+  <?php echo view('components/footer'); ?>
 </body>
 </html>

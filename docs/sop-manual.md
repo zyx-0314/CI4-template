@@ -177,3 +177,82 @@ Based on what you outlined earlier, here’s what you’d append:
 10 mins to present, if not completed then expected as `Pending`
 
 ---
+
+## Fragments & View Components (SOP)
+
+This section documents the standard for view fragments (partials/components) used across the project. It is intentionally short and prescriptive so teams can follow a single convention.
+
+### Purpose
+
+- Keep small, reusable UI fragments in `app/Views/components/` so views remain DRY and consistent.
+- Fragments cover small UI pieces: header, footer, cards, tables, carousels, menus, and tiny widgets.
+
+### Naming and layout
+
+- Root folder: `app/Views/components/`.
+- File naming: use `component.php` (no dots or extra separators). Examples:
+  - `app/Views/components/header.php`
+  - `app/Views/components/footer.php`
+- Variations grouped in subfolders by type:
+  - `app/Views/components/cards/card.php`
+  - `app/Views/components/cards/card_featured.php`
+  - `app/Views/components/carousel/simple.php`
+
+### How to include
+
+- Use CodeIgniter's view helper. Basic include:
+
+  ```php
+  <?= view('components/header') ?>
+  ```
+
+- Pass data explicitly:
+
+  ```php
+  <?= view('components/cards/card', ['item' => $item]) ?>
+  ```
+
+- Subfolder include example:
+
+  ```php
+  <?= view('components/cards/card_featured', $data) ?>
+  ```
+
+### Style & responsibilities
+
+- Fragments are presentation-focused. Keep business logic in Controllers/Services.
+- Acceptable logic: small conditionals, loops, and escaping. Keep complexity out of views.
+- Document the data contract for each component (required keys and types). Example contract for a card:
+
+  ```php
+  // $data = ['item' => ['title' => string, 'excerpt' => string, 'image' => string|null]]
+  ```
+
+- Use the project's CSS utility system (Tailwind) for consistent spacing and typography.
+
+### Accessibility & JS
+
+- Prefer CSS-first interactions. When JS is needed (dropdowns, carousels):
+  - Implement unobtrusive JS in a shared file (e.g., `public/js/components.js`).
+  - Ensure keyboard support and proper ARIA roles.
+  - Components should remain functional (readable) without JS where feasible.
+
+Example (accessible dropdown pattern):
+
+```html
+<button aria-haspopup="true" aria-expanded="false" id="servicesBtn">Services</button>
+<ul role="menu" aria-labelledby="servicesBtn" id="servicesMenu" hidden>
+  <li role="menuitem"><a href="/services/traditional">Traditional Filipino</a></li>
+  <li role="menuitem"><a href="/services/cremation">Cremation</a></li>
+</ul>
+```
+
+Small JS should toggle `aria-expanded` and the `hidden` attribute, and handle Escape and Arrow keys.
+
+### Migration checklist
+
+- Scan views for legacy or inconsistent includes and update to `view('components/<name>')`.
+- Move repeated patterns into `components/<type>/` subfolders and document the component contract.
+- Add one example component per type (header, card, table) and include usage examples in `readme.md` or `docs/components.md`.
+
+---

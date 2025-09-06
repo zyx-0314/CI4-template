@@ -8,13 +8,13 @@
     <img src="./assets/img/nyebe_white.png" alt="Nyebe" width="130" height="100">
   </a>
 <!-- * Title Section -->
-  <h3 align="center">AD - CI4 Template</h3>
+  <h3 align="center">AD - CI4 Demo — Sunset Funeral Homes</h3>
 </div>
 
 <!-- * Description Section -->
 <div align="center">
-This repository is a beginner-friendly CodeIgniter 4 template.  
-It helps teams quickly bootstrap backend + frontend projects, with simple sample modules that show how to extend the system.
+This repository contains the source for the "Sunset Funeral Homes" demo website (not a reusable template).
+It implements a small, working funeral-home site built on CodeIgniter 4 with the following core functionality: service listings, service scheduling, obituary & memorial pages (two designs), an admin dashboard with management and employee assignment, and a simple calendar system.
 </div>
 
 <br/>
@@ -55,22 +55,32 @@ It helps teams quickly bootstrap backend + frontend projects, with simple sample
 
 ## Overview
 
-This template provides a **minimal CodeIgniter 4 project layout** with conventions for file organization, commit practices, and simple modules.
+This repository is a working demo website showcasing how to implement a small funeral-home application using CodeIgniter 4. It is intentionally opinionated and built to demonstrate features and conventions, not to serve as a generic template for cloning.
 
-It is designed to be **easy to start with** and a **reference for adding new features**.
+Included examples and behavior:
 
-* **Purpose**: a clean starting point for CI4 apps.
-* **Audience**: developers who want a predictable structure and quick onboarding.
+- Service listing (public pages showing offered services)
+- Service scheduling (request form, preferred date/time, admin assignment)
+- Obituary & memorial pages (two visual treatments)
+- Admin dashboard (DB health, management UI)
+- Employee assignment by scheduled service
+- Simple calendar view for scheduled services
+
+* **Purpose**: show a practical demo of common patterns (Controllers → Services → Models/Repositories) implemented end-to-end.
+* **Audience**: developers learning CI4 idioms or evaluating feature wiring for small sites.
 
 ### Key Components
 
-These are **sample modules** included (or suggested) for learning how to add features:
+These are the main features implemented or intended for the demo site:
 
-| Component                 | Purpose                                                             | Notes                                                   |
-| ------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------- |
-| **Auth (Sample)**         | Basic login/logout and role check (admin/user).                     | Uses CI4 sessions + MySQL `users` table.                |
-| **CRUD Module**           | Example entity (`Posts` or `Tasks`) with create/read/update/delete. | Demonstrates Controller → Service → Repository pattern. |
-| **Scheduler (Sample)**    | Simple to-do list with due dates.                                   | Shows how to extend with new tables and services.       |
+| Component / Feature                     | Purpose / Notes |
+|-----------------------------------------|-----------------|
+| Service listing                         | Public listing of offered services and prices
+| Service scheduling                      | Request form + scheduling flow with preferred date/time
+| Obituary & Memorial pages (2 designs)   | Two layout templates for memorial pages (simple / gallery)
+| Admin dashboard & functionality         | Admin view with DB health card and basic management
+| Employee assignment per schedule        | Assign staff to scheduled service requests (admin)
+| Calendar system                         | Simple calendar view to visualize scheduled services
 
  <!-- ! Start simple. Use these modules as **learning samples**; extend or replace them based on your project’s needs. -->
 
@@ -91,13 +101,82 @@ These are **sample modules** included (or suggested) for learning how to add fea
 #### Databases
 
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge\&logo=mysql\&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge\&logo=postgresql\&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge\&logo=mongodb\&logoColor=white)
-![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge\&logo=firebase\&logoColor=black)
 
 <!-- ! Keep only the used technology -->
 
 ---
+
+## Quick Start (Docker)
+
+Run the development stack and the app (rebuild if needed):
+
+```cmd
+docker compose up -d --build
+```
+
+Common utility commands (run inside the project root):
+
+- Run migrations:
+```cmd
+docker compose exec php composer migrate
+```
+- Run seeders:
+```cmd
+docker compose exec php composer seed
+```
+- Run tests:
+```cmd
+docker compose exec php composer test
+```
+
+- Create a migration (using CodeIgniter's spark tool):
+```cmd
+docker compose exec php php spark make:migration CreateUsersTable
+```
+
+- Create a model (using CodeIgniter's spark tool):
+
+```cmd
+docker compose exec php php spark make:model UserModel
+```
+
+- Create an entity (value object for a single record) (using CodeIgniter's spark tool):
+```cmd
+docker compose exec php php spark make:entity User
+```
+
+- Create a controller (add --resource to scaffold resourceful methods if you like) (using CodeIgniter's spark tool):
+```cmd
+docker compose exec php php spark make:controller Users
+```
+
+- Create a seeder (for test/dev data) (using CodeIgniter's spark tool):
+```cmd
+docker compose exec php php spark make:seeder UsersSeeder
+```
+
+If you prefer, you can include `-f "compose.yaml"` explicitly; the shorter commands above work when running from the repo root.
+
+## Ports & Database
+
+Defaults used in this project (host mapping):
+
+| Service     | Host port |
+|-------------|-----------:|
+| nginx (app) | 8090      |
+| phpMyAdmin  | 8091      |
+| MySQL       | 3390      |
+
+Database credentials used in examples and CI:
+
+- Host: localhost
+- Port: 3390
+- Database: app
+- User: root
+- Password: root
+
+Be careful: seeding and truncating are destructive operations — run only on local/dev environments unless you know what you're doing.
+
 
 ## Rules, Practices and Principles
 

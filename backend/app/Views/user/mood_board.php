@@ -1,17 +1,8 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Mood board — Sunset Funeral Homes</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <style>
-    /* small utility to show color variants */
-    .swatch { height: 96px; border-radius: 8px }
-    .font-sample { font-size: 1.125rem }
-  </style>
-</head>
+<?= view('components/head', [ 'title' => 'Mood board — Sunset Funeral Homes' ]) ?>
 <body class="bg-gray-50 text-gray-900">
+  <?php echo view('components/header'); ?>
   <div class="mx-auto px-6 py-12 max-w-5xl">
     <header class="mb-8">
       <h1 class="font-bold text-2xl">Mood board</h1>
@@ -22,31 +13,31 @@
       <h2 class="mb-4 font-semibold text-lg">Color system</h2>
       <p class="mb-4 text-gray-600 text-sm">Three main colors with three vibrance levels (dark → light).</p>
       <div class="gap-4 grid grid-cols-3">
-        <!-- Primary: Deep Indigo -->
+        <!-- Sage Green (Accent) -->
         <div>
-          <div class="bg-indigo-900 swatch"></div>
-          <div class="bg-indigo-700 mt-2 swatch"></div>
-          <div class="bg-indigo-300 mt-2 swatch"></div>
-          <p class="mt-2 font-medium">Indigo (Primary)</p>
-          <p class="text-gray-500 text-sm">#312e81, #4c51bf, #c3dafe</p>
+          <div class="swatch" style="background:var(--sage-dark)"></div>
+          <div class="mt-2 swatch" style="background:var(--sage)"></div>
+          <div class="mt-2 swatch" style="background:var(--sage-light)"></div>
+          <p class="mt-2 font-medium">Sage Green (Main accent)</p>
+          <p class="text-gray-500 text-sm">#6F8E78, #8DAA91, #CFE6D7</p>
         </div>
 
-        <!-- Accent: Warm Gray -->
+        <!-- Muted Rose -->
         <div>
-          <div class="bg-gray-800 swatch"></div>
-          <div class="bg-gray-600 mt-2 swatch"></div>
-          <div class="bg-gray-200 mt-2 swatch"></div>
-          <p class="mt-2 font-medium">Warm Gray (Accent)</p>
-          <p class="text-gray-500 text-sm">#1f2937, #4b5563, #e5e7eb</p>
+          <div class="swatch" style="background:var(--rose-dark)"></div>
+          <div class="mt-2 swatch" style="background:var(--rose)"></div>
+          <div class="mt-2 swatch" style="background:var(--rose-light)"></div>
+          <p class="mt-2 font-medium">Muted Rose (Subtle warmth)</p>
+          <p class="text-gray-500 text-sm">#A87D79, #C7A6A0, #EDD9D6</p>
         </div>
 
-        <!-- Support: Soft Gold -->
+        <!-- Cool Stone Gray -->
         <div>
-          <div class="swatch" style="background:#8b6b2a"></div>
-          <div class="mt-2 swatch" style="background:#b0843c"></div>
-          <div class="mt-2 swatch" style="background:#f3e8c3"></div>
-          <p class="mt-2 font-medium">Soft Gold (Support)</p>
-          <p class="text-gray-500 text-sm">#8b6b2a, #b0843c, #f3e8c3</p>
+          <div class="swatch" style="background:var(--stone-dark)"></div>
+          <div class="mt-2 swatch" style="background:var(--stone)"></div>
+          <div class="mt-2 swatch" style="background:var(--stone-light)"></div>
+          <p class="mt-2 font-medium">Cool Stone Gray (Secondary background)</p>
+          <p class="text-gray-500 text-sm">#B1B1B1, #E2E2E2, #F7F7F7</p>
         </div>
       </div>
     </section>
@@ -56,11 +47,11 @@
       <div class="gap-6 grid grid-cols-2">
         <div>
           <p class="text-gray-500 text-sm">Heading font</p>
-          <p class="font-sample font-semibold" style="font-family: 'Merriweather', serif;">Merriweather — Heading example</p>
+          <p class="font-sample font-semibold">Playfair Display — Heading example</p>
         </div>
         <div>
           <p class="text-gray-500 text-sm">Body font</p>
-          <p class="font-sample" style="font-family: 'Inter', sans-serif;">Inter — Body text example that demonstrates readable copy for longer paragraphs.</p>
+          <p class="font-sample">Lato — Body text example that demonstrates readable copy for longer paragraphs.</p>
         </div>
       </div>
     </section>
@@ -126,7 +117,7 @@
       </div>
     </section>
 
-    <footer class="mt-12 text-gray-500 text-sm">© Sunset Funeral Homes — Brand mood board (sample)</footer>
   </div>
+  <?php echo view('components/footer'); ?>
 </body>
 </html>
