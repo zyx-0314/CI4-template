@@ -10,14 +10,14 @@ $roadmapItems = [
         'id' => 'accounts',
         'title' => 'Employee & Admin accounts (RBAC)',
         'desc' => "Create employee and admin accounts, role assignment, and admin ability to deactivate any account.",
-        'status' => 'Planned',
+        'status' => 'Done',
         'priority' => 'High',
     ],
     [
         'id' => 'services',
         'title' => 'Services CRUD',
         'desc' => 'Add, update, and deactivate service packages (pricing, description, tags).',
-        'status' => 'Planned',
+        'status' => 'In Progress',
         'priority' => 'High',
     ],
     [
@@ -76,6 +76,13 @@ $roadmapItems = [
         'status' => 'Backlog',
         'priority' => 'Low',
     ],
+    [
+        'id' => 'platform-infra',
+        'title' => 'Platform: middleware, email verification & image upload',
+        'desc' => 'Shared infra pieces: authorization middleware, email verification workflow, and secure image upload handling for obituaries and profiles.',
+        'status' => 'Backlog',
+        'priority' => 'High',
+    ],
 ];
 
 function renderBadge($status)
@@ -91,7 +98,7 @@ function renderBadge($status)
 
 <div class="space-y-4">
     <?php foreach ($roadmapItems as $it): ?>
-        <article id="item-<?php echo esc($it['id']); ?>" class="bg-white shadow p-4 rounded-lg">
+        <article id="item-<?php echo esc($it['id']); ?>" data-status="<?php echo esc($it['status']); ?>" class="bg-white shadow p-4 rounded-lg">
             <div class="flex justify-between items-start">
                 <div class="flex-1">
                     <h3 class="font-semibold text-lg"><?php echo esc($it['title']); ?></h3>
@@ -106,11 +113,13 @@ function renderBadge($status)
                         <ol class="mt-2 ml-5 text-gray-700 list-decimal">
                             <li>Database migration (tables, columns, indexes)</li>
                             <li>Seeder(s) for dev/test data</li>
+                            <li>Update Documentation for Database Commands</li>
                             <li>Model / Entity and Repository</li>
                             <li>Service layer (business rules) + validation</li>
+                            <li>Update Documentation for Functionality Testing</li>
                             <li>Controller endpoints (API + web) and routes</li>
                             <li>Views (frontend) and small UI components</li>
-                            <li>Unit & integration tests (phpunit), update CI</li>
+                            <li>Update Documentation for Mobile, Tablet and PC Screen Testing</li>
                         </ol>
                     </details>
                 </div>
