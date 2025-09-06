@@ -1,7 +1,21 @@
+<?php
+
+/**
+ * components/head.php
+ * Renders a full <head> block with default CDN includes and accepts
+ * dynamic page title and optional extras (strings or arrays of tags).
+ *
+ * Usage:
+ * <?= view('components/head', ['title' => 'Page title']) ?>
+ */
+
+$title = $title ?? 'Sunset Funeral Homes';
+?>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Website</title>
+    <title><?= esc($title) ?></title>
 
     <!-- Default CDN includes -->
     <!-- Google Fonts: Playfair Display + Lato (global) -->

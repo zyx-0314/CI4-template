@@ -5,7 +5,6 @@
 // $nav: array of ['label' => string, 'href' => string, 'active' => bool]
 // Usage: <?= view('components/header', ['title' => 'My Site', 'nav' => $nav]) 
 ?>
-?>
 <header class="bg-white shadow px-4">
   <div class="flex justify-between items-center mx-auto py-6 max-w-5xl">
     <div class="flex items-center space-x-4">

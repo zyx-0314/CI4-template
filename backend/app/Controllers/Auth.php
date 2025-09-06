@@ -22,4 +22,18 @@ class Auth extends BaseController
 
         return view('auth/login', ['errors' => $errors, 'old' => $old, 'success' => $success]);
     }
+
+    public function showSignup()
+    {
+        $session = session();
+
+        if ($session->has('user')) {
+            return redirect()->to('/admin');
+        }
+
+        $errors = $session->getFlashdata('errors') ?? [];
+        $old = $session->getFlashdata('old') ?? [];
+
+        return view('auth/signup', ['errors' => $errors, 'old' => $old]);
+    }
 }
