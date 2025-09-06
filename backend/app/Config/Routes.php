@@ -16,11 +16,12 @@ $routes->get('logout', 'Auth::logout');
 $routes->get('signup', 'Auth::showSignup');
 $routes->post('signup', 'Auth::signup');
 // Services pages (dynamic): /services and /services/{style}
-$routes->get('services', 'User::services');
-$routes->get('services/(:segment)', 'User::services/$1');
-// Admin dashboard
+$routes->get('services', 'Services::index');
+$routes->get('services/(:segment)', 'Services::show/$1');
+// Admin
 $routes->get('/admin/dashboard', 'Admin::dashboard');
+$routes->get('/admin/services', 'Admin::services');
 // Settings
 $routes->get('settings/profile', 'Settings::profile');
-// Employee dashboard (staff)
+// Employee
 $routes->get('employee/dashboard', 'Employee::dashboard');
