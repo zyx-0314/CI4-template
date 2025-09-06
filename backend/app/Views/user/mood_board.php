@@ -124,7 +124,7 @@
             </div>
             <nav class="flex items-center space-x-4 text-sm" aria-label="Primary navigation">
                 <a href="/" class="text-gray-700">Home</a>
-                <a href="/roadmap" class="text-gray-700">Road map</a>
+                <a href="/road-map" class="text-gray-700">Road map</a>
                 <a href="/login" class="text-gray-700">Login</a>
                 <a href="/services" class="inline-block px-4 py-2 rounded header-cta" role="button">Request Assistance</a>
             </nav>
