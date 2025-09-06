@@ -22,3 +22,5 @@ $routes->get('services/(:segment)', 'User::services/$1');
 $routes->get('/admin/dashboard', 'Admin::dashboard');
 // Settings
 $routes->get('settings/profile', 'Settings::profile');
+// Employee dashboard (staff)
+$routes->get('employee/dashboard', 'Employee::dashboard');

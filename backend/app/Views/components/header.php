@@ -43,6 +43,14 @@
           <div class="right-0 z-50 absolute bg-white shadow mt-2 py-1 border rounded w-48">
             <a href="#" class="block hover:bg-gray-100 px-4 py-2 text-gray-700 text-sm">Settings</a>
             <a href="/settings/profile" class="block hover:bg-gray-100 px-4 py-2 text-gray-700 text-sm">Profile</a>
+            <?php
+            $u = $session->get('user') ?? null;
+            $type = is_array($u) ? ($u['type'] ?? 'client') : (method_exists($u, 'toArray') ? ($u->toArray()['type'] ?? 'client') : 'client');
+            if (strtolower($type) !== 'client'):
+              $dash = strtolower($type) === 'manager' ? '/admin/dashboard' : '/employee/dashboard';
+            ?>
+              <a href="<?= esc($dash) ?>" class="block hover:bg-gray-100 px-4 py-2 text-gray-700 text-sm">Dashboard</a>
+            <?php endif; ?>
             <form method="get" action="/logout">
               <button type="submit" class="hover:bg-gray-100 px-4 py-2 w-full text-gray-700 text-sm text-left">Logout</button>
             </form>
