@@ -48,38 +48,48 @@ class Auth extends BaseController
         $userModel = new \App\Models\UserModel();
         $user = $userModel->where('email', $email)->first();
 
-        if (! $user || ! password_verify($request->getPost('password'), $user['password_hash'])) {
-            $session->setFlashdata('errors', ['credentials' => 'Invalid email or password']);
+        // If no user found, notify about the email
+        if (! $user) {
+            $session->setFlashdata('errors', ['email' => 'No account found for that email']);
             $session->setFlashdata('old', ['email' => $email]);
             return redirect()->back()->withInput();
         }
 
-        if (isset($user['account_status']) && ! (int) $user['account_status']) {
+        // Normalize to array in case model returns an Entity object
+        $userArr = is_array($user) ? $user : (method_exists($user, 'toArray') ? $user->toArray() : (array) $user);
+
+        // If password doesn't match, notify specifically about password
+        if (! password_verify($request->getPost('password'), $userArr['password_hash'] ?? '')) {
+            $session->setFlashdata('errors', ['password' => 'Incorrect password']);
+            $session->setFlashdata('old', ['email' => $email]);
+            return redirect()->back()->withInput();
+        }
+        if (isset($userArr['account_status']) && ! (int) $userArr['account_status']) {
             $session->setFlashdata('errors', ['account' => 'Account is inactive']);
             return redirect()->back()->withInput();
         }
 
         // Set session (minimal safe payload)
         $session->set('user', [
-            'id' => $user['id'],
-            'email' => $user['email'],
-            'first_name' => $user['first_name'] ?? null,
-            'last_name' => $user['last_name'] ?? null,
-            'type' => $user['type'] ?? 'client',
-            'display_name' => trim(($user['first_name'] ?? '') . ' ' . ($user['middle_name'] ?? '') . ' ' . ($user['last_name'] ?? '')),
+            'id' => $userArr['id'] ?? null,
+            'email' => $userArr['email'] ?? null,
+            'first_name' => $userArr['first_name'] ?? null,
+            'last_name' => $userArr['last_name'] ?? null,
+            'type' => $userArr['type'] ?? 'client',
+            'display_name' => trim(($userArr['first_name'][0] ?? '') . ' ' . ($userArr['middle_name'][0] ?? '') . ' ' . ($userArr['last_name'] ?? '')),
         ]);
 
         // Redirect based on role
-        $type = strtolower($user['type'] ?? 'client');
+        $type = strtolower($userArr['type'] ?? 'client');
         if ($type === 'manager') {
             return redirect()->to('/admin/dashboard');
         }
 
         if ($type === 'client') {
-            return redirect()->to('/');
+            return redirect()->to('/settings/profile');
         }
 
-        // default for other staff types: calendar/dashboard (to be implemented)
+        // default for other staff types: calendar/dashboard
         return redirect()->to('/employee/dashboard');
     }
 
