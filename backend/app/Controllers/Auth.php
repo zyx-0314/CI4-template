@@ -15,11 +15,12 @@ class Auth extends BaseController
             return redirect()->to('/admin');
         }
 
-        // Pull flashdata errors/old if present
+        // Pull flashdata errors/old/success if present
         $errors = $session->getFlashdata('errors') ?? [];
         $old = $session->getFlashdata('old') ?? [];
+        $success = $session->getFlashdata('success') ?? null;
 
-        return view('auth/login', ['errors' => $errors, 'old' => $old]);
+        return view('auth/login', ['errors' => $errors, 'old' => $old, 'success' => $success]);
     }
 
     public function login()
@@ -43,10 +44,43 @@ class Auth extends BaseController
 
         $email = $request->getPost('email');
 
-        // NOTE: Demo behaviour — accept any credentials. Replace with real auth.
-        $session->set('user', ['email' => $email]);
+        // Authenticate against users table
+        $userModel = new \App\Models\UserModel();
+        $user = $userModel->where('email', $email)->first();
 
-        return redirect()->to('/admin');
+        if (! $user || ! password_verify($request->getPost('password'), $user['password_hash'])) {
+            $session->setFlashdata('errors', ['credentials' => 'Invalid email or password']);
+            $session->setFlashdata('old', ['email' => $email]);
+            return redirect()->back()->withInput();
+        }
+
+        if (isset($user['account_status']) && ! (int) $user['account_status']) {
+            $session->setFlashdata('errors', ['account' => 'Account is inactive']);
+            return redirect()->back()->withInput();
+        }
+
+        // Set session (minimal safe payload)
+        $session->set('user', [
+            'id' => $user['id'],
+            'email' => $user['email'],
+            'first_name' => $user['first_name'] ?? null,
+            'last_name' => $user['last_name'] ?? null,
+            'type' => $user['type'] ?? 'client',
+            'display_name' => trim(($user['first_name'] ?? '') . ' ' . ($user['middle_name'] ?? '') . ' ' . ($user['last_name'] ?? '')),
+        ]);
+
+        // Redirect based on role
+        $type = strtolower($user['type'] ?? 'client');
+        if ($type === 'manager') {
+            return redirect()->to('/admin/dashboard');
+        }
+
+        if ($type === 'client') {
+            return redirect()->to('/');
+        }
+
+        // default for other staff types: calendar/dashboard (to be implemented)
+        return redirect()->to('/employee/dashboard');
     }
 
     public function logout()
@@ -90,15 +124,38 @@ class Auth extends BaseController
             return redirect()->back()->withInput();
         }
 
-        // Demo behaviour: create session user. Replace with user creation in DB.
-        $session->set('user', [
-            'email' => $post['email'],
+        // Persist user to database using UserModel
+        $userModel = new \App\Models\UserModel();
+
+        // Prevent duplicate emails
+        if ($userModel->where('email', $post['email'])->first()) {
+            $session->setFlashdata('errors', ['email' => 'Email already registered']);
+            $session->setFlashdata('old', $post);
+            return redirect()->back()->withInput();
+        }
+
+        $data = [
             'first_name' => $post['first_name'],
             'middle_name' => $post['middle_name'] ?? null,
             'last_name' => $post['last_name'],
-            'display_name' => trim($post['first_name'] . ' ' . ($post['middle_name'] ?? '') . ' ' . $post['last_name'])
-        ]);
+            'email' => $post['email'],
+            'password_hash' => password_hash($post['password'], PASSWORD_DEFAULT),
+            'type' => 'client',
+            'account_status' => 1,
+            'email_activated' => 0,
+            'newsletter' => 1,
+        ];
 
-        return redirect()->to('/admin');
+        $inserted = $userModel->insert($data);
+
+        if ($inserted === false) {
+            $session->setFlashdata('errors', ['general' => 'Could not create account']);
+            $session->setFlashdata('old', $post);
+            return redirect()->back()->withInput();
+        }
+
+        // Account created — redirect user to login page (no auto-login)
+        $session->setFlashdata('success', 'Account created. Please sign in.');
+        return redirect()->to('/login');
     }
 }

@@ -4,15 +4,29 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class FuneralRequestModel extends Model
+class UserModel extends Model
 {
-    protected $table            = 'funeralrequests';
+    protected $table            = 'users';
     protected $primaryKey       = 'id';
+    // Use auto-increment integer id
     protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
+    // Return entity for convenience
+    protected $returnType       = '\App\\Entities\\User';
+    protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = [
+        'first_name',
+        'middle_name',
+        'last_name',
+        'email',
+        'password_hash',
+        'type',
+        'account_status',
+        'email_activated',
+        'newsletter',
+        'gender',
+        'profile_image',
+    ];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
@@ -21,7 +35,7 @@ class FuneralRequestModel extends Model
     protected array $castHandlers = [];
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
