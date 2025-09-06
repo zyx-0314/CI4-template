@@ -75,7 +75,7 @@ $old = $old ?? [];
                     </div>
 
                     <div class="text-sm">
-                        <a href="/forgot" class="font-medium text-emerald-600 hover:underline">Forgot your password?</a>
+                        <?= view('components/modal/forgetPassword.php') ?>
                     </div>
                 </div>
 
@@ -87,6 +87,8 @@ $old = $old ?? [];
             </form>
         </div>
     </main>
+
+
 
     <?= view('components/footer') ?>
 </body>
