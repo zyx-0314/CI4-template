@@ -129,112 +129,112 @@
     </main>
 
     <?= view('components/footer') ?>
+    <script>
+        // Demo-only UI behavior
+        document.addEventListener('DOMContentLoaded', function() {
+            // Prevent actual submission (UI demo only)
+            const form = document.querySelector('form[action="/settings/profile"]');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Profile UI is demo-only. No changes will be persisted.');
+                });
+            }
+
+            // Image upload: open file chooser when clicking avatar
+            const avatar = document.querySelector('.w-32.h-32');
+            if (avatar) {
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = 'image/*';
+                fileInput.style.display = 'none';
+                document.body.appendChild(fileInput);
+
+                avatar.style.cursor = 'pointer';
+                avatar.addEventListener('click', function() {
+                    fileInput.click();
+                });
+
+                fileInput.addEventListener('change', function() {
+                    const file = fileInput.files && fileInput.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        avatar.innerText = '';
+                        avatar.style.backgroundImage = `url(${ev.target.result})`;
+                        avatar.style.backgroundSize = 'cover';
+                        avatar.style.backgroundPosition = 'center';
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // Password modal
+            let modal = null;
+
+            function createPasswordModal() {
+                modal = document.createElement('div');
+                modal.innerHTML = `
+                <div class="z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-40">
+                    <div class="bg-white shadow-lg p-6 rounded-lg w-11/12 max-w-md">
+                        <h3 class="mb-2 font-semibold text-lg">Change password (demo)</h3>
+                        <p class="mb-4 text-gray-500 text-sm">This is a UI-only modal. No request will be sent.</p>
+                        <form id="pwdForm" class="space-y-3">
+                            <div>
+                                <label class="block text-gray-700 text-sm">Confirm current password</label>
+                                <input type="password" name="current_password" class="block mt-1 border-gray-300 rounded-md w-full" required />
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm">New password</label>
+                                <input type="password" name="new_password" class="block mt-1 border-gray-300 rounded-md w-full" required />
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm">Confirm new password</label>
+                                <input type="password" name="confirm_new_password" class="block mt-1 border-gray-300 rounded-md w-full" required />
+                            </div>
+                            <div class="flex justify-end space-x-2 pt-2">
+                                <button type="button" id="pwdCancel" class="bg-gray-100 px-3 py-2 rounded text-sm">Cancel</button>
+                                <button type="submit" class="bg-emerald-600 px-3 py-2 rounded text-white text-sm">Change</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>`;
+                document.body.appendChild(modal);
+
+                // handlers
+                modal.querySelector('#pwdCancel').addEventListener('click', function() {
+                    closeModal();
+                });
+                modal.querySelector('#pwdForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Password change is demo-only. No changes saved.');
+                    closeModal();
+                });
+            }
+
+            function closeModal() {
+                if (modal) {
+                    document.body.removeChild(modal);
+                    modal = null;
+                }
+            }
+
+            // Create trigger button near password area
+            const pwdTrigger = document.createElement('button');
+            pwdTrigger.type = 'button';
+            pwdTrigger.className = 'mt-2 inline-flex items-center px-3 py-2 bg-gray-100 rounded text-sm';
+            pwdTrigger.innerText = 'Change password';
+            pwdTrigger.addEventListener('click', function() {
+                if (!modal) createPasswordModal();
+            });
+
+            // Append to form under email field
+            const emailField = document.getElementById('email');
+            if (emailField && emailField.parentNode) {
+                emailField.parentNode.appendChild(pwdTrigger);
+            }
+        });
+    </script>
 </body>
 
 </html>
-<script>
-    // Demo-only UI behavior
-    document.addEventListener('DOMContentLoaded', function() {
-        // Prevent actual submission (UI demo only)
-        const form = document.querySelector('form[action="/settings/profile"]');
-        if (form) {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                alert('Profile UI is demo-only. No changes will be persisted.');
-            });
-        }
-
-        // Image upload: open file chooser when clicking avatar
-        const avatar = document.querySelector('.w-32.h-32');
-        if (avatar) {
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.accept = 'image/*';
-            fileInput.style.display = 'none';
-            document.body.appendChild(fileInput);
-
-            avatar.style.cursor = 'pointer';
-            avatar.addEventListener('click', function() {
-                fileInput.click();
-            });
-
-            fileInput.addEventListener('change', function() {
-                const file = fileInput.files && fileInput.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = function(ev) {
-                    avatar.innerText = '';
-                    avatar.style.backgroundImage = `url(${ev.target.result})`;
-                    avatar.style.backgroundSize = 'cover';
-                    avatar.style.backgroundPosition = 'center';
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        // Password modal
-        let modal = null;
-
-        function createPasswordModal() {
-            modal = document.createElement('div');
-            modal.innerHTML = `
-            <div class="z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-40">
-                <div class="bg-white shadow-lg p-6 rounded-lg w-11/12 max-w-md">
-                    <h3 class="mb-2 font-semibold text-lg">Change password (demo)</h3>
-                    <p class="mb-4 text-gray-500 text-sm">This is a UI-only modal. No request will be sent.</p>
-                    <form id="pwdForm" class="space-y-3">
-                        <div>
-                            <label class="block text-gray-700 text-sm">Confirm current password</label>
-                            <input type="password" name="current_password" class="block mt-1 border-gray-300 rounded-md w-full" required />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm">New password</label>
-                            <input type="password" name="new_password" class="block mt-1 border-gray-300 rounded-md w-full" required />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm">Confirm new password</label>
-                            <input type="password" name="confirm_new_password" class="block mt-1 border-gray-300 rounded-md w-full" required />
-                        </div>
-                        <div class="flex justify-end space-x-2 pt-2">
-                            <button type="button" id="pwdCancel" class="bg-gray-100 px-3 py-2 rounded text-sm">Cancel</button>
-                            <button type="submit" class="bg-emerald-600 px-3 py-2 rounded text-white text-sm">Change</button>
-                        </div>
-                    </form>
-                </div>
-            </div>`;
-            document.body.appendChild(modal);
-
-            // handlers
-            modal.querySelector('#pwdCancel').addEventListener('click', function() {
-                closeModal();
-            });
-            modal.querySelector('#pwdForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                alert('Password change is demo-only. No changes saved.');
-                closeModal();
-            });
-        }
-
-        function closeModal() {
-            if (modal) {
-                document.body.removeChild(modal);
-                modal = null;
-            }
-        }
-
-        // Create trigger button near password area
-        const pwdTrigger = document.createElement('button');
-        pwdTrigger.type = 'button';
-        pwdTrigger.className = 'mt-2 inline-flex items-center px-3 py-2 bg-gray-100 rounded text-sm';
-        pwdTrigger.innerText = 'Change password';
-        pwdTrigger.addEventListener('click', function() {
-            if (!modal) createPasswordModal();
-        });
-
-        // Append to form under email field
-        const emailField = document.getElementById('email');
-        if (emailField && emailField.parentNode) {
-            emailField.parentNode.appendChild(pwdTrigger);
-        }
-    });
-</script>
