@@ -2,45 +2,52 @@
 
 namespace App\Controllers;
 
+use App\Models\ServicesModel;
+
 class Services extends BaseController
 {
     public function index()
     {
-        // Static list for now
-        $data = [
-            'services' => [
-                [
-                    'slug' => 'traditional-filipino',
-                    'title' => 'Traditional Filipino',
-                    'summary' => 'Full traditional Filipino funeral service including wake, vigil, and burial logistics.',
-                    'cost' => '1200.00',
-                ],
-                [
-                    'slug' => 'cremation',
-                    'title' => 'Cremation',
-                    'summary' => 'Cremation package with memorial service, urn options, and ashes return.',
-                    'cost' => '800.00',
-                ],
-                [
-                    'slug' => 'green-burial',
-                    'title' => 'Green Burial',
-                    'summary' => 'Environmentally friendly burial option with biodegradable materials.',
-                    'cost' => '900.00',
-                ],
-                [
-                    'slug' => 'hybrid-funeral',
-                    'title' => 'Hybrid Funeral',
-                    'summary' => 'A hybrid service combining elements of burial and cremation to suit family preferences.',
-                    'cost' => '1000.00',
-                ],
-            ],
-        ];
+        $model = new ServicesModel();
+        try {
+            $rows = $model->where('is_active', 1)->where('is_available', 1)->orderBy('id', 'ASC')->findAll();
+        } catch (\Throwable $e) {
+            $rows = [];
+        }
 
-        return view('services/index', $data);
+        $services = array_map(function ($r) {
+            return [
+                'id' => $r['id'],
+                'title' => $r['title'],
+                'summary' => isset($r['description']) ? (mb_strlen($r['description']) > 140 ? mb_substr($r['description'], 0, 140) . '...' : $r['description']) : '',
+                'cost' => $r['cost'],
+            ];
+        }, $rows);
+
+        return view('services/index', ['services' => $services]);
     }
 
     public function show(string $slug)
     {
+        // If segment is numeric, try DB lookup by id first
+        if (is_numeric($slug)) {
+            $model = new ServicesModel();
+            $row = $model->find((int) $slug);
+            if (! empty($row) && (isset($row['is_active']) ? (int)$row['is_active'] === 1 : true)) {
+                $data = [
+                    'title' => $row['title'],
+                    'description' => $row['description'],
+                    'inclusions' => $row['inclusions'],
+                    'cost' => $row['cost'],
+                    'id' => $row['id'],
+                ];
+
+                return view('services/show', $data);
+            }
+
+            return redirect()->to('/services');
+        }
+
         // Static lookup
         $map = [
             'traditional-filipino' => [

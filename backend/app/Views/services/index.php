@@ -16,8 +16,12 @@
                     <h3 class="font-semibold text-lg"><?php echo esc($s['title']); ?></h3>
                     <p class="mt-2 text-gray-600 text-sm"><?php echo esc($s['summary']); ?></p>
                     <div class="flex justify-between items-center mt-4">
-                        <a href="/services/<?php echo esc($s['slug']); ?>" class="text-indigo-600 text-sm">View details</a>
-                        <div class="text-gray-700 text-sm">From $<?php echo esc($s['cost']); ?></div>
+                        <?php if (!empty($s['id'])): ?>
+                            <a href="<?php echo site_url('services/' . $s['id']); ?>" class="text-indigo-600 text-sm">View details</a>
+                        <?php else: ?>
+                            <a href="/services/<?php echo esc($s['slug']); ?>" class="text-indigo-600 text-sm">View details</a>
+                        <?php endif; ?>
+                        <div class="text-gray-700 text-sm">From ₱<?php echo esc($s['cost']); ?></div>
                     </div>
                 </article>
             <?php endforeach; ?>
