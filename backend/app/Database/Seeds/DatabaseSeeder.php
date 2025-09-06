@@ -16,5 +16,6 @@ class DatabaseSeeder extends Seeder
 
         // Domain data
         $this->call('App\\Database\\Seeds\\FuneralRequestsSeeder');
+        $this->call('App\\Database\\Seeds\\ServicesSeeder');
     }
 }
