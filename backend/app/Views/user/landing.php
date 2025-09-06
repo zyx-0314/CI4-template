@@ -15,6 +15,85 @@
 
     <!-- Global base typography -->
     <style>
+        :root {
+            --sage-dark: #6F8E78;
+            --sage: #8DAA91;
+            --sage-light: #CFE6D7;
+
+            --rose-dark: #A87D79;
+            --rose: #C7A6A0;
+            --rose-light: #EDD9D6;
+
+            --stone-dark: #B1B1B1;
+            --stone: #E2E2E2;
+            --stone-light: #F7F7F7;
+        }
+
+        .swatch {
+            width: 100%;
+            height: 3rem;
+            border-radius: .375rem;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        /* Button color utilities using design tokens */
+        .btn-sage {
+            background: var(--sage);
+            color: white;
+        }
+
+        .btn-sage:hover {
+            background: var(--sage-dark);
+        }
+
+        .btn-rose {
+            background: var(--rose);
+            color: white;
+        }
+
+        .btn-rose:hover {
+            background: var(--rose-dark);
+        }
+
+        .btn-stone {
+            background: transparent;
+            border: 1px solid var(--stone-dark);
+            color: #1f2937;
+        }
+
+        .btn-disabled {
+            background: var(--stone-light);
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        /* Header CTA uses the main accent (sage-dark) */
+        .header-cta {
+            background: var(--sage-dark);
+            color: white;
+        }
+
+        .header-cta:hover {
+            background: var(--sage);
+        }
+
+        /* Small token-driven utilities */
+        .text-sage-dark {
+            color: var(--sage-dark);
+        }
+
+        .text-sage {
+            color: var(--sage);
+        }
+
+        .bg-sage-light {
+            background: var(--sage-light);
+        }
+
+        .bg-stone-light {
+            background: var(--stone-light);
+        }
+
         /* Base typography */
         html,
         body {
@@ -47,7 +126,7 @@
                 <a href="/" class="text-gray-700">Home</a>
                 <a href="/roadmap" class="text-gray-700">Road map</a>
                 <a href="/login" class="text-gray-700">Login</a>
-                <a href="/services" class="inline-block bg-emerald-400 hover:bg-emerald-500 px-4 py-2 rounded text-white" role="button">Request Assistance</a>
+                <a href="/services" class="inline-block px-4 py-2 rounded header-cta" role="button">Request Assistance</a>
             </nav>
         </div>
         </nav>
@@ -62,11 +141,11 @@
                 <p class="mt-4 max-w-xl text-gray-700">We provide respectful, professional support for families during difficult moments — clear guidance, compassionate staff, and thoughtful service options.</p>
 
                 <div class="flex flex-wrap items-center gap-3 mt-6">
-                    <a href="/services" class="inline-flex items-center bg-emerald-400 hover:bg-emerald-500 shadow px-6 py-3 rounded-md font-medium text-white">Request Assistance</a>
+                    <a href="/services" class="inline-flex items-center shadow px-6 py-3 rounded-md font-medium text-white header-cta">Request Assistance</a>
                 </div>
 
                 <div class="mt-6">
-                    <div class="inline-flex items-center gap-3 bg-emerald-100 px-4 py-3 rounded-full text-emerald-700">
+                    <div class="inline-flex items-center gap-3 bg-sage-light px-4 py-3 rounded-full text-sage-dark">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8" />
                         </svg>
@@ -127,8 +206,8 @@
 
                 <div class="mt-4 md:mt-0 md:w-64">
                     <div class="text-gray-500 text-sm">Starting from</div>
-                    <div class="mt-1 font-bold text-emerald-700 text-2xl">$650</div>
-                    <a href="/services" class="inline-block bg-emerald-400 hover:bg-emerald-500 mt-4 px-4 py-2 rounded-md w-full text-white text-center">Get an instant quote</a>
+                    <div class="mt-1 font-bold text-sage-dark text-2xl">$650</div>
+                    <a href="/services" class="inline-block mt-4 px-4 py-2 rounded-md w-full text-white text-center header-cta">Get an instant quote</a>
                 </div>
             </div>
         </section>
@@ -152,15 +231,15 @@
             </div>
         </section>
 
-        <!-- CTA band -->
+        <!-- CTA band (aligned to palette) -->
         <section class="mt-12 rounded-lg overflow-hidden">
-            <div class="md:flex md:justify-between md:items-center bg-amber-300 px-6 py-10 text-amber-900">
+            <div class="md:flex md:justify-between md:items-center bg-sage-light px-6 py-10 text-sage-dark">
                 <div>
-                    <h3 class="font-serif font-bold text-2xl">Can we help?</h3>
-                    <p class="mt-2 text-white/90">Our Care Team is available 24 hours a day by phone and live-chat.</p>
+                    <h3 class="font-serif font-bold text-2xl text-sage-dark">Can we help?</h3>
+                    <p class="mt-2 text-sage-dark opacity-90">Our Care Team is available 24 hours a day by phone and live-chat.</p>
                 </div>
                 <div class="mt-4 md:mt-0">
-                    <a href="tel:5551234567" class="inline-block bg-white px-5 py-3 rounded-md font-semibold text-amber-700">Call (555) 123-4567</a>
+                    <a href="tel:5551234567" class="inline-block header-cta px-5 py-3 rounded-md font-semibold">Call (555) 123-4567</a>
                 </div>
             </div>
         </section>
