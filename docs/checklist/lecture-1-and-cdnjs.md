@@ -23,8 +23,33 @@ docs(readme): Updated the `readme`
 - [ ] Create `Issue` named Landing Page, can add description if you want to.
 - [ ] Create `Branch` name it `frontend/landingPage`
 - [ ] Add new `View` with basics html requirements under the `Views/user`
-- [ ] Add new `Controller` named `Users` using command found on templates readme
+- [ ] Add new `Controller` named `Users` using command found on templates(requires php and composer) readme or coding your own
+```php
+// Template Controller
+<?php
+
+namespace App\Controllers;
+
+use App\Controllers\BaseController;
+
+class NameOfControllerHere extends BaseController
+{
+    public function index(): string
+    {
+        // code here
+    }
+}
+
+```
+- [ ] Sample Coding in Controller
+    - [ ] Change the `NameOfControllerHere` with the anme of controller
     - [ ] Add `return view('user/landing');` inside `index()` to show the page
+        - [ ] You can add more functions for different display or `routes`/`end point`
+```php
+// End point
+// Format: $routes-><request type>('end point name`, 'Controller Name::Controller Function')
+$routes->get('/', 'Users::index');
+```
 - [ ] Update `Routes.php` under `Config`
     - [ ] Update `Home::index` to `Users::index` reflecting the `User` Controller and `index` as one of its function
 - [ ] Now visit your site for manual checking, [live](http://localhost:8090/).
@@ -46,7 +71,7 @@ feat(landing page): Added a new landing page
 - [ ] Once `PR` is created if there is other member who need to review it you can set them to review and click `merge` if all goods, else you can comment and provide feedback.
 
 [ ] 3. Activity
-Create the following
+Create the following, with their own issues, branches and PR
 - [ ] Create Login Page
 - [ ] Create Sign Up Page
 - [ ] Create Mood Board Page. It must contain the following
@@ -69,3 +94,7 @@ Fragment the following
 
 [ ] 5. Complete Project
 - [ ] Propose 3 Functionality with CRUD add to the road map
+
+[ ] 6. Wrapping up
+- [ ] Test your development branch
+- [ ] Make PR to `main`/`master` branch then `merge`
