@@ -39,6 +39,11 @@
     },
     "scripts": {
         "test": "phpunit",
-        "health": "php spark health:check"
+        "health": "php spark health:check",
+        "migrate": "php spark migrate",
+        "migrate:status": "php spark migrate:status",
+        "seed": "php spark db:seed",
+        "seed:all": "php spark db:seed DatabaseSeeder",
+        "truncate": "php spark db:seed ClearDatabaseSeeder"
     }
 }
