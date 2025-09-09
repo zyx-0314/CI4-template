@@ -20,5 +20,8 @@ $routes->post('signup', 'Auth::signup');
 // Admin:Manager
 $routes->get('admin/dashboard', 'Admin::dashboard');
 
+// Employee
+$routes->get('employee/dashboard', 'Employee::dashboard');
+
 // Debug
 $routes->get('auth-debug', 'Auth::debugCheck');
