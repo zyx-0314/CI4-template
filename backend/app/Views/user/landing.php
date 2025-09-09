@@ -4,15 +4,7 @@
 <?= view('components/head') ?>
 
 <body class="bg-gray-50 font-sans text-slate-900">
-    <?= view('components/header', [
-        'title' => 'Sunset Funeral Homes',
-        'nav' => [
-            ['label' => 'Home', 'href' => '/', 'active' => true],
-            ['label' => 'Road map', 'href' => '/road-map', 'active' => false],
-            ['label' => 'Login', 'href' => '/login'],
-        ],
-        'cta' => ['label' => 'Request Assistance', 'href' => '/services']
-    ]) ?>
+    <?= view('components/header', ['active' => 'Home']) ?>
 
     <main class="mx-auto px-6 py-12 max-w-6xl">
         <!-- Hero -->
