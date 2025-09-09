@@ -163,9 +163,5 @@ $title = $title ?? 'Sunset Funeral Homes';
         h5 {
             font-family: 'Playfair Display', Georgia, serif;
         }
-
-        a {
-            color: var(--sage);
-        }
     </style>
 </head>
