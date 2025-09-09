@@ -10,8 +10,8 @@
             ['label' => 'Home', 'href' => '/', 'active' => false],
             ['label' => 'Road map', 'href' => '/road-map'],
             ['label' => 'Login', 'href' => '/login'],
-            ['label' => 'Request Assistance', 'href' => '/services']
-        ]
+        ],
+        'cta' => ['label' => 'Request Assistance', 'href' => '/services']
     ]) ?>
 
     <main class="mx-auto px-6 py-12 max-w-5xl">
@@ -76,11 +76,19 @@
         <section class="mb-8">
             <h2 class="mb-4 font-semibold text-lg">Buttons</h2>
             <div class="space-y-4">
+                <h3>Light Mode</h3>
                 <div class="flex items-center space-x-4">
                     <?= view('components/buttons/button_primary', ['label' => 'Primary', 'href' => '#']) ?>
                     <?= view('components/buttons/button_secondary', ['label' => 'Secondary', 'href' => '#']) ?>
-                    <?= view('components/buttons/button_ghost', ['label' => 'Border', 'href' => '#']) ?>
-                    <?= view('components/buttons/button_primary', ['label' => 'Disabled', 'href' => '#']) ?>
+                    <?= view('components/buttons/button_border', ['label' => 'Border', 'href' => '#']) ?>
+                    <?= view('components/buttons/button_primary', ['label' => 'Disabled', 'href' => '#', 'disable' => true]) ?>
+                </div>
+                <h3>Dark Mode</h3>
+                <div class="flex items-center space-x-4 bg-stone-700 p-4 w-fit">
+                    <?= view('components/buttons/button_primary', ['label' => 'Primary', 'href' => '#', 'dark' => true, 'disable' => false]) ?>
+                    <?= view('components/buttons/button_secondary', ['label' => 'Secondary', 'href' => '#']) ?>
+                    <?= view('components/buttons/button_border', ['label' => 'Border', 'href' => '#']) ?>
+                    <?= view('components/buttons/button_primary', ['label' => 'Disabled', 'href' => '#', 'disable' => true]) ?>
                 </div>
                 <p class="text-gray-500 text-sm">Primary for main CTAs, secondary for supportive actions, border for subtle actions, disabled for unavailable states.</p>
             </div>

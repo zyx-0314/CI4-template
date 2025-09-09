@@ -35,9 +35,9 @@ $title = $title ?? 'Sunset Funeral Homes';
             --rose: #C7A6A0;
             --rose-light: #EDD9D6;
 
-            --stone-dark: #B1B1B1;
-            --stone: #E2E2E2;
-            --stone-light: #F7F7F7;
+            --stone-dark: #d6d6d6ff;
+            --stone: #aaaaaaff;
+            --stone-light: #c2c2c2ff;
         }
 
         .swatch {
@@ -49,32 +49,69 @@ $title = $title ?? 'Sunset Funeral Homes';
 
         /* Button color utilities using design tokens */
         .btn-sage {
-            background: var(--sage);
+            background: var(--sage-dark);
             color: white;
         }
 
         .btn-sage:hover {
+            background: var(--sage);
+        }
+
+        .btn-sage-dark {
+            background: var(--sage);
+            color: white;
+        }
+
+        .btn-sage-dark:hover {
             background: var(--sage-dark);
         }
 
         .btn-rose {
-            background: var(--rose);
+            background: var(--rose-dark);
             color: white;
         }
 
         .btn-rose:hover {
+            background: var(--rose);
+        }
+
+        .btn-rose-dark {
+            background: var(--rose);
+            color: white;
+        }
+
+        .btn-rose-dark:hover {
             background: var(--rose-dark);
         }
 
-        .btn-stone {
-            background: transparent;
-            border: 1px solid var(--stone-dark);
-            color: #1f2937;
+        .btn-border {
+            border-color: var(--rose);
+            border-width: 2px;
+            color: var(--rose);
+            font-weight: 600;
+        }
+
+        .btn-border:hover {
+            color: white;
+            background: var(--rose);
+            font-weight: 500;
+        }
+
+        .btn-border-dark {
+            border-color: var(--rose-dark);
+            border-width: 2px;
+            color: var(--rose-dark);
+            font-weight: 600;
+        }
+
+        .btn-border-dark:hover {
+            color: white;
+            background: var(--rose-dark);
         }
 
         .btn-disabled {
-            background: var(--stone-light);
-            color: #9ca3af;
+            background-color: var(--stone);
+            color: white;
             cursor: not-allowed;
         }
 
@@ -101,6 +138,14 @@ $title = $title ?? 'Sunset Funeral Homes';
             background: var(--sage-light);
         }
 
+        .bg-sage {
+            background: var(--sage);
+        }
+
+        .bg-sage-dark {
+            background: var(--sage-dark);
+        }
+
         .bg-stone-light {
             background: var(--stone-light);
         }
@@ -117,6 +162,10 @@ $title = $title ?? 'Sunset Funeral Homes';
         h4,
         h5 {
             font-family: 'Playfair Display', Georgia, serif;
+        }
+
+        a {
+            color: var(--sage);
         }
     </style>
 </head>

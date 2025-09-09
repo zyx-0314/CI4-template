@@ -5,7 +5,7 @@
 // $links: array of ['label'=>string, 'href'=>string]
 ?>
 <footer class="bg-white mt-12 border-t" role="contentinfo">
-  <div class="mx-auto px-6 py-8 max-w-5xl text-gray-600 text-sm">
+  <div class="mx-auto px-6 py-8 max-w-6xl text-gray-600 text-sm">
     <div class="flex md:flex-row flex-col md:justify-between md:items-start gap-6">
       <div>
         <img src="logo/main.svg" alt="Sunset Funeral Homes" class="mb-2 h-11">
