@@ -2,7 +2,28 @@
 // Primary button
 // $label: string
 // $href: string
+// $dark: boolean
+// $disable: boolean
 ?>
-<a href="<?= esc($href ?? '#') ?>" class="inline-block bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700">
-  <?= esc($label ?? 'Action') ?>
-</a>
+
+<?php
+if ($disable ?? false) :
+?>
+  <a href="<?= esc($href ?? '#') ?>" class="inline-block opacity-50 shadow px-4 py-2 rounded text-white duration-200 btn-disabled">
+    <?= esc($label ?? 'Action') ?>
+  </a>
+<?php
+elseif ($dark ?? false) :
+?>
+  <a href="<?= esc($href ?? '#') ?>" class="inline-block shadow px-4 py-2 rounded text-white duration-200 btn-sage-dark">
+    <?= esc($label ?? 'Action') ?>
+  </a>
+<?php
+else:
+?>
+  <a href="<?= esc($href ?? '#') ?>" class="inline-block shadow px-4 py-2 rounded text-white duration-200 btn-sage dark:btn-sage-dark">
+    <?= esc($label ?? 'Action') ?>
+  </a>
+<?php
+endif;
+?>
