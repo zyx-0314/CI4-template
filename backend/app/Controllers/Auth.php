@@ -112,7 +112,7 @@ class Auth extends BaseController
         }
 
         if ($type === 'client') {
-            return redirect()->to('/settings/profile');
+            return redirect()->to('/');
         }
 
         // default for other staff types: calendar/dashboard
