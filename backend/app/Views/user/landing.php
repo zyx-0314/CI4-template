@@ -22,7 +22,7 @@
                 <p class="mt-4 max-w-xl text-gray-700">We provide respectful, professional support for families during difficult moments — clear guidance, compassionate staff, and thoughtful service options.</p>
 
                 <div class="flex flex-wrap items-center gap-3 mt-6">
-                    <a href="/services" class="inline-flex items-center shadow px-6 py-3 rounded-md font-medium text-white header-cta">Request Assistance</a>
+                    <?= view('components/buttons/button_primary', ['label' => 'Request Assistance', 'href' => '#']) ?>
                 </div>
 
                 <div class="mt-6">
@@ -70,7 +70,7 @@
                 <div class="mt-4 md:mt-0 md:w-64">
                     <div class="text-gray-500 text-sm">Starting from</div>
                     <div class="mt-1 font-bold text-sage-dark text-2xl">$650</div>
-                    <a href="/services" class="inline-block mt-4 px-4 py-2 rounded-md w-full text-white text-center header-cta">Get an instant quote</a>
+                    <?= view('components/buttons/button_primary', ['label' => 'Get an instant quote', 'href' => '#']) ?>
                 </div>
             </div>
         </section>
@@ -79,18 +79,15 @@
         <section class="mt-12">
             <h3 class="font-semibold text-lg">We guide you through the process</h3>
             <div class="gap-6 grid grid-cols-1 md:grid-cols-4 mt-6">
-                <div class="bg-white p-4 rounded-lg text-center">
-                    <div class="font-medium text-sm">You arrange</div>
-                </div>
-                <div class="bg-white p-4 rounded-lg text-center">
-                    <div class="font-medium text-sm">We collect</div>
-                </div>
-                <div class="bg-white p-4 rounded-lg text-center">
-                    <div class="font-medium text-sm">We register</div>
-                </div>
-                <div class="bg-white p-4 rounded-lg text-center">
-                    <div class="font-medium text-sm">We return</div>
-                </div>
+                <?php
+                $process  = ["You Arrange", "We Collect", "We Register", "We Return"];
+                foreach ($process as $value) : ?>
+                    <div class="bg-white p-4 rounded-lg text-center">
+                        <div class="font-medium text-sm"><?php echo $value ?></div>
+                    </div>
+                <?php
+                endforeach;
+                ?>
             </div>
         </section>
 
