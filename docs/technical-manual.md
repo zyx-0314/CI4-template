@@ -41,7 +41,41 @@
 
 ---
 
-## 4. Data Model
+## 4. Admin Dashboard
+
+### 4.1 Overview
+The admin dashboard provides a centralized interface for system administration and monitoring.
+
+**URL:** `/admin`
+**Controller:** `App\Controllers\Admin`
+**View:** `app/Views/admin/dashboard.php`
+
+### 4.2 Features
+* **Statistics Grid**: Displays key metrics (Total Users, Active Sessions, Total Posts, System Health)
+* **Recent Activity**: Shows recent system activities and user actions
+* **Quick Actions**: Fast access to common admin tasks (Add User, Create Post, System Backup, View Logs)
+* **System Information**: Real-time display of PHP version, environment, and server time
+* **Responsive Navigation**: Header with Dashboard, Users, and Settings menu items
+
+### 4.3 Implementation Details
+```php
+// Controller Method
+public function index(): string
+{
+    $data = [
+        'title' => 'Admin Dashboard',
+        'stats' => $this->getDashboardStats(),
+    ];
+    return view('admin/dashboard', $data);
+}
+```
+
+**Styling:** Uses Tailwind CSS via CDN for responsive design
+**Testing:** Comprehensive unit tests in `tests/unit/AdminControllerTest.php` and `tests/unit/AdminDashboardViewTest.php`
+
+---
+
+## 5. Data Model
 
 * ER diagram or table definitions.
 * Entities: `User`, `Post`, `Comment`, etc.
