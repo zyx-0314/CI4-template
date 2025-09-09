@@ -6,10 +6,10 @@
 // $primary: ['label'=>string,'href'=>string]
 // $secondary: ['label'=>string,'href'=>string]
 ?>
-<section class="bg-blue-600 text-white py-12 rounded-lg my-8">
-  <div class="container mx-auto px-4 text-center">
+<section class="bg-sage my-8 py-12 rounded-lg text-white">
+  <div class="mx-auto px-4 text-center container">
     <?php if (!empty($heading)): ?>
-      <h2 class="text-2xl font-bold mb-2"><?= esc($heading) ?></h2>
+      <h2 class="mb-2 font-bold text-2xl"><?= esc($heading) ?></h2>
     <?php endif; ?>
     <?php if (!empty($sub)): ?>
       <p class="mb-4 text-blue-100"><?= esc($sub) ?></p>

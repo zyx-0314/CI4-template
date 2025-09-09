@@ -14,7 +14,7 @@
 ?>
 
 <header class="bg-white shadow px-4">
-  <div class="flex justify-between items-center mx-auto py-6 max-w-5xl">
+  <div class="flex justify-between items-center mx-auto py-5 max-w-6xl">
     <div class="flex items-center space-x-4">
       <a href="/" class="flex items-center space-x-3" aria-label="<?= esc($brandTitle ?? 'Sunset Funeral Homes') ?> home">
         <img src="<?= esc($logo ?? base_url('logo/main.svg')) ?>" alt="<?= esc($brandTitle ?? 'Sunset Funeral Homes') ?>" class="h-11">
@@ -34,7 +34,7 @@
       <?php endif;
       endforeach; ?>
 
-      <a href="/services" class="inline-block bg-emerald-400 hover:bg-emerald-500 px-4 py-2 rounded text-white" role="button">Request Assistance</a>
+      <?= $cta ?? false ? view('components/buttons/button_primary', ['label' => $cta['label'], 'href' => '#']) : '' ?>
 
       <?php if ($session->has('user')): ?>
         <details class="relative">

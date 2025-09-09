@@ -1,5 +1,5 @@
 <?php
-// Secondary button
+// Border button
 // $label: string
 // $href: string
 // $dark: boolean
@@ -14,13 +14,13 @@ if ($disable ?? false) :
 <?php
 elseif ($dark ?? false) :
 ?>
-  <a href="<?= esc($href ?? '#') ?>" class="inline-block shadow px-4 py-2 rounded text-white duration-200 btn-rose-dark">
+  <a href="<?= esc($href ?? '#') ?>" class="inline-block shadow px-4 py-1.5 btn-border-dark rounded text-white transition duration-200">
     <?= esc($label ?? 'Secondary') ?>
   </a>
 <?php
 else:
 ?>
-  <a href="<?= esc($href ?? '#') ?>" class="inline-block shadow px-4 py-2 rounded text-white duration-200 btn-rose dark:btn-rose-dark">
+  <a href="<?= esc($href ?? '#') ?>" class="inline-block shadow px-4 py-1.5 btn-border dark:btn-border-dark rounded text-white transition duration-200">
     <?= esc($label ?? 'Secondary') ?>
   </a>
 <?php
