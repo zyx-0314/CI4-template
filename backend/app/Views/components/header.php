@@ -11,6 +11,13 @@
  * Notes:
  * - Minimal presentation view. Keep logic small and pass only simple strings.
  */
+
+$nav = [
+  ['label' => 'Home', 'href' => '/'],
+  ['label' => 'Road map', 'href' => '/road-map'],
+  ['label' => 'Login', 'href' => '/login'],
+];
+$cta = ['label' => 'Request Assistance', 'href' => '/services'];
 ?>
 
 <header class="bg-white shadow px-4">
@@ -28,7 +35,7 @@
       <?php $session = session(); ?>
       <?php foreach ($nav ?? [] as $item):
         if ((!$session->has('user') && $item['label'] === "Login") || $item['label'] !== "Login"): ?>
-          <a href="<?= esc($item['href'] ?? '#') ?>" class="<?= !empty($item['active']) ? 'text-blue-600 font-semibold' : 'text-gray-700' ?>">
+          <a href="<?= esc($item['href'] ?? '#') ?>" class="<?= !empty($active ?? false && $active == $item['label']) ? 'text-sage-dark font-bold' : 'text-gray-700' ?>">
             <?= esc($item['label'] ?? '') ?>
           </a>
       <?php endif;
