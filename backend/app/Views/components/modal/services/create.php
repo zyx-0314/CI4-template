@@ -1,5 +1,5 @@
 <div class="flex justify-end mb-4">
-    <button id="btnCreate" class="bg-blue-600 px-3 py-2 rounded text-white cursor-pointer">
+    <button id="btnCreate" class="px-3 py-2 rounded text-white cursor-pointer btn-sage dark:btn-sage-dark">
         <i class="fa-solid fa-plus"></i>
         Create service
     </button>

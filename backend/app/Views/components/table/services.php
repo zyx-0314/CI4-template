@@ -68,7 +68,7 @@ function qs(array $overrides = [])
                             <td class="p-3"><?php echo ((int) ($it['is_available'] ?? 0) === 1) ? 'Yes' : 'No'; ?></td>
                             <td class="flex gap-2 p-3">
                                 <div class="flex justify-end mb-4">
-                                    <a class="bg-gray-600 px-3 py-2 rounded text-white cursor-pointer" href="<?php echo site_url('admin/services/' . urlencode($it['id'])); ?>">
+                                    <a class="bg-gray-600/70 hover:bg-gray-600/60 px-3 py-2 rounded text-white duration-200 cursor-pointer" href="<?php echo site_url('admin/services/' . urlencode($it['id'])); ?>">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
                                 </div>
@@ -101,7 +101,7 @@ function qs(array $overrides = [])
                     $endP = min($total_pages, $page + 3); ?>
                     <a class="px-3 py-1 border rounded <?php echo ($page <= 1) ? 'opacity-50 pointer-events-none' : ''; ?>" href="?<?php echo qs(['page' => $page - 1 < 1 ? 1 : $page - 1, 'per_page' => $per_page]); ?>">Prev</a>
                     <?php for ($p = $startP; $p <= $endP; $p++): ?>
-                        <a class="px-3 py-1 border rounded <?php echo ($p == $page) ? 'bg-blue-600 text-white' : ''; ?>" href="?<?php echo qs(['page' => $p, 'per_page' => $per_page]); ?>"><?php echo $p; ?></a>
+                        <a class="px-3 py-1 border rounded <?php echo ($p == $page) ? 'btn-sage text-white' : ''; ?>" href="?<?php echo qs(['page' => $p, 'per_page' => $per_page]); ?>"><?php echo $p; ?></a>
                     <?php endfor; ?>
                     <a class="px-3 py-1 border rounded <?php echo ($page >= $total_pages) ? 'opacity-50 pointer-events-none' : ''; ?>" href="?<?php echo qs(['page' => $page + 1 > $total_pages ? $total_pages : $page + 1, 'per_page' => $per_page]); ?>">Next</a>
                 <?php endif; ?>

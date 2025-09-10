@@ -54,6 +54,8 @@ $title = $title ?? 'Sunset Funeral Homes';
         .btn-sage {
             background: var(--sage-dark);
             color: white;
+            transition: all;
+            transition-duration: 300ms;
         }
 
         .btn-sage:hover {
@@ -63,6 +65,8 @@ $title = $title ?? 'Sunset Funeral Homes';
         .btn-sage-dark {
             background: var(--sage);
             color: white;
+            transition: all;
+            transition-duration: 300ms;
         }
 
         .btn-sage-dark:hover {
@@ -72,6 +76,8 @@ $title = $title ?? 'Sunset Funeral Homes';
         .btn-rose {
             background: var(--rose-dark);
             color: white;
+            transition: all;
+            transition-duration: 300ms;
         }
 
         .btn-rose:hover {
@@ -81,6 +87,8 @@ $title = $title ?? 'Sunset Funeral Homes';
         .btn-rose-dark {
             background: var(--rose);
             color: white;
+            transition: all;
+            transition-duration: 300ms;
         }
 
         .btn-rose-dark:hover {
@@ -92,6 +100,8 @@ $title = $title ?? 'Sunset Funeral Homes';
             border-width: 2px;
             color: var(--rose);
             font-weight: 600;
+            transition: all;
+            transition-duration: 300ms;
         }
 
         .btn-border:hover {
@@ -105,6 +115,8 @@ $title = $title ?? 'Sunset Funeral Homes';
             border-width: 2px;
             color: var(--rose-dark);
             font-weight: 600;
+            transition: all;
+            transition-duration: 300ms;
         }
 
         .btn-border-dark:hover {

@@ -15,7 +15,7 @@ if ($svc !== null) {
 ?>
 
 <div class="flex justify-end mb-4">
-    <button id="btnTriggerDelete" type="button" <?= $svcId !== null ? 'data-delete-service-id="' . esc($svcId) . '"' : '' ?> <?= $svcTitle !== null ? 'data-delete-service-title="' . esc($svcTitle) . '"' : '' ?> class="bg-red-600 px-3 py-2 rounded text-white cursor-pointer">
+    <button id="btnTriggerDelete" type="button" <?= $svcId !== null ? 'data-delete-service-id="' . esc($svcId) . '"' : '' ?> <?= $svcTitle !== null ? 'data-delete-service-title="' . esc($svcTitle) . '"' : '' ?> class="bg-red-600/70 hover:bg-red-600/60 px-3 py-2 rounded text-white duration-200 cursor-pointer">
         <i class="fa-solid fa-trash"></i>
     </button>
 </div>

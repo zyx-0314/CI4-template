@@ -27,7 +27,7 @@ if ($svc !== null) {
 ?>
 
 <div class="flex justify-end mb-4">
-    <button id="btnTriggerUpdate" type="button" class="bg-yellow-600 px-3 py-2 rounded text-white cursor-pointer btnUpdateService"
+    <button id="btnTriggerUpdate" type="button" class="bg-yellow-600/70 hover:bg-yellow-600/60 px-3 py-2 rounded text-white duration-200 cursor-pointer btnUpdateService"
         <?= $svcId !== null ? 'data-id="' . esc($svcId) . '"' : '' ?>
         <?= $svcTitle !== null ? 'data-title="' . esc($svcTitle) . '"' : '' ?>
         <?= $svcCost !== null ? 'data-cost="' . esc($svcCost) . '"' : '' ?>
