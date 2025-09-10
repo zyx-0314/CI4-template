@@ -14,7 +14,7 @@
 
 $nav = [
   ['label' => 'Home', 'href' => '/'],
-  ['label' => 'Road map', 'href' => '/road-map'],
+  ['label' => 'Services', 'href' => '/services'],
   ['label' => 'Login', 'href' => '/login'],
 ];
 $cta = ['label' => 'Request Assistance', 'href' => '/services'];

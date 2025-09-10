@@ -68,7 +68,7 @@ function qs(array $overrides = [])
                             <td class="p-3"><?php echo ((int) ($it['is_available'] ?? 0) === 1) ? 'Yes' : 'No'; ?></td>
                             <td class="flex gap-2 p-3">
                                 <div class="flex justify-end mb-4">
-                                    <a class="bg-gray-600/70 hover:bg-gray-600/60 px-3 py-2 rounded text-white duration-200 cursor-pointer" href="<?php echo site_url('admin/services/' . urlencode($it['id'])); ?>">
+                                    <a class="bg-gray-600/70 hover:bg-gray-600/60 px-3 py-2 rounded text-white duration-200 cursor-pointer" href="<?php echo site_url('services/' . urlencode($it['id'])); ?>">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
                                 </div>

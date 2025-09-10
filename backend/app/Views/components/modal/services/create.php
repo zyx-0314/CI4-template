@@ -50,11 +50,6 @@
 
             <div class="flex items-center space-x-6">
                 <label class="inline-flex items-center">
-                    <input type="checkbox" id="is_active" name="is_active" value="1" class="form-checkbox" />
-                    <span class="ml-2 text-sm">Is active (shown on user side)</span>
-                </label>
-
-                <label class="inline-flex items-center">
                     <input type="checkbox" id="is_available" name="is_available" value="1" class="form-checkbox" />
                     <span class="ml-2 text-sm">Is available (shown but not browsable)</span>
                 </label>

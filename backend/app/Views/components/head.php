@@ -107,7 +107,6 @@ $title = $title ?? 'Sunset Funeral Homes';
         .btn-border:hover {
             color: white;
             background: var(--rose);
-            font-weight: 500;
         }
 
         .btn-border-dark {
