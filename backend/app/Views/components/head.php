@@ -24,6 +24,9 @@ $title = $title ?? 'Sunset Funeral Homes';
     <!-- Tailwind CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
+    <!-- Font Awsome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <!-- Global base typography -->
     <style>
         :root {
@@ -51,6 +54,8 @@ $title = $title ?? 'Sunset Funeral Homes';
         .btn-sage {
             background: var(--sage-dark);
             color: white;
+            transition: all;
+            transition-duration: 300ms;
         }
 
         .btn-sage:hover {
@@ -60,6 +65,8 @@ $title = $title ?? 'Sunset Funeral Homes';
         .btn-sage-dark {
             background: var(--sage);
             color: white;
+            transition: all;
+            transition-duration: 300ms;
         }
 
         .btn-sage-dark:hover {
@@ -69,6 +76,8 @@ $title = $title ?? 'Sunset Funeral Homes';
         .btn-rose {
             background: var(--rose-dark);
             color: white;
+            transition: all;
+            transition-duration: 300ms;
         }
 
         .btn-rose:hover {
@@ -78,6 +87,8 @@ $title = $title ?? 'Sunset Funeral Homes';
         .btn-rose-dark {
             background: var(--rose);
             color: white;
+            transition: all;
+            transition-duration: 300ms;
         }
 
         .btn-rose-dark:hover {
@@ -89,6 +100,8 @@ $title = $title ?? 'Sunset Funeral Homes';
             border-width: 2px;
             color: var(--rose);
             font-weight: 600;
+            transition: all;
+            transition-duration: 300ms;
         }
 
         .btn-border:hover {
@@ -102,6 +115,8 @@ $title = $title ?? 'Sunset Funeral Homes';
             border-width: 2px;
             color: var(--rose-dark);
             font-weight: 600;
+            transition: all;
+            transition-duration: 300ms;
         }
 
         .btn-border-dark:hover {
