@@ -15,8 +15,14 @@
                 <?= view('components/cards/card_stat', ['title' => 'Available & active', 'value' => 0]) ?>
                 <?= view('components/cards/card_stat', ['title' => 'Not available but active', 'value' => 0]) ?>
             </div>
-
-            <?= view('components/modal/services/create') ?>
+            <div class="flex justify-end gap-3 mb-4">
+                <div class="flex justify-end mb-4">
+                    <a class="px-3 py-2 btn-border hover:btn-border-dark rounded text-white duration-200 cursor-pointer" href="<?php echo site_url('services/'); ?>">
+                        Services List
+                    </a>
+                </div>
+                <?= view('components/modal/services/create') ?>
+            </div>
             <?= view('components/table/services') ?>
         </section>
 
