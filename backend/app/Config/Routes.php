@@ -9,6 +9,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Users::index');
 $routes->get('mood-board', 'Users::moodBoard');
 $routes->get('road-map', 'Users::roadMap');
+$routes->get('services', 'Users::services');
 
 // Auth
 $routes->get('login', 'Auth::showLogin');
