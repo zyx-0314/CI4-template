@@ -5,19 +5,22 @@
  * Renders prioritized features and a small per-feature pipeline.
  */
 
-$roadmapItems = [
+$roadmapItemsDone = [
     [
         'id' => 'accounts',
         'title' => 'Employee & Admin accounts (RBAC)',
         'desc' => "Create employee and admin accounts, role assignment, and admin ability to deactivate any account.",
-        'status' => 'In Progress',
+        'status' => 'Done',
         'priority' => 'High',
     ],
+];
+
+$roadmapItems = [
     [
         'id' => 'services',
         'title' => 'Services CRUD',
         'desc' => 'Add, update, and deactivate service packages (pricing, description, tags).',
-        'status' => 'Planned',
+        'status' => 'In Progress',
         'priority' => 'High',
     ],
     [
@@ -98,6 +101,45 @@ function renderBadge($status)
 
 <div class="space-y-4">
     <?php foreach ($roadmapItems as $it): ?>
+        <article id="item-<?php echo esc($it['id']); ?>" data-status="<?php echo esc($it['status']); ?>" class="bg-white shadow p-4 rounded-lg">
+            <div class="flex justify-between items-start">
+                <div class="flex-1">
+                    <h3 class="font-semibold text-lg"><?php echo esc($it['title']); ?></h3>
+                    <p class="mt-1 text-gray-600 text-sm"><?php echo esc($it['desc']); ?></p>
+
+                    <div class="mt-3 text-gray-700 text-xs">
+                        <strong>Priority:</strong> <?php echo esc($it['priority']); ?>
+                    </div>
+
+                    <details class="mt-3 text-sm">
+                        <summary class="text-gray-600 text-sm cursor-pointer">Implementation pipeline</summary>
+                        <ol class="mt-2 ml-5 text-gray-700 list-decimal">
+                            <li>Database migration (tables, columns, indexes)</li>
+                            <li>Seeder(s) for dev/test data</li>
+                            <li>Update Documentation for Database Commands</li>
+                            <li>Controller endpoints (API + web) and routes</li>
+                            <li>Views (frontend) and small UI components</li>
+                            <li>Update Documentation for Mobile, Tablet and PC Screen Testing</li>
+                            <li>Model / Entity and Repository</li>
+                            <li>Service layer (business rules) + validation</li>
+                            <li>Update Documentation for Functionality Testing</li>
+                        </ol>
+                    </details>
+                </div>
+
+                <div class="ml-4 text-right">
+                    <?php echo renderBadge($it['status']); ?>
+                </div>
+            </div>
+        </article>
+    <?php endforeach; ?>
+
+    <br>
+    <hr>
+    <br>
+    <h2>Completed</h2>
+
+    <?php foreach ($roadmapItemsDone as $it): ?>
         <article id="item-<?php echo esc($it['id']); ?>" data-status="<?php echo esc($it['status']); ?>" class="bg-white shadow p-4 rounded-lg">
             <div class="flex justify-between items-start">
                 <div class="flex-1">
