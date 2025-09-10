@@ -86,11 +86,6 @@ if ($svc !== null) {
 
             <div class="flex items-center space-x-6">
                 <label class="inline-flex items-center">
-                    <input type="checkbox" id="update_is_active" name="is_active" value="1" class="cursor-pointer form-checkbox" <?= !empty($svcIsActive) ? 'checked' : '' ?> />
-                    <span class="ml-2 text-sm cursor-pointer">Is active (shown on user side)</span>
-                </label>
-
-                <label class="inline-flex items-center">
                     <input type="checkbox" id="update_is_available" name="is_available" value="1" class="cursor-pointer form-checkbox" <?= !empty($svcIsAvailable) ? 'checked' : '' ?> />
                     <span class="ml-2 text-sm cursor-pointer">Is available (shown but not browsable)</span>
                 </label>

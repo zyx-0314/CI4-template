@@ -10,6 +10,7 @@ $routes->get('/', 'Users::index');
 $routes->get('mood-board', 'Users::moodBoard');
 $routes->get('road-map', 'Users::roadMap');
 $routes->get('services', 'Users::services');
+$routes->get('services/(:segment)', 'Users::show/$1');
 
 // Auth
 $routes->get('login', 'Auth::showLogin');
