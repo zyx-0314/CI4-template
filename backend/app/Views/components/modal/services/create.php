@@ -186,14 +186,10 @@
                     const data = await res.json().catch(() => null);
                     if (res.ok && data && data.success) {
                         toast(data.message || 'Created', 'success');
-                        // allow closing and then close modal
-                        _canClose = true;
-                        if (submitBtn) {
-                            submitBtn.disabled = false;
-                            submitBtn.textContent = 'Create';
-                        }
-                        // Optionally refresh the page or the services list. For now, close modal after short delay
-                        setTimeout(closeModal, 700);
+                        // refresh page to show new service
+                        setTimeout(() => {
+                            location.reload();
+                        }, 500);
                     } else {
                         const msg = (data && data.message) ? data.message : 'Failed to create service';
                         toast(msg, 'error');
