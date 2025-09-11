@@ -19,7 +19,7 @@
           <h4 class="mb-2 font-semibold">Company</h4>
           <ul>
             <li><a href="/mood-board" class="hover:underline">Mood board</a></li>
-            <li><a href="/roadmap" class="hover:underline">Road map</a></li>
+            <li><a href="/road-map" class="hover:underline">Road map</a></li>
           </ul>
         </div>
         <div>
