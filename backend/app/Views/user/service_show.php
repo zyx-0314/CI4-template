@@ -26,8 +26,8 @@ $service = $service ?? null;
 
                     <!-- Hero image -->
                     <div class="bg-white shadow-sm mt-4 rounded-lg overflow-hidden">
-                        <?php if (!empty($service['image'])): ?>
-                            <img src="<?= esc($service['image']) ?>" alt="<?= esc($service['title']) ?>" class="w-full h-96 object-cover">
+                        <?php if (!empty($service['banner_image'])): ?>
+                            <img src="/<?php echo $service['banner_image'] ?>" alt="<?= esc($service['title']) ?>" class="w-full h-96 object-cover">
                         <?php else: ?>
                             <div class="flex justify-center items-center bg-slate-100 w-full h-96">
                                 <img src="/logo/main.svg" alt="no image" class="h-16">
@@ -49,7 +49,7 @@ $service = $service ?? null;
                                 <?php foreach (explode(',', $service['inclusions']) as $inc): ?>
                                     <?php $inc = trim($inc);
                                     if ($inc === '') continue; ?>
-                                    <?= view('components/cards/card', ['title' => $inc, 'excerpt' => '', 'image' => null, 'href' => null]) ?>
+                                    <?= view('components/cards/card', ['title' => $inc, 'excerpt' => '', 'banner_image' => null, 'href' => null]) ?>
                                 <?php endforeach; ?>
                             </div>
                         </section>

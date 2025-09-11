@@ -2,24 +2,30 @@
 // Server-rendered services table using a local dummy dataset while API is unavailable.
 // Usage: include this view from an admin page. Supports GET params: page, per_page
 
-// --- Dummy dataset (from provided JS converted to PHP arrays) ---
-$DUMMY_SERVICES = [
-    ['id' => 1, 'title' => 'Basic Funeral Package', 'description' => 'Simple service with chapel of rest', 'cost' => 15000, 'is_available' => 1, 'is_active' => 1, 'inclusions' => 'Chapel,Hearse,Flowers'],
-    ['id' => 2, 'title' => 'Standard Funeral Package', 'description' => 'Includes viewing and basic catering', 'cost' => 30000, 'is_available' => 1, 'is_active' => 1, 'inclusions' => 'Chapel,Hearse,Catering'],
-    ['id' => 3, 'title' => 'Premium Funeral Package', 'description' => 'Full service with extended amenities', 'cost' => 60000, 'is_available' => 0, 'is_active' => 1, 'inclusions' => 'Chapel,Limo,Catering,Program'],
-    ['id' => 4, 'title' => 'Cremation Service', 'description' => 'Cremation-only service', 'cost' => 12000, 'is_available' => 1, 'is_active' => 1, 'inclusions' => 'Cremation Certificate'],
-    ['id' => 5, 'title' => 'Memorial Only', 'description' => 'Memorial service without remains', 'cost' => 8000, 'is_available' => 1, 'is_active' => 1, 'inclusions' => 'Venue,Sound System'],
-    ['id' => 6, 'title' => 'Archived Package (inactive)', 'description' => 'Old package no longer available', 'cost' => 5000, 'is_available' => 0, 'is_active' => 0, 'inclusions' => ''],
-    ['id' => 7, 'title' => 'Express Service', 'description' => 'Quick handling and burial', 'cost' => 7000, 'is_available' => 1, 'is_active' => 1, 'inclusions' => 'Hearse'],
-    ['id' => 8, 'title' => 'Deluxe with Reception', 'description' => 'Includes reception after service', 'cost' => 45000, 'is_available' => 1, 'is_active' => 1, 'inclusions' => 'Reception,Catering,Program'],
-];
+// Use `$services` passed from controller when available, otherwise fall back to a local demo dataset
+$services_source = null;
+if (isset($services) && is_array($services)) {
+    $services_source = $services;
+} else {
+    $services_source = [
+        ['id' => 1, 'title' => 'Demo Basic Funeral Package', 'description' => 'Simple service with chapel of rest', 'cost' => 15000, 'is_available' => 1, 'is_active' => 1, 'inclusions' => 'Chapel,Hearse,Flowers'],
+        ['id' => 2, 'title' => 'Demo Standard Funeral Package', 'description' => 'Includes viewing and basic catering', 'cost' => 30000, 'is_available' => 1, 'is_active' => 1, 'inclusions' => 'Chapel,Hearse,Catering'],
+        ['id' => 3, 'title' => 'Demo Premium Funeral Package', 'description' => 'Full service with extended amenities', 'cost' => 60000, 'is_available' => 0, 'is_active' => 1, 'inclusions' => 'Chapel,Limo,Catering,Program'],
+        ['id' => 4, 'title' => 'Demo Cremation Service', 'description' => 'Cremation-only service', 'cost' => 12000, 'is_available' => 1, 'is_active' => 1, 'inclusions' => 'Cremation Certificate'],
+        ['id' => 5, 'title' => 'Demo Memorial Only', 'description' => 'Memorial service without remains', 'cost' => 8000, 'is_available' => 1, 'is_active' => 1, 'inclusions' => 'Venue,Sound System'],
+        ['id' => 6, 'title' => 'Demo Archived Package (inactive)', 'description' => 'Old package no longer available', 'cost' => 5000, 'is_available' => 0, 'is_active' => 0, 'inclusions' => ''],
+        ['id' => 7, 'title' => 'Demo Express Service', 'description' => 'Quick handling and burial', 'cost' => 7000, 'is_available' => 1, 'is_active' => 1, 'inclusions' => 'Hearse'],
+        ['id' => 8, 'title' => 'Demo Deluxe with Reception', 'description' => 'Includes reception after service', 'cost' => 45000, 'is_available' => 1, 'is_active' => 1, 'inclusions' => 'Reception,Catering,Program'],
+    ];
+}
 
 // read GET params
 $page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
 $per_page = isset($_GET['per_page']) ? max(1, (int) $_GET['per_page']) : 5;
 
+$dataToUse = $services_source;
 // filter only active services
-$active = array_values(array_filter($DUMMY_SERVICES, function ($s) {
+$active = array_values(array_filter($dataToUse, function ($s) {
     return (int) ($s['is_active'] ?? 0) === 1;
 }));
 $total = count($active);
