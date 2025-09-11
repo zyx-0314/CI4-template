@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\ServicesModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Admin extends BaseController
@@ -15,13 +16,8 @@ class Admin extends BaseController
     public function services()
     {
         try {
-            $db = \Config\Database::connect();
-            $builder = $db->table('services');
-            $services = $builder
-                ->where('is_active', 1)
-                ->orderBy('id', 'ASC')
-                ->get()
-                ->getResultArray();
+            $model = new ServicesModel();
+            $services = $model->where('is_active', 1)->orderBy('id', 'ASC')->findAll();
             return view('admin/services', ['services' => $services]);
         } catch (\Exception $e) {
             // If DB not available, let the view fall back to its demo dataset
@@ -109,24 +105,24 @@ class Admin extends BaseController
         }
 
         try {
-            $db = \Config\Database::connect();
-            $builder = $db->table('services');
+            $model = new ServicesModel();
 
-            $data = [
+            $entity = $model->newEntity([
                 'title' => $title,
                 'cost' => $cost,
                 'description' => $description,
                 'inclusions' => $inclusions,
-                // banner_image upload disabled for now — leave null/empty
                 'banner_image' => $bannerImagePath,
                 'is_available' => $isAvailable,
                 'is_active' => 1,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ];
+            ]);
 
-            $builder->insert($data);
-            $insertId = $db->insertID();
+            $ok = $model->insert($entity);
+            if ($ok === false) {
+                throw new \RuntimeException('Model insert failed');
+            }
+
+            $insertId = $model->getInsertID();
 
             return $this->response->setStatusCode(ResponseInterface::HTTP_CREATED)
                 ->setJSON(['success' => true, 'message' => 'Service created', 'data' => ['id' => $insertId]]);
@@ -214,24 +210,29 @@ class Admin extends BaseController
         }
 
         try {
-            $db = \Config\Database::connect();
-            $builder = $db->table('services');
+            $model = new ServicesModel();
 
-            // Build update payload
-            $data = [
+            $service = $model->find($id);
+            if (! $service) {
+                return $this->response->setStatusCode(ResponseInterface::HTTP_NOT_FOUND)
+                    ->setJSON(['success' => false, 'message' => 'Service not found']);
+            }
+
+            $payload = [
+                'id' => $id,
                 'title' => $title,
                 'cost' => $cost,
                 'description' => $description,
                 'inclusions' => $inclusions,
                 'is_available' => $isAvailable,
-                'updated_at' => date('Y-m-d H:i:s'),
             ];
 
-            if ($bannerImagePath) {
-                $data['banner_image'] = $bannerImagePath;
-            }
+            if ($bannerImagePath) $payload['banner_image'] = $bannerImagePath;
 
-            $builder->where('id', $id)->update($data);
+            $ok = $model->save($payload);
+            if ($ok === false) {
+                throw new \RuntimeException('Model update failed');
+            }
 
             return $this->response->setStatusCode(ResponseInterface::HTTP_OK)
                 ->setJSON(['success' => true, 'message' => 'Service updated', 'data' => ['id' => $id]]);
@@ -270,37 +271,25 @@ class Admin extends BaseController
         $id = (int) $id;
 
         try {
-            $db = \Config\Database::connect();
-            $builder = $db->table('services');
+            $model = new ServicesModel();
 
-            // confirm service exists
-            $existing = $builder->where('id', $id)->get()->getRowArray();
-            if (! $existing) {
+            $service = $model->find($id);
+            if (! $service) {
                 return $this->response->setStatusCode(ResponseInterface::HTTP_NOT_FOUND)
                     ->setJSON(['success' => false, 'message' => 'Service not found']);
             }
 
-            $now = date('Y-m-d H:i:s');
-            $data = [
-                'is_active' => 0,
-                'deleted_at' => $now,
-            ];
+            $service->is_active = 0;
+            $service->deleted_at = date('Y-m-d H:i:s');
 
-            $ok = $builder->where('id', $id)->update($data);
+            $ok = $model->save($service);
             if ($ok === false) {
                 return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
                     ->setJSON(['success' => false, 'message' => 'Failed to delete service']);
             }
 
-            // Re-fetch to confirm
-            $after = $builder->where('id', $id)->get()->getRowArray();
-            if ($after && isset($after['is_active']) && intval($after['is_active']) === 0) {
-                return $this->response->setStatusCode(ResponseInterface::HTTP_OK)
-                    ->setJSON(['success' => true, 'message' => 'Service deleted', 'data' => ['id' => $id]]);
-            }
-
-            return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                ->setJSON(['success' => false, 'message' => 'Delete did not persist']);
+            return $this->response->setStatusCode(ResponseInterface::HTTP_OK)
+                ->setJSON(['success' => true, 'message' => 'Service deleted', 'data' => ['id' => $id]]);
         } catch (\Exception $e) {
             log_message('error', 'Failed to delete service: ' . $e->getMessage());
             return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
