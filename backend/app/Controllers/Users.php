@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\ServicesModel;
 
 class Users extends BaseController
 {
@@ -20,14 +21,8 @@ class Users extends BaseController
     public function index(): string
     {
         try {
-            $db = \Config\Database::connect();
-            $builder = $db->table('services');
-            $services = $builder
-                ->where('is_active', 1)
-                ->where('is_available', 1)
-                ->orderBy('id', 'ASC')
-                ->get()
-                ->getResultArray();
+            $model = new ServicesModel();
+            $services = $model->where('is_active', 1)->where('is_available', 1)->orderBy('id', 'ASC')->findAll();
         } catch (\Exception $e) {
             // Fallback to in-memory demo data when DB is not available
             $services = $this->DUMMY_SERVICES;
@@ -48,14 +43,8 @@ class Users extends BaseController
     public function services()
     {
         try {
-            $db = \Config\Database::connect();
-            $builder = $db->table('services');
-            $services = $builder
-                ->where('is_active', 1)
-                ->where('is_available', 1)
-                ->orderBy('id', 'ASC')
-                ->get()
-                ->getResultArray();
+            $model = new ServicesModel();
+            $services = $model->where('is_active', 1)->where('is_available', 1)->orderBy('id', 'ASC')->findAll();
         } catch (\Exception $e) {
             // Fallback to in-memory demo data when DB is not available
             $services = $this->DUMMY_SERVICES;
@@ -68,11 +57,9 @@ class Users extends BaseController
     {
         $service = null;
         try {
-            $db = \Config\Database::connect();
-            $service = $db->table('services')
-                ->where('id', $id)
-                ->get()
-                ->getRowArray();
+            $model = new ServicesModel();
+            $service = $model->find($id);
+            if ($service) $service = $service->toArray();
         } catch (\Exception $e) {
             // fallback to in-memory
             foreach ($this->DUMMY_SERVICES as $s) {
