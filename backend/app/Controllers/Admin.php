@@ -121,6 +121,8 @@ class Admin extends BaseController
                 'banner_image' => $bannerImagePath,
                 'is_available' => $isAvailable,
                 'is_active' => 1,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
             ];
 
             $builder->insert($data);
@@ -222,6 +224,7 @@ class Admin extends BaseController
                 'description' => $description,
                 'inclusions' => $inclusions,
                 'is_available' => $isAvailable,
+                'updated_at' => date('Y-m-d H:i:s'),
             ];
 
             if ($bannerImagePath) {
@@ -236,6 +239,72 @@ class Admin extends BaseController
             log_message('error', 'Failed to update service: ' . $e->getMessage());
             return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
                 ->setJSON(['success' => false, 'message' => 'Server error while updating service']);
+        }
+    }
+
+    /**
+     * Soft-delete a service (AJAX endpoint)
+     * Sets is_active = 0 and deleted_at = now()
+     * Expects POST: id
+     */
+    public function deleteService()
+    {
+        // Only allow POST
+        $incomingMethod = strtolower($this->request->getMethod());
+        if ($incomingMethod !== 'post') {
+            return $this->response->setStatusCode(ResponseInterface::HTTP_METHOD_NOT_ALLOWED)
+                ->setJSON(['success' => false, 'message' => 'Method not allowed']);
+        }
+        // Accept either 'id' or legacy 'service_id'
+        $id = $this->request->getPost('id');
+        if (empty($id)) {
+            $id = $this->request->getPost('service_id');
+        }
+
+        if (empty($id)) {
+            return $this->response->setStatusCode(ResponseInterface::HTTP_UNPROCESSABLE_ENTITY)
+                ->setJSON(['success' => false, 'message' => 'Missing service id']);
+        }
+
+        // ensure integer
+        $id = (int) $id;
+
+        try {
+            $db = \Config\Database::connect();
+            $builder = $db->table('services');
+
+            // confirm service exists
+            $existing = $builder->where('id', $id)->get()->getRowArray();
+            if (! $existing) {
+                return $this->response->setStatusCode(ResponseInterface::HTTP_NOT_FOUND)
+                    ->setJSON(['success' => false, 'message' => 'Service not found']);
+            }
+
+            $now = date('Y-m-d H:i:s');
+            $data = [
+                'is_active' => 0,
+                'deleted_at' => $now,
+            ];
+
+            $ok = $builder->where('id', $id)->update($data);
+            if ($ok === false) {
+                return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
+                    ->setJSON(['success' => false, 'message' => 'Failed to delete service']);
+            }
+
+            // Re-fetch to confirm
+            $after = $builder->where('id', $id)->get()->getRowArray();
+            if ($after && isset($after['is_active']) && intval($after['is_active']) === 0) {
+                return $this->response->setStatusCode(ResponseInterface::HTTP_OK)
+                    ->setJSON(['success' => true, 'message' => 'Service deleted', 'data' => ['id' => $id]]);
+            }
+
+            return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
+                ->setJSON(['success' => false, 'message' => 'Delete did not persist']);
+        } catch (\Exception $e) {
+            log_message('error', 'Failed to delete service: ' . $e->getMessage());
+            return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
+                ->setJSON(['success' => false, 'message' => 'Server error while deleting service']);
         }
     }
 }
