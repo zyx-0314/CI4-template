@@ -29,9 +29,9 @@ $routes->get('/admin/services', 'Admin::services');
 // Create service (AJAX)
 $routes->post('/admin/services/create', 'Admin::createService');
 // Update service (AJAX)
-$routes->post('/admin/services/update', 'Admin::updateService');
+$routes->patch('/admin/services/update', 'Admin::updateService');
 // Delete service (soft delete via AJAX)
-$routes->post('/admin/services/delete', 'Admin::deleteService');
+$routes->delete('/admin/services/delete', 'Admin::deleteService');
 
 // Employee
 $routes->get('employee/dashboard', 'Employee::dashboard');

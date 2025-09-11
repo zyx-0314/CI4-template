@@ -146,7 +146,7 @@ if ($svc !== null) {
             const fd = new FormData(form);
             try {
                 const resp = await fetch('/admin/services/update', {
-                    method: 'POST',
+                    method: 'PATCH',
                     body: fd
                 });
                 let data = null;

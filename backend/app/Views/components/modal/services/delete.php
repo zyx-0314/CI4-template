@@ -133,7 +133,7 @@ if ($svc !== null) {
 
             try {
                 const resp = await fetch(form.action, {
-                    method: 'POST',
+                    method: 'DELETE',
                     body: fd
                 });
                 let data = null;
