@@ -134,4 +134,108 @@ class Admin extends BaseController
                 ->setJSON(['success' => false, 'message' => 'Server error while creating service']);
         }
     }
+
+    /**
+     * Update an existing service (AJAX/JSON endpoint)
+     * Expects POST: id, title, cost, description, inclusions (CSV), is_available
+     * Optional file: banner_image
+     */
+    public function updateService()
+    {
+        // Only allow POST
+        $incomingMethod = strtolower($this->request->getMethod());
+        if ($incomingMethod !== 'post') {
+            return $this->response->setStatusCode(ResponseInterface::HTTP_METHOD_NOT_ALLOWED)
+                ->setJSON(['success' => false, 'message' => 'Method not allowed']);
+        }
+
+        $id = $this->request->getPost('id');
+        if (empty($id)) {
+            return $this->response->setStatusCode(ResponseInterface::HTTP_UNPROCESSABLE_ENTITY)
+                ->setJSON(['success' => false, 'message' => 'Missing service id']);
+        }
+
+        // Validation rules (same as create)
+        $rules = [
+            'title' => 'required|min_length[2]|max_length[255]',
+            'cost'  => 'required|numeric',
+        ];
+
+        if (! $this->validate($rules)) {
+            $errors = $this->validator->getErrors();
+            return $this->response->setStatusCode(ResponseInterface::HTTP_UNPROCESSABLE_ENTITY)
+                ->setJSON(['success' => false, 'message' => 'Validation failed', 'errors' => $errors]);
+        }
+
+        $title = $this->request->getPost('title');
+        $cost = $this->request->getPost('cost');
+        $description = $this->request->getPost('description');
+        $inclusions = $this->request->getPost('inclusions');
+        $isAvailable = $this->request->getPost('is_available') ? 1 : 0;
+
+        // Handle banner image upload if present
+        $bannerImagePath = null;
+        try {
+            $file = $this->request->getFile('banner_image');
+            if ($file && $file->isValid() && ! $file->hasMoved()) {
+                $allowed = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+                $mime = $file->getClientMimeType();
+                if (! in_array($mime, $allowed)) {
+                    return $this->response->setStatusCode(ResponseInterface::HTTP_UNSUPPORTED_MEDIA_TYPE)
+                        ->setJSON(['success' => false, 'message' => 'Invalid image type']);
+                }
+
+                $maxBytes = 5 * 1024 * 1024;
+                if ($file->getSize() > $maxBytes) {
+                    return $this->response->setStatusCode(413)
+                        ->setJSON(['success' => false, 'message' => 'Image too large']);
+                }
+
+                $sub = date('Y') . DIRECTORY_SEPARATOR . date('m');
+                $publicUploadDir = FCPATH . 'uploads' . DIRECTORY_SEPARATOR . 'services' . DIRECTORY_SEPARATOR . $sub . DIRECTORY_SEPARATOR;
+                if (! is_dir($publicUploadDir)) mkdir($publicUploadDir, 0755, true);
+
+                $newName = $file->getRandomName();
+                $moved = $file->move($publicUploadDir, $newName);
+                if ($moved) {
+                    $bannerImagePath = 'uploads/services/' . str_replace(DIRECTORY_SEPARATOR, '/', $sub) . '/' . $newName;
+                }
+            }
+        } catch (\Exception $e) {
+            log_message('error', 'Banner upload failed (update): ' . $e->getMessage());
+            return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
+                ->setJSON(['success' => false, 'message' => 'Failed to process banner image']);
+        }
+
+        if (is_array($inclusions)) {
+            $inclusions = implode(',', $inclusions);
+        }
+
+        try {
+            $db = \Config\Database::connect();
+            $builder = $db->table('services');
+
+            // Build update payload
+            $data = [
+                'title' => $title,
+                'cost' => $cost,
+                'description' => $description,
+                'inclusions' => $inclusions,
+                'is_available' => $isAvailable,
+            ];
+
+            if ($bannerImagePath) {
+                $data['banner_image'] = $bannerImagePath;
+            }
+
+            $builder->where('id', $id)->update($data);
+
+            return $this->response->setStatusCode(ResponseInterface::HTTP_OK)
+                ->setJSON(['success' => true, 'message' => 'Service updated', 'data' => ['id' => $id]]);
+        } catch (\Exception $e) {
+            log_message('error', 'Failed to update service: ' . $e->getMessage());
+            return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
+                ->setJSON(['success' => false, 'message' => 'Server error while updating service']);
+        }
+    }
 }

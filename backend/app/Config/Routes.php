@@ -28,6 +28,8 @@ $routes->get('admin/dashboard', 'Admin::dashboard');
 $routes->get('/admin/services', 'Admin::services');
 // Create service (AJAX)
 $routes->post('/admin/services/create', 'Admin::createService');
+// Update service (AJAX)
+$routes->post('/admin/services/update', 'Admin::updateService');
 
 // Employee
 $routes->get('employee/dashboard', 'Employee::dashboard');
