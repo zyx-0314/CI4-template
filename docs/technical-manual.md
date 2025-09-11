@@ -1,132 +1,125 @@
-# 📘 technical-manual.md (Expected Contents & Format)
+# 📘 technical-manual.md
 
-## 1. System Overview
+## 1. System overview
 
-* High-level purpose of the project.
-* Stack summary (backend, frontend, database, infra).
-* Key design decisions (e.g., using CI4 native views + Tailwind via CDNJS).
+This repository provides a starter CodeIgniter 4 (CI4) backend using CI4 native views for UI. It includes a small set of controllers, models, views, and tests plus Docker compose support for local development.
+
+- Stack summary:
+  - Backend: PHP 8.x + CodeIgniter 4
+  - Views: CI4 native views (Tailwind can be included via CDNJS)
+  - Database: development assumes MySQL (see migrations); models use standard CI4 database conventions
+  - Infra: Docker (dev), Nginx + PHP-FPM for production
+  - Tests: PHPUnit (config at `backend/phpunit.xml.dist`)
+
+- Key config observed:
+  - `backend/app/Config/App.php` sets `baseURL` = `http://localhost:8090/`
+  - Timezone = `UTC`, default locale = `en`, Content Security Policy disabled by default
 
 ---
 
 ## 2. Architecture
 
-* **Diagram** (boxes + arrows) of:
+High level request flow used by the project:
 
-  * User (browser)
-  * CI4 controllers/views
-  * Database (MySQL)
-  * Docker (dev-only infra)
-* Clear description of request flow (HTTP → CI4 Controller → Service → Repository → DB → Response).
+- HTTP request → Router → Controller (thin) → Service (business logic) → Repository / Model → Database → Controller → View / JSON response
 
----
-
-## 3. Project Structure
-
-* Folder layout with purpose:
-
-  ```
-  backend/ci4/      # main CodeIgniter app
-  ├── app/Controllers
-  ├── app/Models
-  ├── app/Views
-  ├── app/Services
-  ├── app/Repositories
-  ├── database/migrations
-  ├── database/seeders
-  frontend/         # (not used here, only CI4 native views)
-  infrastructure/   # Docker files & configs
-  docs/             # manuals
-  ```
-* Conventions: controllers thin, services hold logic, repositories isolate DB.
+Notes:
+- `BaseController` is minimal; controllers are expected to load services or helpers they require.
+- Docker is provided for local development; production deployment should use PHP-FPM + Nginx.
 
 ---
 
-## 4. Data Model
+## 3. Project structure
 
-* ER diagram or table definitions.
-* Entities: `User`, `Post`, `Comment`, etc.
-* Relationships (1\:N, N\:N).
-* Example MySQL schema snippet.
+Top-level layout (relevant directories in this repo):
 
----
+```
+backend/
+  app/
+    Config/
+    Controllers/   # Admin.php, Auth.php, Employee.php, Reservation.php, Users.php
+    Models/        # UsersModel.php
+    Entities/      # User.php
+    Views/         # admin/, auth/, employee/, user/, components/
+  public/          # index.php, assets, uploads
+  tests/           # PHPUnit tests and examples
+  composer.json
+  Dockerfile
+  phpunit.xml.dist
+docs/
+  technical-manual.md
+  sop-manual.md
+  commit-manual.md
+```
 
-## 5. API Contracts
-
-* Endpoints list (REST).
-
-  * Example:
-
-    * `POST /v1/auth/login` → Request: {email, password}, Response: {token}
-    * `GET /v1/users` → returns list of users
-* JSON response envelope standard:
-
-  ```json
-  { "data": {...}, "meta": {...} }
-  ```
-* Error format:
-
-  ```json
-  { "error": { "code": "VALIDATION_ERROR", "message": "...", "details": [] } }
-  ```
-
----
-
-## 6. Frontend Conventions
-
-* Using **CI4 native views**.
-* TailwindCSS via CDNJS snippet.
-* Base layout view includes:
-
-  * Navigation bar
-  * Footer
-  * Content slot (`<?= $this->renderSection('content') ?>`)
+Conventions used in this repo:
+- Controllers should be thin: handle request/response and delegate work to services.
+- Business logic belongs in Services; database access should be isolated in Repositories/Models.
 
 ---
 
-## 7. Security & Auth
+## 4. Data model
 
-* Authentication method (JWT or session).
-* Role model (e.g., `admin`, `user`).
-* CSRF protection toggle (if used in forms).
-* Rate limiting (future note).
-
----
-
-## 8. Testing Strategy
-
-* Unit tests: services.
-* Integration tests: repositories.
-* API tests: Manual verification using Postman or Insomnia.
-* Coverage target (≥70%).
+Current Models and Used for:
+- Users -> Houses Data of User in Client, Admin and Employee
+- Services -> Houses Data of Services provided
 
 ---
 
-## 9. Variants & Extensions
+## 5. API contracts and route discovery
 
-* Baseline = CI4 + MySQL.
-* Future extensions: PostgreSQL, MongoDB, Firebase.
-* Differences documented here (e.g., MySQL uses `AUTO_INCREMENT`, PG uses `SERIAL` or `UUID`).
+List of current APIs:
 
----
+### Create
+- `/signup`: Create Client: Account
+- `/login`: Create Auth Verification
+- `/admin/services/create`: Create Service
 
-## 10. Deployment Notes
+### Read
+- `/logout`: Request Removal of Auth Verification
+- `/services`: View Services List
+- `/services/(:segment)`: View Specific Service
 
-* Reminder: Docker is **for dev only**.
-* For production: deploy via PHP-FPM + Nginx or Apache.
-* DB migrations must be run before app start.
+### Update
+- `/admin/services/update`: Update Service
 
----
-
-## 11. Documentation Practices
-
-* Every new feature → update this manual.
-* Add request/response examples.
-* Add ERD changes when schema evolves.
+### Delete
+- `/admin/services/delete`: Delete Service
 
 ---
 
-## 12. Notes & Version
+## 6. Frontend conventions
 
-* Last update: YYYY-MM-DD
-* Who: Author/Editor Name
-* TL;DR: One-line summary of what was changed in this doc
+- Use CI4 native views located under `backend/app/Views/`.
+- TailwindCSS can be included via CDNJS in base layout files. Keep JS unobtrusive and small; prefer server-side rendering for basic pages.
+- Fragment Code
+
+---
+
+## 7. Security & authentication
+<!-- Upcomming -->
+
+---
+
+## 8. Testing strategy
+
+- will be doing manual testing documented at `test.md`
+- currebtly has the following:
+  - Authentication: Admin, User and Employee
+  - Services(Admin): Create, Read(All), Update and Delete
+  <!-- - Request: Create -->
+
+---
+
+## 9. Documentation practices
+
+- Update this manual when adding features, changing contracts, or altering the schema.
+- Add request/response examples and update the ERD section when migrations change.
+
+---
+
+## 10. Notes & version
+
+- Last update: 2025-09-11
+- Who: repo maintainer
+- TL;DR: Filled in system overview, project layout, UsersModel-derived data contract, and a plan for extracting API endpoints.
