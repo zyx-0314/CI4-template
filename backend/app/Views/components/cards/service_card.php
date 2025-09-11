@@ -6,10 +6,10 @@
         <img class="w-full h-44 object-cover" src="<?= esc($s['image']) ?>" alt="<?= esc($s['title'] ?? 'Service image') ?>">
     <?php else: ?>
         <div class="flex justify-center items-center bg-slate-100 w-full h-44">
-            <img src="https://hds.hel.fi/images/foundation/visual-assets/placeholders/image-l@3x.png" alt="no image">
+            <img src="<?= esc($s['banner_image'] ? "/" . $s['banner_image'] : 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1400&q=80') ?>" alt="<?= esc($s['title'] ?? 'no image') ?>">
         </div>
     <?php endif; ?>
-    <div class="flex flex-col flex-1 p-4">
+    <div class="flex flex-col flex-1 mt-8 p-4">
         <h3 class="mb-1 min-h-[4rem] overflow-hidden font-medium text-slate-900 text-lg line-clamp-2" style="display:-webkit-box;">
             <?= esc($s['title'] ?? 'Untitled') ?><?php echo $s['is_available'] ? " " : " (inactive)" ?>
         </h3>
