@@ -23,8 +23,8 @@ This project is an **instructional template** for CodeIgniter 4 with:
 
 * **Optional tools**:
 
-  * Postman or Insomnia (API testing)
-  * MySQL Workbench or phpMyAdmin
+  * Postman
+  * phpMyAdmin
 
 ---
 
@@ -52,8 +52,8 @@ cd ci4-instructional-template
 docker compose up --build
 ```
 
-* App: `http://localhost:8080`
-* phpMyAdmin (if enabled): `http://localhost:8081`
+* App: `http://localhost:8090`
+* phpMyAdmin (if enabled): `http://localhost:8091`
 
 ---
 
@@ -62,13 +62,13 @@ docker compose up --build
 ### Run Migrations
 
 ```bash
-docker compose exec php php spark migrate
+docker compose exec php composer migrate
 ```
 
 ### Run Seeders
 
 ```bash
-docker compose exec php php spark db:seed UserSeeder
+docker compose exec php composer seed:all
 ```
 
 ---
@@ -88,57 +88,4 @@ Tailwind is included directly in CI4 views using the CDN link:
 
 ## 6. Running Tests
 
-### PHPUnit
-
-```bash
-docker compose exec php vendor/bin/phpunit
-```
-
-### PHPStan (static analysis)
-
-```bash
-docker compose exec php vendor/bin/phpstan analyse
-```
-
----
-
-## 7. Common Tasks
-
-* **New Migration**
-
-```bash
-docker compose exec php php spark make:migration CreatePostsTable
-```
-
-* **New Seeder**
-
-```bash
-docker compose exec php php spark db:seed PostSeeder
-```
-
-* **Run Server (inside container)**
-
-```bash
-docker compose exec php php spark serve
-```
-
----
-
-## 8. Troubleshooting
-
-* **Ports in use** → Change port mapping in `docker-compose.yml`.
-* **.env not loaded** → Ensure it’s present in repo & not in `.dockerignore`.
-* **Permission errors** → Run `chmod -R 775 writable/`.
-* **Container stuck** → Rebuild:
-
-  ```bash
-  docker compose down -v && docker compose up --build
-  ```
-
----
-
-## 9. Notes & Version
-
-* Last update: YYYY-MM-DD
-* Who: Author/Editor Name
-* TL;DR: One-line summary of what was changed in this doc
+`test-manual.md`
