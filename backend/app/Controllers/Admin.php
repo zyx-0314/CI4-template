@@ -36,9 +36,9 @@ class Admin extends BaseController
      */
     public function createService()
     {
-        // Only allow POST
+        // Allow PATCH (preferred) and POST (fallback/legacy)
         $incomingMethod = strtolower($this->request->getMethod());
-        if ($incomingMethod !== 'post') {
+        if (! in_array($incomingMethod, ['post', 'patch'])) {
             return $this->response->setStatusCode(ResponseInterface::HTTP_METHOD_NOT_ALLOWED)
                 ->setJSON(['success' => false, 'message' => 'Method not allowed']);
         }
@@ -144,9 +144,9 @@ class Admin extends BaseController
      */
     public function updateService()
     {
-        // Only allow POST
+        // Allow DELETE (preferred) and POST (fallback/legacy)
         $incomingMethod = strtolower($this->request->getMethod());
-        if ($incomingMethod !== 'post') {
+        if (! in_array($incomingMethod, ['post', 'delete'])) {
             return $this->response->setStatusCode(ResponseInterface::HTTP_METHOD_NOT_ALLOWED)
                 ->setJSON(['success' => false, 'message' => 'Method not allowed']);
         }
