@@ -132,8 +132,9 @@ if ($svc !== null) {
             if (hiddenId && hiddenId.value) fd.set('id', hiddenId.value);
 
             try {
+                // Prefer DELETE verb for soft-delete; form POST is kept for non-JS fallback
                 const resp = await fetch(form.action, {
-                    method: 'POST',
+                    method: 'DELETE',
                     body: fd
                 });
                 let data = null;

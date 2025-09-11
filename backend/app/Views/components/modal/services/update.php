@@ -145,8 +145,9 @@ if ($svc !== null) {
 
             const fd = new FormData(form);
             try {
+                // Prefer PATCH verb; form POST remains as non-JS fallback
                 const resp = await fetch('/admin/services/update', {
-                    method: 'POST',
+                    method: 'PATCH',
                     body: fd
                 });
                 let data = null;
