@@ -14,7 +14,7 @@
 
 $nav = [
   ['label' => 'Home', 'href' => '/'],
-  ['label' => 'Road map', 'href' => '/road-map'],
+  ['label' => 'Services', 'href' => '/services'],
   ['label' => 'Login', 'href' => '/login'],
 ];
 $cta = ['label' => 'Request Assistance', 'href' => '/services'];
@@ -47,7 +47,6 @@ $cta = ['label' => 'Request Assistance', 'href' => '/services'];
         <details class="relative">
           <summary class="flex items-center space-x-2 p-1 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer">
             <span class="sr-only">Open user menu</span>
-            <!-- Simple user icon -->
             <div class="flex justify-center items-center bg-gray-200 rounded-full w-8 h-8 text-gray-700">👤</div>
           </summary>
           <div class="right-0 z-50 absolute bg-white shadow mt-2 py-1 border rounded w-48">
