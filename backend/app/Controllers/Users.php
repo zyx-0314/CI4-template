@@ -34,16 +34,38 @@ class Users extends BaseController
 
     public function services()
     {
-        return view('user/services', ['services' => $this->DUMMY_SERVICES]);
+        try {
+            $db = \Config\Database::connect();
+            $builder = $db->table('services');
+            $services = $builder
+                ->where('is_active', 1)
+                ->orderBy('id', 'ASC')
+                ->get()
+                ->getResultArray();
+        } catch (\Exception $e) {
+            // Fallback to in-memory demo data when DB is not available
+            $services = $this->DUMMY_SERVICES;
+        }
+
+        return view('user/services', ['services' => $services]);
     }
 
     public function show($id = null)
     {
         $service = null;
-        foreach ($this->DUMMY_SERVICES as $s) {
-            if ((string)$s['id'] === (string)$id) {
-                $service = $s;
-                break;
+        try {
+            $db = \Config\Database::connect();
+            $service = $db->table('services')
+                ->where('id', $id)
+                ->get()
+                ->getRowArray();
+        } catch (\Exception $e) {
+            // fallback to in-memory
+            foreach ($this->DUMMY_SERVICES as $s) {
+                if ((string)$s['id'] === (string)$id) {
+                    $service = $s;
+                    break;
+                }
             }
         }
 

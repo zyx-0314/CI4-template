@@ -14,6 +14,18 @@ class Admin extends BaseController
 
     public function services()
     {
-        return view('admin/services');
+        try {
+            $db = \Config\Database::connect();
+            $builder = $db->table('services');
+            $services = $builder
+                ->where('is_active', 1)
+                ->orderBy('id', 'ASC')
+                ->get()
+                ->getResultArray();
+            return view('admin/services', ['services' => $services]);
+        } catch (\Exception $e) {
+            // If DB not available, let the view fall back to its demo dataset
+            return view('admin/services');
+        }
     }
 }
