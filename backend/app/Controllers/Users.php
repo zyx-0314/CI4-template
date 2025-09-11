@@ -39,6 +39,7 @@ class Users extends BaseController
             $builder = $db->table('services');
             $services = $builder
                 ->where('is_active', 1)
+                ->where('is_available', 1)
                 ->orderBy('id', 'ASC')
                 ->get()
                 ->getResultArray();

@@ -26,6 +26,8 @@ $routes->post('signup', 'Auth::signup');
 // Admin:Manager
 $routes->get('admin/dashboard', 'Admin::dashboard');
 $routes->get('/admin/services', 'Admin::services');
+// Create service (AJAX)
+$routes->post('/admin/services/create', 'Admin::createService');
 
 // Employee
 $routes->get('employee/dashboard', 'Employee::dashboard');

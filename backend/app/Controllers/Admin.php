@@ -28,4 +28,110 @@ class Admin extends BaseController
             return view('admin/services');
         }
     }
+
+    /**
+     * Create a new service (AJAX/JSON endpoint)
+     * Expects POST: title, cost, description, inclusions (CSV), is_available
+     * Returns JSON { success: bool, message: string, data?: {id: int} }
+     */
+    public function createService()
+    {
+        // Only allow POST
+        $incomingMethod = strtolower($this->request->getMethod());
+        if ($incomingMethod !== 'post') {
+            return $this->response->setStatusCode(ResponseInterface::HTTP_METHOD_NOT_ALLOWED)
+                ->setJSON(['success' => false, 'message' => 'Method not allowed']);
+        }
+
+        // Simple validation
+        $rules = [
+            'title' => 'required|min_length[2]|max_length[255]',
+            'cost'  => 'required|numeric',
+        ];
+
+        if (! $this->validate($rules)) {
+            $errors = $this->validator->getErrors();
+            return $this->response->setStatusCode(ResponseInterface::HTTP_UNPROCESSABLE_ENTITY)
+                ->setJSON(['success' => false, 'message' => 'Validation failed', 'errors' => $errors]);
+        }
+
+        $title = $this->request->getPost('title');
+        $cost = $this->request->getPost('cost');
+        $description = $this->request->getPost('description');
+        $inclusions = $this->request->getPost('inclusions');
+        $isAvailable = $this->request->getPost('is_available') ? 1 : 0;
+
+        // Handle banner image upload if present
+        $bannerImagePath = null;
+        try {
+            $file = $this->request->getFile('banner_image');
+            if ($file && $file->isValid() && ! $file->hasMoved()) {
+                // simple validation: allow png, jpg, jpeg, webp and limit size (5MB)
+                $allowed = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+                $mime = $file->getClientMimeType();
+                if (! in_array($mime, $allowed)) {
+                    return $this->response->setStatusCode(ResponseInterface::HTTP_UNSUPPORTED_MEDIA_TYPE)
+                        ->setJSON(['success' => false, 'message' => 'Invalid image type']);
+                }
+
+                $maxBytes = 5 * 1024 * 1024;
+                if ($file->getSize() > $maxBytes) {
+                    // 413 Payload Too Large
+                    return $this->response->setStatusCode(413)
+                        ->setJSON(['success' => false, 'message' => 'Image too large']);
+                }
+
+                // Create upload directory if missing under public so files are directly accessible
+                $sub = date('Y') . DIRECTORY_SEPARATOR . date('m');
+                $publicUploadDir = FCPATH . 'uploads' . DIRECTORY_SEPARATOR . 'services' . DIRECTORY_SEPARATOR . $sub . DIRECTORY_SEPARATOR;
+                if (! is_dir($publicUploadDir)) {
+                    mkdir($publicUploadDir, 0755, true);
+                }
+
+                // Use random name to avoid collisions and move file into public uploads
+                $newName = $file->getRandomName();
+                $moved = $file->move($publicUploadDir, $newName);
+                if ($moved) {
+                    // store path relative to public (so it can be used as /uploads/... in views)
+                    $bannerImagePath = 'uploads/services/' . str_replace(DIRECTORY_SEPARATOR, '/', $sub) . '/' . $newName;
+                }
+            }
+        } catch (\Exception $e) {
+            // If upload fails, log and continue (or return error). We'll return error to client.
+            log_message('error', 'Banner upload failed: ' . $e->getMessage());
+            return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
+                ->setJSON(['success' => false, 'message' => 'Failed to process banner image']);
+        }
+
+        // Normalize inclusions: store as CSV string (backend currently expects CSV in view)
+        if (is_array($inclusions)) {
+            $inclusions = implode(',', $inclusions);
+        }
+
+        try {
+            $db = \Config\Database::connect();
+            $builder = $db->table('services');
+
+            $data = [
+                'title' => $title,
+                'cost' => $cost,
+                'description' => $description,
+                'inclusions' => $inclusions,
+                // banner_image upload disabled for now — leave null/empty
+                'banner_image' => $bannerImagePath,
+                'is_available' => $isAvailable,
+                'is_active' => 1,
+            ];
+
+            $builder->insert($data);
+            $insertId = $db->insertID();
+
+            return $this->response->setStatusCode(ResponseInterface::HTTP_CREATED)
+                ->setJSON(['success' => true, 'message' => 'Service created', 'data' => ['id' => $insertId]]);
+        } catch (\Exception $e) {
+            log_message('error', 'Failed to create service: ' . $e->getMessage());
+            return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
+                ->setJSON(['success' => false, 'message' => 'Server error while creating service']);
+        }
+    }
 }
