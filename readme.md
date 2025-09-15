@@ -104,7 +104,7 @@ These are **sample modules** included (or suggested) for learning how to add fea
 Run the development stack and the app (rebuild if needed):
 
 ```cmd
-docker compose up -d --build
+docker compose up --watch
 ```
 
 Common utility commands (run inside the project root):
