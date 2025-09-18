@@ -269,6 +269,7 @@ Create the following, with their own issues, branches and PR
             ```php
                 <!-- Here i created rules for email and password -->
                 $validation = \Config\Services::validation();
+                <!-- Variable comes from the htnm the id from the input -->
                 <!-- Format: variable, human readable name, rules seperated by | -->
                 <!-- So this following rule means variable email is Email which means it should not be null and has valid email format -->
                 $validation->setRule('email', 'Email', 'required|valid_email');
@@ -353,7 +354,7 @@ Create the following, with their own issues, branches and PR
                 }
 
                 if ($type === 'client') {
-                    return redirect()->to('/settings/profile');
+                    return redirect()->to('/');
                 }
             ```
 - [ ] Update `Routes` to add certain end point
@@ -364,9 +365,51 @@ Create the following, with their own issues, branches and PR
 > now you do the other functions with your own logics
 - [ ] Logout
     - [ ] In `Controller`
+        - [ ] Destroy from session.
+            ```php
+            session()->destroy();
+            ```
+        - [ ] Remove session
+            ```php
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 3600, $params['path'] ?? '/', $params['domain'] ?? '', isset($_SERVER['HTTPS']), true);
+            ```
+        - [ ] Remove session
+            ```php
+            return redirect()->to('/');
+            ```
     - [ ] In `Routes`
 - [ ] Sign Up
     - [ ] In `Controller`
+        - [ ] Create Session
+        - [ ] Extract Data from frontend
+            ```php
+            $request = service('request');
+            ```
+        - [ ] Create Rules
+        - [ ] Error Catchers, Conditions that if not followed will return error messages
+        - [ ] If all is good now we create and use the data structure coming from model
+            ```php
+            $userModel = new \App\Models\UsersModel();
+            ```
+        - [ ] Now prepare your data. below is an example.
+            ```php
+            $data = [
+                'first_name' => $post['first_name'],
+                'middle_name' => $post['middle_name'] ?? null,
+                'last_name' => $post['last_name'],
+                'email' => $post['email'],
+                'password_hash' => password_hash($post['password'], PASSWORD_DEFAULT),
+                'type' => 'client',
+                'account_status' => 1,
+                'email_activated' => 0,
+            ];
+            ```
+        - [ ] Now insert in the database
+            ```php
+            $inserted = $userModel->insert($data);
+            ```
+        - [ ] Redirect if success or not
     - [ ] In `Routes`
 - [ ] Once all done you can start adding your `label` in your source control.
     - [ ] Since we updated Controller and Routes. We could say we added a new feature
