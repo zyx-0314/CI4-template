@@ -8,13 +8,23 @@ class ClearDatabaseSeeder extends Seeder
 {
     public function run()
     {
-        $db      = \Config\Database::connect();
-        $builder = $db->table('funeral_requests');
-        $builder = $db->table('users');
+        $db = \Config\Database::connect();
 
-        // Use disableForeignKeyChecks if supported by the DB to avoid FK issues
+        // Order matters: child tables first, then parents
+        // List down your tables here
+        $tablesInOrder = [];
+
         $db->disableForeignKeyChecks();
-        $builder->truncate();
-        $db->enableForeignKeyChecks();
+
+        try {
+            foreach ($tablesInOrder as $table) {
+                if (method_exists($db, 'tableExists') && $db->tableExists($table)) {
+                    // TRUNCATE resets AUTO_INCREMENT in MySQL
+                    $db->table($table)->truncate();
+                }
+            }
+        } finally {
+            $db->enableForeignKeyChecks();
+        }
     }
 }
