@@ -52,7 +52,10 @@ $routes->get('/', 'Users::index');
 ```
 - [ ] Update `Routes.php` under `Config`
     - [ ] Update `Home::index` to `Users::index` reflecting the `User` Controller and `index` as one of its function
-- [ ] Now visit your site for manual checking, [live](http://localhost:8090/).
+- [ ] Now visit your site for manual checking.
+    - Open Docker Desktop
+    - Check Port from `nginx` it should by default `8090` but can use other poerts
+    - This is the default port [live](http://localhost:8090/).
     - This wont pose issue if you didnt change the port or the port is not in use
 - [ ] Once all working you can start adding your `label` in your source control.
     - [ ] Since we created landing page view, controller and updated the routes. We could say we added a new feature
