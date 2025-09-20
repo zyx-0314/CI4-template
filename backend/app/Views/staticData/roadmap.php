@@ -13,35 +13,35 @@ $roadmapItemsDone = [
         'status' => 'Done',
         'priority' => 'High',
     ],
-];
-
-$roadmapItems = [
     [
         'id' => 'services',
         'title' => 'Services CRUD',
         'desc' => 'Add, update, and deactivate service packages (pricing, description, tags).',
-        'status' => 'In Progress',
+        'status' => 'Done',
         'priority' => 'High',
     ],
     [
         'id' => 'requests-anon',
         'title' => 'Client service request (no account)',
         'desc' => 'Allow anonymous users to request a service; capture contact details and preferences.',
-        'status' => 'Planned',
+        'status' => 'Done',
         'priority' => 'High',
     ],
     [
         'id' => 'requests-auth',
         'title' => 'Client service request (with account)',
         'desc' => 'Authenticated requests with tracking/history for the client (requires accounts).',
-        'status' => 'Planned',
+        'status' => 'Done',
         'priority' => 'High',
     ],
+];
+
+$roadmapItems = [
     [
         'id' => 'obituary',
         'title' => 'Obituary & Memorial pages',
         'desc' => 'Clients with accounts can create memorial pages, upload images and moderate guestbook entries.',
-        'status' => 'Backlog',
+        'status' => 'In Progress',
         'priority' => 'Medium',
     ],
     [
