@@ -1,20 +1,8 @@
 <?php
-
-/**
- * views/auth/signup.php
- *
- * Data contract (optional):
- * - $action: string - form action URL (default: '/signup')
- * - $method: string - http method (default: 'post')
- * - $errors: array|null - validation errors keyed by field name
- * - $old: array|null - old input values
- */
-
-$action = $action ?? '/signup';
-$method = strtoupper($method ?? 'post');
-$errors = $errors ?? [];
-$old = $old ?? [];
-
+// Page: auth/signup
+// Data contract:
+// $errors: array
+// $old: array
 ?>
 <!doctype html>
 <html lang="en">
@@ -31,19 +19,9 @@ $old = $old ?? [];
                 <p class="mt-2 text-gray-600 text-sm text-center">Already have an account? <a href="/login" class="font-medium text-emerald-600 hover:underline">Sign in</a></p>
             </div>
 
-            <form class="space-y-6 mt-8" action="<?= esc($action) ?>" method="<?= $method === 'GET' ? 'get' : 'post' ?>" novalidate>
+            <form class="space-y-6 mt-8" action="/signup" method="post" novalidate>
                 <?= csrf_field() ?>
                 <div class="-space-y-px shadow-sm rounded-md">
-                    <div>
-                        <label for="name" class="sr-only">Full name</label>
-                        <input id="name" name="name" type="text" autocomplete="name" required
-                            value="<?= esc($old['name'] ?? '') ?>"
-                            class="appearance-none rounded-none relative block w-full px-3 py-2 border <?= isset($errors['name']) ? 'border-red-500' : 'border-gray-300' ?> placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 focus:z-10 sm:text-sm"
-                            placeholder="Full name" aria-invalid="<?= isset($errors['name']) ? 'true' : 'false' ?>" aria-describedby="name-error">
-                        <?php if (! empty($errors['name'])): ?>
-                            <p id="name-error" class="mt-2 text-red-600 text-sm"><?= esc($errors['name']) ?></p>
-                        <?php endif; ?>
-                    </div>
                     <div>
                         <label for="first_name" class="sr-only">First name</label>
                         <input id="first_name" name="first_name" type="text" autocomplete="given-name" required

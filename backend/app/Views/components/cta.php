@@ -1,10 +1,10 @@
 <?php
-// Component: CTA section
+// Component: components/cta.php
 // Data contract:
 // $heading: string
 // $sub: string|null
-// $primary: ['label'=>string,'href'=>string]
-// $secondary: ['label'=>string,'href'=>string]
+// $primary: object
+// $secondary: object
 ?>
 <section class="bg-sage my-8 py-12 rounded-lg text-white">
   <div class="mx-auto px-4 text-center container">

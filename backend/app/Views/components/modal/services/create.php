@@ -1,3 +1,15 @@
+<?php
+// Component: components/modal/services/create.php
+// Data contract:
+// $errors: object array
+// $old: object array
+// $fieldErrors: object array
+?>
+<?php
+$errors = $errors ?? [];
+$old = $old ?? [];
+$fieldErrors = $fieldErrors ?? [];
+?>
 <div class="flex justify-end mb-4">
     <button id="btnCreate" class="px-3 py-2 rounded text-white cursor-pointer btn-sage dark:btn-sage-dark">
         <i class="fa-solid fa-plus"></i>
@@ -5,7 +17,7 @@
     </button>
 </div>
 
-<div id="createServiceModal" class="hidden z-50 fixed inset-0 justify-center items-center m-0">
+<div id="createServiceModal" class="hidden z-50 fixed inset-0 justify-center items-center m-0" aria-hidden="true">
     <div class="absolute inset-0 bg-black opacity-50" id="createServiceModalBackdrop"></div>
 
     <div class="relative bg-white shadow-lg mx-4 my-8 rounded w-full max-w-2xl max-h-[90vh] overflow-auto" role="dialog" aria-modal="true" aria-labelledby="createServiceTitle">
@@ -13,17 +25,19 @@
             <h3 id="createServiceTitle" class="font-semibold text-lg">Create service</h3>
         </header>
 
-        <form id="createServiceForm" class="space-y-4 px-6 py-4" method="POST" action="/admin/services/create" enctype="multipart/form-data">
+        <form id="createServiceForm" class="space-y-4 px-6 py-4" method="POST" action="/admin/services/create" enctype="multipart/form-data" aria-labelledby="createServiceTitle">
             <?= csrf_field() ?>
 
             <div>
                 <label for="title" class="block font-medium text-gray-700 text-sm">Title</label>
                 <input id="title" name="title" required class="block mt-1 px-3 py-2 border rounded w-full" />
+                <div class="mt-2 text-red-500 text-sm" id="titleError"></div>
             </div>
 
             <div>
                 <label for="cost" class="block font-medium text-gray-700 text-sm">Cost</label>
                 <input id="cost" name="cost" type="number" step="0.01" min="0" required class="block mt-1 px-3 py-2 border rounded w-full" />
+                <div class="mt-2 text-red-500 text-sm" id="costError"></div>
             </div>
 
             <div>
@@ -51,7 +65,9 @@
             <div class="flex items-center space-x-6">
                 <label class="inline-flex items-center">
                     <input type="checkbox" id="is_available" name="is_available" value="1" class="form-checkbox" />
-                    <span class="ml-2 text-sm">Is available (shown but not browsable)</span>
+                    <div class="ml-2">
+                        Available
+                    </div>
                 </label>
             </div>
 
@@ -62,7 +78,7 @@
         </form>
     </div>
 </div>
-
+<script src="<?= base_url('js/toast.js') ?>"></script>
 <script>
     (function() {
         const btnCreate = document.getElementById('btnCreate');
@@ -71,6 +87,11 @@
         const btnCancel = document.getElementById('btnCancelCreate');
         const bannerInput = document.getElementById('banner_image');
         const bannerPreview = document.getElementById('bannerPreview');
+        const costError = document.getElementById('costError');
+        const titleError = document.getElementById('titleError');
+
+        // track opener to restore focus when modal closes
+        let _lastFocusedBeforeOpen = null;
 
         let _currentBannerObjectUrl = null;
         const PLACEHOLDER = (bannerPreview && bannerPreview.dataset && bannerPreview.dataset.placeholder) ?
@@ -78,10 +99,14 @@
             'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1400&q=80';
 
         function openModal() {
+            _lastFocusedBeforeOpen = document.activeElement;
             document.body.style.overflow = 'hidden';
 
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+            // expose to screen readers
+            modal.setAttribute('aria-hidden', 'false');
+
             const first = modal.querySelector('input,textarea,select,button');
             if (first) first.focus();
         }
@@ -94,6 +119,8 @@
 
             modal.classList.remove('flex');
             modal.classList.add('hidden');
+            // hide from screen readers
+            modal.setAttribute('aria-hidden', 'true');
 
             document.body.style.overflow = '';
 
@@ -107,6 +134,15 @@
             if (bannerPreview) bannerPreview.src = PLACEHOLDER;
             const form = document.getElementById('createServiceForm');
             if (form) form.reset();
+
+            // restore focus to the opener when modal has closed
+            try {
+                if (_lastFocusedBeforeOpen && typeof _lastFocusedBeforeOpen.focus === 'function') {
+                    _lastFocusedBeforeOpen.focus();
+                } else if (btnCreate) {
+                    btnCreate.focus();
+                }
+            } catch (e) {}
         }
 
         if (btnCreate) btnCreate.addEventListener('click', openModal);
@@ -143,22 +179,6 @@
             if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
         });
 
-        // Simple toast helper
-        function toast(message, type = 'info') {
-            const id = 'toast-' + Date.now();
-            const el = document.createElement('div');
-            el.id = id;
-            el.className = 'fixed right-4 top-4 z-60 px-4 py-2 rounded shadow text-white';
-            el.style.background = (type === 'error') ? '#ef4444' : (type === 'success' ? '#10b981' : '#0ea5e9');
-            el.textContent = message;
-            document.body.appendChild(el);
-            setTimeout(() => {
-                try {
-                    document.body.removeChild(el);
-                } catch (e) {}
-            }, 5000);
-        }
-
         // Submit form via fetch as JSON; show pre-op toast and prevent close until done
         const form = document.getElementById('createServiceForm');
         const submitBtn = document.getElementById('btnSubmitCreate');
@@ -192,6 +212,15 @@
                         }, 500);
                     } else {
                         const msg = (data && data.message) ? data.message : 'Failed to create service';
+                        console.log(data);
+
+                        if (data.errors.title) {
+                            titleError.textContent = data.errors.title;
+                        }
+                        if (data.errors.cost) {
+                            costError.textContent = data.errors.cost;
+                        }
+
                         toast(msg, 'error');
                         _canClose = true;
                         if (submitBtn) {

@@ -1,11 +1,11 @@
 <?php
-// Primary button
-// $label: string
-// $href: string
-// $dark: boolean
-// $disable: boolean
+// Page: components/button/button_primary
+// Data contract:
+// $disable: boolean | null
+// $href: string | null
+// $label: string | null
+// $dark: string | null
 ?>
-
 <?php
 if ($disable ?? false) :
 ?>

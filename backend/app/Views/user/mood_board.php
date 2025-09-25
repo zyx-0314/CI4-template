@@ -1,3 +1,6 @@
+<?php
+// Page: user/mood_board
+?>
 <!doctype html>
 <html lang="en">
 

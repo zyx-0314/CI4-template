@@ -1,10 +1,15 @@
 <?php
-// View: backend/app/Views/user/reservation_form.php
-$service = $service ?? null;
-$errors = $errors ?? [];
-$old = $old ?? [];
-$focal_name = $focal_name ?? '';
-$fieldErrors = $fieldErrors ?? [];
+// Page: user/reservation_form
+// Data contract:
+// $services: object array | string
+// $errors: object array | array
+// $old: object array | array
+// $focalName: string
+// $fieldErrors: object array | array
+?>
+<?php
+//  In case there is no set value available
+$service = $service ? $service : $services[0];
 ?>
 <!doctype html>
 <html lang="en">
@@ -19,7 +24,7 @@ $fieldErrors = $fieldErrors ?? [];
                 <h1 class="font-semibold text-slate-900 text-2xl">Reserve Service</h1>
                 <?php if (!empty($service)): ?>
                     <div class="mt-1 text-slate-700 text-sm">
-                        <?= esc($service['title']) ?> • <span class="font-medium">$<?= number_format((float)($service['cost'] ?? 0), 2) ?></span>
+                        <?= esc($service->title) ?> • <span class="font-medium">$<?= number_format((float)($service->cost ?? 0), 2) ?></span>
                     </div>
                 <?php endif; ?>
             </div>
@@ -39,7 +44,7 @@ $fieldErrors = $fieldErrors ?? [];
                     </div>
                 <?php endif; ?>
 
-                <form method="post" action="/reservation" class="gap-4 grid grid-cols-1">
+                <form method="post" action="/reservation/<?php echo $service->id ?>" class="gap-4 grid grid-cols-1">
                     <?= csrf_field() ?>
                     <!-- Service selector -->
                     <label class="block">
@@ -47,8 +52,8 @@ $fieldErrors = $fieldErrors ?? [];
                         <select name="service_id" id="service_id" class="block px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sage w-full">
                             <?php if (!empty($services) && is_array($services)): ?>
                                 <?php foreach ($services as $svc): ?>
-                                    <?php $selected = ((string)($old['service_id'] ?? ($service['id'] ?? '')) === (string)$svc['id']) ? 'selected' : ''; ?>
-                                    <option value="<?= esc($svc['id']) ?>" <?= $selected ?>><?= esc($svc['title']) ?> — $<?= number_format((float)($svc['cost'] ?? 0), 2) ?></option>
+                                    <?php $selected = ($service->id === $svc->id) ? 'selected' : ''; ?>
+                                    <option value="<?= esc($svc->id) ?>" <?= $selected ?>><?= esc($svc->title) ?> — $<?= number_format((float)($svc->cost ?? 0), 2) ?></option>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <option value="<?= esc($service['id'] ?? '') ?>"><?= esc($service['title'] ?? 'Select a service') ?></option>
@@ -65,7 +70,7 @@ $fieldErrors = $fieldErrors ?? [];
                                 <input name="first_name" value="<?= esc($old['first_name'] ?? ($first_name ?? '')) ?>" class="block px-3 py-2 pl-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-sage w-full" />
                             </div>
                             <?php if (!empty($fieldErrors['first_name'])): ?>
-                                <div class="mt-2 text-rose text-sm"><?= esc($fieldErrors['first_name']) ?></div>
+                                <div class="mt-2 text-red-500 text-sm"><?= esc($fieldErrors['first_name']) ?></div>
                             <?php endif; ?>
                         </label>
 
@@ -76,7 +81,7 @@ $fieldErrors = $fieldErrors ?? [];
                                 <input name="last_name" value="<?= esc($old['last_name'] ?? ($last_name ?? '')) ?>" class="block px-3 py-2 pl-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-sage w-full" />
                             </div>
                             <?php if (!empty($fieldErrors['last_name'])): ?>
-                                <div class="mt-2 text-rose text-sm"><?= esc($fieldErrors['last_name']) ?></div>
+                                <div class="mt-2 text-red-500 text-sm"><?= esc($fieldErrors['last_name']) ?></div>
                             <?php endif; ?>
                         </label>
                     </div>
@@ -88,7 +93,7 @@ $fieldErrors = $fieldErrors ?? [];
                             <input name="phone" value="<?= esc($old['phone'] ?? '') ?>" class="block px-3 py-2 pl-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-sage w-full" />
                         </div>
                         <?php if (!empty($fieldErrors['phone'])): ?>
-                            <div class="mt-2 text-red-700 text-rose text-sm"><?= esc($fieldErrors['phone']) ?></div>
+                            <div class="mt-2 text-red-500700 text-rose text-sm"><?= esc($fieldErrors['phone']) ?></div>
                         <?php endif; ?>
                     </label>
 
@@ -99,7 +104,7 @@ $fieldErrors = $fieldErrors ?? [];
                             <input name="email" value="<?= esc($old['email'] ?? ($email ?? '')) ?>" class="block px-3 py-2 pl-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-sage w-full" />
                         </div>
                         <?php if (!empty($fieldErrors['email'])): ?>
-                            <div class="mt-2 text-rose text-sm"><?= esc($fieldErrors['email']) ?></div>
+                            <div class="mt-2 text-red-500 text-sm"><?= esc($fieldErrors['email']) ?></div>
                         <?php endif; ?>
                     </label>
 
@@ -111,7 +116,7 @@ $fieldErrors = $fieldErrors ?? [];
                                 <input type="date" name="date_start" value="<?= esc($old['date_start'] ?? '') ?>" class="block px-3 py-2 pl-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-sage w-full" />
                             </div>
                             <?php if (!empty($fieldErrors['date_start'])): ?>
-                                <div class="mt-2 text-rose text-sm"><?= esc($fieldErrors['date_start']) ?></div>
+                                <div class="mt-2 text-red-500 text-sm"><?= esc($fieldErrors['date_start']) ?></div>
                             <?php endif; ?>
                         </label>
 
@@ -122,7 +127,7 @@ $fieldErrors = $fieldErrors ?? [];
                                 <input type="date" name="date_end" value="<?= esc($old['date_end'] ?? '') ?>" class="block px-3 py-2 pl-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-sage w-full" />
                             </div>
                             <?php if (!empty($fieldErrors['date_end'])): ?>
-                                <div class="mt-2 text-rose text-sm"><?= esc($fieldErrors['date_end']) ?></div>
+                                <div class="mt-2 text-red-500 text-sm"><?= esc($fieldErrors['date_end']) ?></div>
                             <?php endif; ?>
                         </label>
                     </div>
@@ -142,7 +147,7 @@ $fieldErrors = $fieldErrors ?? [];
                                 <div class="mb-1 text-sm">Name on card</div>
                                 <input name="cc_name" value="<?= esc($old['cc_name'] ?? '') ?>" class="block px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sage w-full" />
                                 <?php if (!empty($fieldErrors['cc_name'])): ?>
-                                    <div class="mt-2 text-rose text-sm"><?= esc($fieldErrors['cc_name']) ?></div>
+                                    <div class="mt-2 text-red-500 text-sm"><?= esc($fieldErrors['cc_name']) ?></div>
                                 <?php endif; ?>
                             </label>
 
@@ -161,7 +166,7 @@ $fieldErrors = $fieldErrors ?? [];
                                     <input id="cc_cvv" name="cc_cvv" value="<?= esc($old['cc_cvv'] ?? '') ?>" placeholder="123" maxlength="4" class="block px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sage w-full" />
                                 </label>
                                 <?php if (!empty($fieldErrors['cc_cvv'])): ?>
-                                    <div class="mt-2 text-rose text-sm"><?= esc($fieldErrors['cc_cvv']) ?></div>
+                                    <div class="mt-2 text-red-500 text-sm"><?= esc($fieldErrors['cc_cvv']) ?></div>
                                 <?php endif; ?>
 
                                 <label class="block">
@@ -169,7 +174,7 @@ $fieldErrors = $fieldErrors ?? [];
                                     <input id="cc_expiry" name="cc_expiry" value="<?= esc($old['cc_expiry'] ?? '') ?>" placeholder="MM/YY" maxlength="5" class="block px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sage w-full" />
                                 </label>
                                 <?php if (!empty($fieldErrors['cc_expiry'])): ?>
-                                    <div class="mt-2 text-rose text-sm"><?= esc($fieldErrors['cc_expiry']) ?></div>
+                                    <div class="mt-2 text-red-500 text-sm"><?= esc($fieldErrors['cc_expiry']) ?></div>
                                 <?php endif; ?>
 
                                 <label class="block">
@@ -190,7 +195,7 @@ $fieldErrors = $fieldErrors ?? [];
 
                     <div class="flex items-center gap-3 pt-2">
                         <button class="shadow px-4 py-2 rounded-md text-white btn-sage"> <i class="mr-2 fa fa-check"></i> Submit reservation</button>
-                        <a href="/services<?= isset($service['id']) ? '/' . $service['id'] : '' ?>" class="px-4 py-2 btn-border rounded-md"> <i class="fa-arrow-left mr-2 fa"></i> Back</a>
+                        <a href="/services<?= isset($service->id) ? '/' . $service->id : '' ?>" class="px-4 py-2 btn-border rounded-md"> <i class="fa-arrow-left mr-2 fa"></i> Back</a>
                     </div>
                 </form>
             </div>

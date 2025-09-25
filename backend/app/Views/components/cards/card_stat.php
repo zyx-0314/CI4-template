@@ -1,5 +1,5 @@
 <?php
-// Component: cards/card_stats.php
+// Component: components/cards/card_stats.php
 // Data contract:
 // $title: string
 // $value: string|int

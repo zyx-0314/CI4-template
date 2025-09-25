@@ -1,21 +1,16 @@
 <?php
-
-/**
- * components/head.php
- * Renders a full <head> block with default CDN includes and accepts
- * dynamic page title and optional extras (strings or arrays of tags).
- *
- * Usage:
- * <?= view('components/head', ['title' => 'Page title']) ?>
- */
-
-$title = $title ?? 'Sunset Funeral Homes';
+// Component: components/head.php
+// Data contract:
+// $heading: string
+// $sub: string|null
+// $primary: object
+// $secondary: object
 ?>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title><?= esc($title) ?></title>
+    <title><?= esc($title ?? null ? $title . ": " : "") ?>Sunset Funeral Homes</title>
 
     <!-- Default CDN includes -->
     <!-- Google Fonts: Playfair Display + Lato (global) -->
@@ -162,6 +157,39 @@ $title = $title ?? 'Sunset Funeral Homes';
 
         .bg-stone-light {
             background: var(--stone-light);
+        }
+
+        /* Custom scrollbar styling using sage-light token (#CFE6D7) */
+        /* WebKit-based browsers */
+        ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--sage-light);
+            border-radius: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--sage) 0%, var(--sage-dark) 100%);
+            border-radius: 8px;
+            border: 3px solid rgba(0, 0, 0, 0.03);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--sage-dark) 0%, var(--sage) 100%);
+        }
+
+        /* Firefox */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--sage-dark) var(--sage-light);
+        }
+
+        /* Utility class to apply custom scrollbars to specific containers */
+        .custom-scroll {
+            overflow: auto;
         }
 
         /* Base typography */

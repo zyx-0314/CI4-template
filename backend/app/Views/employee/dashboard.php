@@ -1,3 +1,6 @@
+<?php
+// Component: employee/dashboard.php
+?>
 <!doctype html>
 <html lang="en">
 <?= view('components/head', ['title' => 'Employee Dashboard — Sunset Funeral Homes']) ?>
@@ -7,7 +10,7 @@
 
     <main class="mx-auto px-6 py-10 max-w-6xl">
         <div class="md:flex md:space-x-6">
-            <?= view('components/aside/admin_manager') ?>
+            <?= view('components/aside/employee', ['active' => 'dashboard']) ?>
             <section class="flex flex-col flex-1 justify-between gap-4">
                 <div class="flex justify-between items-center">
                     <div>

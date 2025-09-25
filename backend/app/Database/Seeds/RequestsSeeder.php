@@ -260,7 +260,7 @@ class RequestsSeeder extends Seeder
             // 15. Assigned and ongoing
             [
                 'service_id' => 8,
-                'user_id' => 11,
+                'user_id' => 1,
                 'first_name' => 'Jordan',
                 'last_name' => 'Cole',
                 'phone' => '09174440055',
@@ -288,10 +288,28 @@ class RequestsSeeder extends Seeder
             }
 
             if ($existing === 0) {
-                $builder->insertBatch($data);
+                // Debug: print structure of data to detect malformed entries
+                echo "RequestsSeeder: will insert " . count($data) . " rows" . PHP_EOL;
+                foreach ($data as $i => $row) {
+                    if (is_array($row)) {
+                        echo " item $i: keys=" . implode('|', array_keys($row)) . " count=" . count($row) . PHP_EOL;
+                    } else {
+                        echo " item $i: NOT ARRAY (" . gettype($row) . ")" . PHP_EOL;
+                    }
+                }
+
+                // Try inserting one-by-one so we can pinpoint problematic rows
+                foreach ($data as $i => $row) {
+                    try {
+                        $builder->insert($row);
+                        echo " inserted row $i" . PHP_EOL;
+                    } catch (\Throwable $e) {
+                        echo "Error inserting row $i: " . $e->getMessage() . PHP_EOL;
+                        throw $e;
+                    }
+                }
             }
         } catch (\Exception $e) {
-            // swallow errors to avoid interrupting seeding process in different environments
         }
     }
 }

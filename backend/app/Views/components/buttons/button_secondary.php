@@ -1,10 +1,11 @@
 <?php
-// Secondary button
-// $label: string
-// $href: string
-// $dark: boolean
+// Page: components/button/button_secondary
+// Data contract:
+// $disable: boolean | null
+// $href: string | null
+// $label: string | null
+// $dark: string | null
 ?>
-
 <?php
 if ($disable ?? false) :
 ?>

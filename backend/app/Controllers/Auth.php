@@ -3,61 +3,72 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\UsersModel;
 
 class Auth extends BaseController
 {
-    public function showLogin()
+    public function showLoginPage()
     {
+        // Initialize session
         $session = session();
 
-        // If already logged in, send to admin
+        // If already logged in, send to landing
         if ($session->has('user')) {
-            return redirect()->to('/admin');
+            return redirect()->to('/');
         }
 
         // Pull flashdata errors/old/success if present
         $errors = $session->getFlashdata('errors') ?? [];
         $old = $session->getFlashdata('old') ?? [];
-        $success = $session->getFlashdata('success') ?? null;
 
-        return view('auth/login', ['errors' => $errors, 'old' => $old, 'success' => $success]);
+        return view('auth/login', ['errors' => $errors, 'old' => $old]);
     }
 
     public function login()
     {
+        // Access service request
         $request = service('request');
+        // Initialize Session
         $session = session();
-
-        // Debug: log incoming request keys
-        log_message('debug', 'Auth::login start - POST keys: ' . json_encode(array_keys($request->getPost())));
 
         // Basic validation using CI's Validation service
         $validation = \Config\Services::validation();
         $validation->setRule('email', 'Email', 'required|valid_email');
         $validation->setRule('password', 'Password', 'required');
 
+        // Assign value from post to variable
         $post = $request->getPost();
 
+        // If no value found from post, notify it is required
         if (! $validation->run($post)) {
             // Save errors and old input in flashdata and redirect back (PRG)
             $session->setFlashdata('errors', $validation->getErrors());
             $session->setFlashdata('old', $post);
+            // Return back to the page with errors indicated
             return redirect()->back()->withInput();
         }
 
+        // Assign value of email from post to variable
         $email = $request->getPost('email');
 
-        log_message('debug', 'Auth::login email: ' . $email);
-
         // Authenticate against users table
-        $userModel = new \App\Models\UsersModel();
+        $userModel = new UsersModel();
+        // Using Query Builder, query the email from post and look for first value
         $user = $userModel->where('email', $email)->first();
-
-        log_message('debug', 'Auth::login user found: ' . ($user ? 'yes' : 'no'));
 
         // If no user found, notify about the email
         if (! $user) {
             $session->setFlashdata('errors', ['email' => 'No account found for that email']);
+            $session->setFlashdata('old', ['email' => $email]);
+            return redirect()->back()->withInput();
+        }
+
+        // Using Query Builder, query the email from post and look if active
+        $user = $userModel->where('email', $email)->where('email_activated', 1)->first();
+
+        // If user is activated
+        if (! $user) {
+            $session->setFlashdata('errors', ['email' => 'Account has been deactivated']);
             $session->setFlashdata('old', ['email' => $email]);
             return redirect()->back()->withInput();
         }
@@ -69,10 +80,6 @@ class Auth extends BaseController
         if (! password_verify($request->getPost('password'), $userArr['password_hash'] ?? '')) {
             $session->setFlashdata('errors', ['password' => 'Incorrect password']);
             $session->setFlashdata('old', ['email' => $email]);
-            return redirect()->back()->withInput();
-        }
-        if (isset($userArr['account_status']) && ! (int) $userArr['account_status']) {
-            $session->setFlashdata('errors', ['account' => 'Account is inactive']);
             return redirect()->back()->withInput();
         }
 
@@ -131,28 +138,28 @@ class Auth extends BaseController
         return redirect()->to('/');
     }
 
-    // Quick debug endpoint: GET /auth-debug
     public function debugCheck()
     {
         $db = \Config\Database::connect();
         try {
             $ok = $db->query('SELECT 1')->getRow();
-            log_message('debug', 'Auth::debugCheck DB ok');
             return $this->response->setStatusCode(200)->setBody('debug: OK');
         } catch (\Throwable $e) {
-            log_message('error', 'Auth::debugCheck DB error: ' . $e->getMessage());
             return $this->response->setStatusCode(500)->setBody('debug: DB error');
         }
     }
 
-    public function showSignup()
+    public function showSignupPage()
     {
+        // Initialize session
         $session = session();
 
+        // If already logged in, send to landing
         if ($session->has('user')) {
-            return redirect()->to('/admin');
+            return redirect()->to('/');
         }
 
+        // Pull flashdata errors/old if present
         $errors = $session->getFlashdata('errors') ?? [];
         $old = $session->getFlashdata('old') ?? [];
 
@@ -161,19 +168,24 @@ class Auth extends BaseController
 
     public function signup()
     {
+        // Access service request
         $request = service('request');
+        // Initialize Session
         $session = session();
 
+        // Basic validation using CI's Validation service
         $validation = \Config\Services::validation();
-        $validation->setRule('first_name', 'First name', 'required|min_length[1]|max_length[100]');
+        $validation->setRule('first_name', 'First name', 'required|min_length[2]|max_length[100]');
         $validation->setRule('middle_name', 'Middle name', 'permit_empty|max_length[100]');
-        $validation->setRule('last_name', 'Last name', 'required|min_length[1]|max_length[100]');
+        $validation->setRule('last_name', 'Last name', 'required|min_length[2]|max_length[100]');
         $validation->setRule('email', 'Email', 'required|valid_email');
         $validation->setRule('password', 'Password', 'required|min_length[6]');
         $validation->setRule('password_confirm', 'Password Confirmation', 'required|matches[password]');
 
+        // Assign value from post to variable
         $post = $request->getPost();
 
+        // If no value found from post, notify it is required
         if (! $validation->run($post)) {
             $session->setFlashdata('errors', $validation->getErrors());
             $session->setFlashdata('old', $post);
@@ -181,7 +193,7 @@ class Auth extends BaseController
         }
 
         // Persist user to database using UsersModel
-        $userModel = new \App\Models\UsersModel();
+        $userModel = new UsersModel();
 
         // Prevent duplicate emails
         if ($userModel->where('email', $post['email'])->first()) {
@@ -190,6 +202,7 @@ class Auth extends BaseController
             return redirect()->back()->withInput();
         }
 
+        // Prepare data
         $data = [
             'first_name' => $post['first_name'],
             'middle_name' => $post['middle_name'] ?? null,
@@ -202,8 +215,10 @@ class Auth extends BaseController
             'newsletter' => 1,
         ];
 
+        // Using Query Builder insert the data and check the return value
         $inserted = $userModel->insert($data);
 
+        // If false means issue could happen in database
         if ($inserted === false) {
             $session->setFlashdata('errors', ['general' => 'Could not create account']);
             $session->setFlashdata('old', $post);

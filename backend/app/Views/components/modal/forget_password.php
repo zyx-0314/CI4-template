@@ -1,3 +1,7 @@
+<?php
+// Component: components/modal/forget_password.php
+?>
+
 <button type="button" id="openForgotModal" class="font-medium text-emerald-600 hover:underline">Forgot your password?</button>
 
 <!-- Template (inert inside the page) to avoid being inside the login form DOM tree -->

@@ -1,5 +1,7 @@
 <?php
-$reservation = $reservation ?? [];
+// Page: user/reservation_success
+// Data contract:
+// $reservation: object array | string
 ?>
 <!doctype html>
 <html lang="en">

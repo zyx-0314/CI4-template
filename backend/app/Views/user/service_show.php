@@ -1,7 +1,7 @@
 <?php
-// View: backend/app/Views/user/service_show.php
-// Expects: $service associative array
-$service = $service ?? null;
+// Page: user/service_show
+// Data contract:
+// $service: object | string
 ?>
 <!doctype html>
 <html lang="en">
@@ -19,15 +19,15 @@ $service = $service ?? null;
                 <!-- Main column -->
                 <div class="lg:col-span-2">
                     <!-- Sticky Title -->
-                    <div class="top-4 z-10 sticky bg-transparent py-2">
-                        <h1 class="font-semibold text-slate-900 text-2xl"><?= esc($service['title']) ?></h1>
-                        <div class="text-slate-600 text-sm">Cost: <span class="font-medium">$<?= number_format((float)($service['cost'] ?? 0), 2) ?></span></div>
+                    <div class="top-0 z-10 sticky bg-white py-2">
+                        <h1 class="font-semibold text-slate-900 text-2xl"><?= esc($service->title) ?></h1>
+                        <div class="text-slate-600 text-sm">Cost: <span class="font-medium">$<?= number_format((float)($service->cost ?? 0), 2) ?></span></div>
                     </div>
 
                     <!-- Hero image -->
                     <div class="bg-white shadow-sm mt-4 rounded-lg overflow-hidden">
-                        <?php if (!empty($service['banner_image'])): ?>
-                            <img src="/<?php echo $service['banner_image'] ?>" alt="<?= esc($service['title']) ?>" class="w-full h-96 object-cover">
+                        <?php if (!empty($service->banner_image)): ?>
+                            <img src="/<?php echo $service->banner_image ?>" alt="<?= esc($service->title) ?>" class="w-full h-96 object-cover">
                         <?php else: ?>
                             <div class="flex justify-center items-center bg-slate-100 w-full h-96">
                                 <img src="/logo/main.svg" alt="no image" class="h-16">
@@ -38,15 +38,15 @@ $service = $service ?? null;
                     <!-- Description -->
                     <section class="bg-white shadow-sm mt-6 p-6 rounded-lg">
                         <h2 class="mb-3 font-medium text-lg">Description</h2>
-                        <div class="text-slate-700 leading-relaxed"><?= nl2br(esc($service['description'] ?? '')) ?></div>
+                        <div class="text-slate-700 leading-relaxed"><?= nl2br(esc($service->description ?? '')) ?></div>
                     </section>
 
                     <!-- Inclusions -->
-                    <?php if (!empty($service['inclusions'])): ?>
+                    <?php if (!empty($service->inclusions)): ?>
                         <section class="mt-6">
                             <h2 class="mb-3 font-medium text-lg">Inclusions</h2>
                             <div class="gap-4 grid grid-cols-1 sm:grid-cols-2">
-                                <?php foreach (explode(',', $service['inclusions']) as $inc): ?>
+                                <?php foreach (explode(',', $service->inclusions) as $inc): ?>
                                     <?php $inc = trim($inc);
                                     if ($inc === '') continue; ?>
                                     <?= view('components/cards/card', ['title' => $inc, 'excerpt' => '', 'banner_image' => null, 'href' => null]) ?>
@@ -62,11 +62,11 @@ $service = $service ?? null;
                         <div class="bg-white shadow-sm p-4 rounded-lg">
                             <div class="flex justify-between items-center">
                                 <div class="text-slate-600 text-sm">Price</div>
-                                <div class="font-semibold text-lg">$<?= number_format((float)($service['cost'] ?? 0), 2) ?></div>
+                                <div class="font-semibold text-lg">$<?= number_format((float)($service->cost ?? 0), 2) ?></div>
                             </div>
                             <div class="mt-4">
-                                <?php if (!empty($service['is_available'])): ?>
-                                    <a href="/reservation" class="inline-flex justify-center items-center px-4 py-2 rounded-md w-full text-white btn-sage">Reserve service</a>
+                                <?php if (!empty($service->is_available)): ?>
+                                    <a href="/reservation/<?php echo $service->id ?>" class="inline-flex justify-center items-center px-4 py-2 rounded-md w-full text-white btn-sage">Reserve service</a>
                                 <?php else: ?>
                                     <button class="bg-slate-200 px-4 py-2 rounded-md w-full text-slate-600" disabled>Not available</button>
                                 <?php endif; ?>

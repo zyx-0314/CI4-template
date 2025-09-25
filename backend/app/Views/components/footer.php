@@ -1,8 +1,5 @@
 <?php
-// Component: footer
-// Data contract:
-// $copyright: string
-// $links: array of ['label'=>string, 'href'=>string]
+// Component: components/footer.php
 ?>
 <footer class="bg-white mt-12 border-t" role="contentinfo">
   <div class="mx-auto px-6 py-8 max-w-6xl text-gray-600 text-sm">

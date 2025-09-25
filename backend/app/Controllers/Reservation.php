@@ -3,33 +3,26 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use CodeIgniter\HTTP\IncomingRequest;
+use App\Models\ServicesModel;
+use App\Models\RequestsModel;
+use CodeIgniter\HTTP\ResponseInterface;
 
 class Reservation extends BaseController
 {
-    private $DUMMY_SERVICES = [
-        ['id' => 1, 'title' => 'Basic Funeral Package', 'description' => 'Simple service with chapel of rest', 'cost' => 15000, 'is_available' => 1, 'is_active' => 1, 'inclusions' => 'Chapel,Hearse,Flowers'],
-        ['id' => 2, 'title' => 'Standard Funeral Package', 'description' => 'Includes viewing and basic catering', 'cost' => 30000, 'is_available' => 1, 'is_active' => 1, 'inclusions' => 'Chapel,Hearse,Catering'],
-        ['id' => 4, 'title' => 'Cremation Service', 'description' => 'Cremation-only service', 'cost' => 12000, 'is_available' => 1, 'is_active' => 1, 'inclusions' => 'Cremation Certificate'],
-        ['id' => 5, 'title' => 'Memorial Only', 'description' => 'Memorial service without remains', 'cost' => 8000, 'is_available' => 1, 'is_active' => 1, 'inclusions' => 'Venue,Sound System'],
-        ['id' => 7, 'title' => 'Express Service', 'description' => 'Quick handling and burial', 'cost' => 7000, 'is_available' => 1, 'is_active' => 1, 'inclusions' => 'Hearse'],
-        ['id' => 8, 'title' => 'Deluxe with Reception', 'description' => 'Includes reception after service', 'cost' => 45000, 'is_available' => 1, 'is_active' => 1, 'inclusions' => 'Reception,Catering,Program'],
-    ];
-
-    public function create()
+    public function showReservationRequestPage($serviceId)
     {
-        $serviceId = $this->request->getGet('service_id');
+        // Initialize Session
+        $session = session();
 
-        $service = null;
-        foreach ($this->DUMMY_SERVICES as $s) {
-            if ((string) $s['id'] === (string) $serviceId) {
-                $service = $s;
-                break;
-            }
-        }
+        // Persist service to database using ServicesModel
+        $model = new ServicesModel();
+
+        // Query Builder Select the Data in Database
+        $service = $model->where('id', $serviceId)->first();
+        // Query Builder Select List the Data in Database
+        $services = $model->where('is_active', 1)->where('is_available', 1)->orderBy('id', 'ASC')->findAll();
 
         // Try to prefill first and last name and email from session user data if present
-        $session = session();
         $firstName = $session->get('user.first_name') ?? null;
         $lastName = $session->get('user.last_name') ?? null;
         $email = $session->get('user.email') ?? null;
@@ -54,93 +47,213 @@ class Reservation extends BaseController
             'first_name' => $firstName ?? '',
             'last_name' => $lastName ?? '',
             'email' => $email ?? '',
-            'services' => $this->DUMMY_SERVICES
+            'services' => $services,
+            'serviceId' => $serviceId,
         ]);
     }
 
-    public function store()
+    public function createRequest()
     {
-        $post = $this->request->getPost();
+        try {
 
-        $data = [
-            'service_id' => $post['service_id'] ?? null,
-            'first_name' => $post['first_name'] ?? null,
-            'last_name' => $post['last_name'] ?? null,
-            'phone' => $post['phone'] ?? null,
-            'email' => $post['email'] ?? null,
-            'date_start' => $post['date_start'] ?? null,
-            'date_end' => $post['date_end'] ?? null,
-            'additional_requests' => $post['additional_requests'] ?? null,
-            // For demo, don't store real credit card. We'll mask it.
-            'cc_last4' => isset($post['cc_number']) ? substr(preg_replace('/\D/', '', $post['cc_number']), -4) : null,
-            'cc_name' => $post['cc_name'] ?? null,
-        ];
+            // Access service request
+            $request = service('request');
+            // Initialize Session
+            $session = session();
 
-        // Minimal validation
-        $errors = [];
-        if (empty($data['first_name'])) $errors[] = 'First name is required.';
-        if (empty($data['last_name'])) $errors[] = 'Last name is required.';
-        if (empty($data['phone'])) $errors[] = 'Phone number is required.';
-        if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) $errors[] = 'Valid email is required.';
-        if (empty($data['date_start'])) $errors[] = 'Start date is required.';
-        if (empty($data['date_end'])) $errors[] = 'End date is required.';
+            // Persist request to database using RequestsModel
+            $requestModel = new RequestsModel();
 
-        // Demo payment validations (lightweight)
-        if (empty($post['cc_name'])) $errors[] = 'Name on card is required.';
-        if (empty($post['cc_cvv'])) $errors[] = 'CVV is required.';
-        else {
-            $cvv = preg_replace('/\D/', '', $post['cc_cvv']);
-            if (!preg_match('/^\d{3,4}$/', $cvv)) $errors[] = 'CVV must be 3 or 4 digits.';
-        }
-        if (empty($post['cc_expiry'])) $errors[] = 'Expiry is required.';
-        else {
-            if (!preg_match('/^(0[1-9]|1[0-2])\/[0-9]{2}$/', $post['cc_expiry'])) $errors[] = 'Expiry must be in MM/YY format.';
-        }
+            // Assign value from post to variable
+            $post = $request->getPost();
 
-        if (!empty($errors)) {
-            // Try to find the service to re-render the form context
-            $service = null;
-            $serviceId = $post['service_id'] ?? null;
-            foreach ($this->DUMMY_SERVICES as $s) {
-                if ((string)$s['id'] === (string)$serviceId) {
-                    $service = $s;
-                    break;
+            // Basic validation using CI's Validation service
+            $validation = \Config\Services::validation();
+            $rules = [
+                'service_id' => [
+                    'label' => 'Service',
+                    'rules' => 'required|is_natural_no_zero',
+                ],
+                'first_name' => [
+                    'label' => 'First name',
+                    'rules' => 'required|string',
+                ],
+                'last_name' => [
+                    'label' => 'Last name',
+                    'rules' => 'required|string',
+                ],
+                'date_start' => [
+                    'label' => 'Start date',
+                    'rules' => 'required|valid_date[Y-m-d]',
+                ],
+                'date_end' => [
+                    'label' => 'End date',
+                    'rules' => 'required|valid_date[Y-m-d]',
+                ],
+                'phone' => [
+                    'label' => 'Phone',
+                    'rules' => 'required_without[email]|string',
+                ],
+                'email' => [
+                    'label' => 'Email',
+                    'rules' => 'required_without[phone]|valid_email',
+                ],
+            ];
+
+            // If no value found from post, notify it is required
+            if (!$validation->setRules($rules)->run($post)) {
+                $errors = $validation->getErrors();
+
+                // For AJAX clients return JSON like before
+                if ($request->isAJAX()) {
+                    return $this->response->setJSON([
+                        'ok'     => false,
+                        'errors' => $errors,
+                        'old'    => $post,
+                    ])->setStatusCode(422);
                 }
+
+                // Otherwise render the form view directly with errors and old input
+                $servicesModel = new ServicesModel();
+                $service = $servicesModel->find($post['service_id'] ?? null);
+                $services = $servicesModel->where('is_active', 1)->orderBy('id', 'ASC')->findAll();
+
+                return view('user/reservation_form', [
+                    'service' => $service,
+                    'first_name' => $post['first_name'] ?? '',
+                    'last_name' => $post['last_name'] ?? '',
+                    'email' => $post['email'] ?? '',
+                    'services' => $services,
+                    'serviceId' => $post['service_id'] ?? null,
+                    'errors' => array_values($errors),
+                    'fieldErrors' => $errors,
+                    'old' => $post,
+                ]);
             }
 
-            // Map common error messages to field keys for inline display
-            $fieldErrors = [];
-            foreach ($errors as $msg) {
-                if (stripos($msg, 'first name') !== false || stripos($msg, 'first_name') !== false) $fieldErrors['first_name'] = $msg;
-                if (stripos($msg, 'last name') !== false || stripos($msg, 'last_name') !== false) $fieldErrors['last_name'] = $msg;
-                if (stripos($msg, 'phone') !== false) $fieldErrors['phone'] = $msg;
-                if (stripos($msg, 'email') !== false) $fieldErrors['email'] = $msg;
-                if (stripos($msg, 'start date') !== false || stripos($msg, 'start') !== false) $fieldErrors['date_start'] = $msg;
-                if (stripos($msg, 'end date') !== false || stripos($msg, 'end') !== false) $fieldErrors['date_end'] = $msg;
-                // Payment related mappings
-                if (stripos($msg, 'name on card') !== false || stripos($msg, 'name on card') !== false || stripos($msg, 'name on card') !== false) $fieldErrors['cc_name'] = $msg;
-                if (stripos($msg, 'cvv') !== false) $fieldErrors['cc_cvv'] = $msg;
-                if (stripos($msg, 'expiry') !== false || stripos($msg, 'expir') !== false) $fieldErrors['cc_expiry'] = $msg;
+            $dateStart = strtotime($post['date_start']);
+            $dateEnd   = strtotime($post['date_end']);
+            $minDate   = strtotime('+3 days', strtotime(date('Y-m-d')));
+
+            // Start date must be >= 3 days from now
+            if ($dateStart < $minDate) {
+                $msg = 'Start date must be at least 3 days from today.';
+
+                if ($request->isAJAX()) {
+                    return $this->response->setJSON([
+                        'ok' => false,
+                        'errors' => ['date_start' => $msg],
+                        'old' => $post,
+                    ])->setStatusCode(422);
+                }
+
+                $servicesModel = new ServicesModel();
+                $service = $servicesModel->find($post['service_id'] ?? null);
+                $services = $servicesModel->where('is_active', 1)->orderBy('id', 'ASC')->findAll();
+
+                return view('user/reservation_form', [
+                    'service' => $service,
+                    'first_name' => $post['first_name'] ?? '',
+                    'last_name' => $post['last_name'] ?? '',
+                    'email' => $post['email'] ?? '',
+                    'services' => $services,
+                    'serviceId' => $post['service_id'] ?? null,
+                    'errors' => [$msg],
+                    'fieldErrors' => ['date_start' => $msg],
+                    'old' => $post,
+                ]);
             }
 
-            return view('user/reservation_form', [
-                'errors' => $errors,
-                'fieldErrors' => $fieldErrors,
-                'old' => $post,
-                'services' => $this->DUMMY_SERVICES,
-                'service' => $service,
-                'first_name' => $post['first_name'] ?? '',
-                'last_name' => $post['last_name'] ?? '',
-                'email' => $post['email'] ?? ''
-            ]);
+            // End date must not be earlier than start date
+            if ($dateEnd < $dateStart) {
+                $msg = 'End date cannot be earlier than start date.';
+
+                if ($request->isAJAX()) {
+                    return $this->response->setJSON([
+                        'ok'     => false,
+                        'errors' => ['date_end' => $msg],
+                        'old'    => $post,
+                    ])->setStatusCode(422);
+                }
+
+                $servicesModel = new ServicesModel();
+                $service = $servicesModel->find($post['service_id'] ?? null);
+                $services = $servicesModel->where('is_active', 1)->orderBy('id', 'ASC')->findAll();
+
+                return view('user/reservation_form', [
+                    'service' => $service,
+                    'first_name' => $post['first_name'] ?? '',
+                    'last_name' => $post['last_name'] ?? '',
+                    'email' => $post['email'] ?? '',
+                    'services' => $services,
+                    'serviceId' => $post['service_id'] ?? null,
+                    'errors' => [$msg],
+                    'fieldErrors' => ['date_end' => $msg],
+                    'old' => $post,
+                ]);
+            }
+
+
+            // Prepare data for insertion
+            $saveData = [
+                'service_id'          => $post['service_id'],
+                'first_name'          => $post['first_name'],
+                'last_name'           => $post['last_name'],
+                'phone'               => $post['phone'] ?? null,
+                'email'               => $post['email'] ?? null,
+                'date_start'          => $post['date_start'],
+                'date_end'            => $post['date_end'],
+                'additional_requests' => $post['additional_requests'] ?? null,
+                'status'              => 'pending',
+                'is_active'           => 1,
+            ];
+
+            // Attach current user id if available in session
+            if ($session->has('user')) {
+                $saveData['user_id'] = $session->get('user')['id'];
+            } else {
+                $saveData['user_id'] = null;
+            }
+
+            // Insert into DB
+            $insertResult = $requestModel->insert($saveData);
+
+            if ($insertResult === false) {
+                $msg = 'Could not create request';
+
+                if ($request->isAJAX()) {
+                    return $this->response->setJSON([
+                        'ok' => false,
+                        'errors' => ['general' => $msg],
+                        'old' => $post,
+                    ])->setStatusCode(500);
+                }
+
+                $servicesModel = new ServicesModel();
+                $service = $servicesModel->find($post['service_id'] ?? null);
+                $services = $servicesModel->where('is_active', 1)->orderBy('id', 'ASC')->findAll();
+
+                return view('user/reservation_form', [
+                    'service' => $service,
+                    'first_name' => $post['first_name'] ?? '',
+                    'last_name' => $post['last_name'] ?? '',
+                    'email' => $post['email'] ?? '',
+                    'services' => $services,
+                    'serviceId' => $post['service_id'] ?? null,
+                    'errors' => [$msg],
+                    'fieldErrors' => ['general' => $msg],
+                    'old' => $post,
+                ]);
+            }
+
+
+            // Utilize JSON to transfer feedback into toast
+        } catch (\Exception $e) {
+            // Utilize JSON to transfer feedback into toast
+            return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
+                ->setJSON(['success' => false, 'message' => 'Server error while creating service: ' . $e->getMessage()]);
         }
 
-        // Store reservation in session as demo
-        $session = session();
-        $reservations = $session->get('reservations') ?? [];
-        $reservations[] = $data + ['created_at' => date('c')];
-        $session->set('reservations', $reservations);
-
-        return view('user/reservation_success', ['reservation' => $data]);
+        return view('user/reservation_success', ['reservation' => $saveData]);
     }
 }

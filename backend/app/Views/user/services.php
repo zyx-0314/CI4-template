@@ -1,11 +1,7 @@
 <?php
-// View: backend/app/Views/user/services.php
-// Expects: $services = array of associative arrays with keys:
-//   id, title, category, cost, duration, description, image, created_at
-// This view provides a GET form for server-side filtering and client-side JS for instant filtering/sorting.
-// If $services is not provided, an empty array will be used.
-
-$services = $services ?? [];
+// Page: user/services
+// Data contract:
+// $services: object array | string
 ?>
 <!doctype html>
 <html lang="en">
@@ -21,8 +17,6 @@ $services = $services ?? [];
         <form id="filterForm" onsubmit="return false;" class="flex sm:flex-row flex-col sm:items-center gap-3 mb-6">
             <input type="search" id="q" placeholder="Search services" class="shadow-sm px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-1/3">
 
-
-
             <select id="sort" class="shadow-sm px-3 py-2 border border-slate-200 rounded-md focus:outline-none w-full sm:w-48">
                 <option value="">Sort — default</option>
                 <option value="cost_asc">cost: low → high</option>
@@ -37,12 +31,16 @@ $services = $services ?? [];
 
         <div id="results" class="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             <!-- Client-side rendered, interactive results -->
-            <?php if (empty($services)): ?>
-                <div class="col-span-full py-12 text-slate-600 text-center">No services available.</div>
-            <?php else: ?>
-                <?php foreach ($services as $s): ?>
-                    <?= view('components/cards/service_card', ['s' => $s]) ?>
-                <?php endforeach; ?>
+            <?php if (is_string($services)) : ?>
+                <?= view('components/cards/card', ['title' => $services, 'value' => 0]); ?>
+            <?php else : ?>
+                <?php if (empty($services)): ?>
+                    <div class="col-span-full py-12 text-slate-600 text-center">No services available.</div>
+                <?php else: ?>
+                    <?php foreach ($services as $service): ?>
+                        <?= view('components/cards/service_card', ['service' => $service]) ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
     </main>

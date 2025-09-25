@@ -1,23 +1,8 @@
 <?php
-
-/**
- * views/auth/login.php
- *
- * Data contract (optional):
- * - $action: string - form action URL (default: '/login')
- * - $method: string - http method (default: 'post')
- * - $errors: array|null - validation errors keyed by field name
- * - $old: array|null - old input values, e.g. old('email')
- *
- * This view renders an accessible login form. It expects the framework's
- * `csrf_field()` helper to be available for CSRF protection.
- */
-
-$action = $action ?? '/login';
-$method = strtoupper($method ?? 'post');
-$errors = $errors ?? [];
-$old = $old ?? [];
-
+// Page: auth/login
+// Data contract:
+// $errors: array
+// $old: array
 ?>
 <!doctype html>
 <html lang="en">
@@ -35,7 +20,7 @@ $old = $old ?? [];
                 <p class="mt-2 text-gray-600 text-sm text-center">Don't have an account? <a href="/signup" class="font-medium text-emerald-600 hover:underline">Sign up</a></p>
             </div>
 
-            <form class="space-y-6 mt-8" action="<?= esc($action) ?>" method="<?= $method === 'GET' ? 'get' : 'post' ?>" novalidate>
+            <form class="space-y-6 mt-8" action="/login" method="post" novalidate>
                 <?= csrf_field() ?>
                 <input type="hidden" name="remember" value="0">
                 <div class="-space-y-px shadow-sm rounded-md">
@@ -67,7 +52,7 @@ $old = $old ?? [];
                     </div>
 
                     <div class="text-sm">
-                        <?= view('components/modal/forgetPassword.php') ?>
+                        <?= view('components/modal/forget_password.php') ?>
                     </div>
                 </div>
 

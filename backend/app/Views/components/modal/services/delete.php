@@ -1,45 +1,36 @@
 <?php
-// Accept either array or object service passed from parent view
-$svc = $service ?? null;
-$svcId = null;
-$svcTitle = null;
-if ($svc !== null) {
-    if (is_array($svc)) {
-        $svcId = $svc['id'] ?? null;
-        $svcTitle = $svc['title'] ?? null;
-    } elseif (is_object($svc)) {
-        $svcId = $svc->id ?? null;
-        $svcTitle = $svc->title ?? null;
-    }
-}
+// Component: components/modal/services/delete.php
+// Data contract:
+// $service: object array
 ?>
-
 <div class="flex justify-end mb-4">
-    <button id="btnTriggerDelete" type="button" <?= $svcId !== null ? 'data-delete-service-id="' . esc($svcId) . '"' : '' ?> <?= $svcTitle !== null ? 'data-delete-service-title="' . esc($svcTitle) . '"' : '' ?> class="bg-red-600/70 hover:bg-red-600/60 px-3 py-2 rounded text-white duration-200 cursor-pointer">
+    <button type="button" <?= $service->id !== null ? 'data-delete-service-id="' . esc($service->id) . '"' : '' ?> <?= $service->title !== null ? 'data-delete-service-title="' . esc($service->title) . '"' : '' ?> class="bg-red-600/70 hover:bg-red-600/60 px-3 py-2 rounded text-white duration-200 cursor-pointer js-delete-service-trigger">
         <i class="fa-solid fa-trash"></i>
     </button>
 </div>
-<div id="deleteServiceModal" class="hidden z-50 fixed inset-0 justify-center items-center m-0">
-    <div class="absolute inset-0 bg-black opacity-50" id="deleteServiceModalBackdrop"></div>
+
+<!-- Modal instance (one per row) - use class selectors so JS finds modal relative to trigger -->
+<div class="hidden z-50 fixed inset-0 justify-center items-center m-0 delete-service-modal">
+    <div class="absolute inset-0 bg-black opacity-50 delete-service-backdrop"></div>
 
     <div class="relative bg-white shadow-lg mx-4 my-8 rounded w-full max-w-lg max-h-[90vh] overflow-auto" role="dialog" aria-modal="true" aria-labelledby="deleteServiceTitle">
         <header class="px-6 py-4 border-b">
             <h3 id="deleteServiceTitle" class="font-semibold text-lg">Delete service</h3>
         </header>
 
-        <form id="deleteServiceForm" class="space-y-4 px-6 py-4" method="POST" action="/admin/services/delete">
+        <form class="space-y-4 px-6 py-4 delete-service-form" method="POST" action="/admin/services/delete">
             <?= csrf_field() ?>
-            <input type="hidden" name="id" id="deleteServiceId" value="<?= esc($svcId ?? '') ?>" />
+            <input type="hidden" name="id" class="delete-service-id" value="<?= esc($service->id ?? '') ?>" />
 
             <p class="text-gray-700 text-sm">You are about to delete the following service. This action cannot be undone.</p>
 
             <div class="mt-4 px-2">
                 <div class="font-medium text-gray-900 text-sm">Service</div>
-                <div id="deleteServiceName" class="mt-1 text-gray-700 text-base"><?= $svcTitle ? esc($svcTitle) : '—' ?></div>
+                <div class="mt-1 text-gray-700 text-base delete-service-name"><?= $service->title ? esc($service->title) : '\u2014' ?></div>
             </div>
 
             <footer class="flex justify-end space-x-2 pt-4 border-t">
-                <button type="button" id="btnCancelDelete" class="px-4 py-2 border rounded cursor-pointer">Cancel</button>
+                <button type="button" class="px-4 py-2 border rounded cursor-pointer btn-cancel-delete">Cancel</button>
                 <button type="submit" class="bg-red-600 px-4 py-2 rounded text-white cursor-pointer">Delete</button>
             </footer>
         </form>
@@ -48,57 +39,10 @@ if ($svc !== null) {
 
 <script>
     (function() {
-        const modal = document.getElementById('deleteServiceModal');
-        const backdrop = document.getElementById('deleteServiceModalBackdrop');
-        const btnCancel = document.getElementById('btnCancelDelete');
-        const inputId = document.getElementById('deleteServiceId');
-        const serviceNameEl = document.getElementById('deleteServiceName');
+        if (window.__deleteServiceModalInit) return; // already installed
+        window.__deleteServiceModalInit = true;
 
-        function openModal(id, title) {
-            if (!modal) return;
-            // Prevent background scrolling
-            document.body.style.overflow = 'hidden';
-
-            inputId.value = id || '';
-            serviceNameEl.textContent = title || '—';
-
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-
-            const cancel = modal.querySelector('#btnCancelDelete');
-            if (cancel) cancel.focus();
-        }
-
-        function closeModal() {
-            if (!modal) return;
-            modal.classList.remove('flex');
-            modal.classList.add('hidden');
-            document.body.style.overflow = '';
-
-            if (inputId) inputId.value = '';
-            if (serviceNameEl) serviceNameEl.textContent = '—';
-        }
-
-        document.addEventListener('click', function(e) {
-            const trigger = e.target.closest('[data-delete-service-id]');
-            if (!trigger) return;
-            e.preventDefault();
-            const id = trigger.getAttribute('data-delete-service-id');
-            const title = trigger.getAttribute('data-delete-service-title') || trigger.textContent || '';
-            openModal(id, title.trim());
-        });
-
-        if (backdrop) backdrop.addEventListener('click', closeModal);
-        if (btnCancel) btnCancel.addEventListener('click', closeModal);
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) closeModal();
-        });
-
-        // AJAX submit handler: post to /admin/services/delete with FormData, show toast, reload on success
-        const form = document.getElementById('deleteServiceForm');
-        let _isSubmitting = false;
-
+        // Delegated handler: opens the modal instance associated with the clicked trigger.
         function showToast(message, type = 'info', timeout = 3000) {
             const id = 'toast_' + Date.now();
             const el = document.createElement('div');
@@ -115,55 +59,100 @@ if ($svc !== null) {
             return id;
         }
 
-        async function submitDelete(e) {
+        document.addEventListener('click', async function(e) {
+            // Trigger: match by data attribute or class
+            const trigger = e.target.closest('[data-delete-service-id], .js-delete-service-trigger');
+            if (!trigger) return;
             e.preventDefault();
-            if (_isSubmitting) return;
-            _isSubmitting = true;
+            const id = trigger.getAttribute('data-delete-service-id');
+            const title = trigger.getAttribute('data-delete-service-title') || trigger.textContent || '';
 
-            // disable close actions while deleting
-            if (backdrop) backdrop.removeEventListener('click', closeModal);
-            if (btnCancel) btnCancel.disabled = true;
+            // find modal within same table cell/row
+            const container = trigger.closest('td') || trigger.closest('tr') || document;
+            const modal = container.querySelector('.delete-service-modal');
+            if (!modal) return;
 
-            const statusToast = showToast('Deleting service...', 'info', 60000);
+            const inputId = modal.querySelector('.delete-service-id');
+            const nameEl = modal.querySelector('.delete-service-name');
+            const backdrop = modal.querySelector('.delete-service-backdrop');
+            const btnCancel = modal.querySelector('.btn-cancel-delete');
+            const form = modal.querySelector('.delete-service-form');
 
-            const fd = new FormData(form);
-            // ensure 'id' is present (forms may use service_id previously)
-            const hiddenId = document.getElementById('deleteServiceId');
-            if (hiddenId && hiddenId.value) fd.set('id', hiddenId.value);
+            // open
+            document.body.style.overflow = 'hidden';
+            if (inputId) inputId.value = id || '';
+            if (nameEl) nameEl.textContent = title.trim() || '\u2014';
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
 
-            try {
-                const resp = await fetch(form.action, {
-                    method: 'DELETE',
-                    body: fd
-                });
-                let data = null;
-                try {
-                    data = await resp.json();
-                } catch (err) {
-                    data = null;
-                }
-                if (resp.ok && data && data.success) {
-                    showToast(data.message || 'Deleted', 'success', 3000);
-                    setTimeout(() => {
-                        location.reload();
-                    }, 600);
-                } else {
-                    const msg = data && data.message ? data.message : 'Delete failed';
-                    showToast(msg, 'error', 5000);
-                }
-            } catch (err) {
-                showToast('Network or server error', 'error', 5000);
-            } finally {
-                _isSubmitting = false;
-                try {
-                    const t = document.getElementById(statusToast);
-                    if (t) t.remove();
-                } catch (e) {}
-                if (backdrop) backdrop.addEventListener('click', closeModal);
-                if (btnCancel) btnCancel.disabled = false;
+            // focus cancel
+            if (btnCancel) btnCancel.focus();
+
+            // attach handlers for backdrop/cancel and form submit for this modal only
+            function closeModal() {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+                if (inputId) inputId.value = '';
+                if (nameEl) nameEl.textContent = '\u2014';
+                // remove listeners
+                if (backdrop) backdrop.removeEventListener('click', onBackdrop);
+                if (btnCancel) btnCancel.removeEventListener('click', onCancel);
+                if (form) form.removeEventListener('submit', onSubmit);
             }
-        }
 
-        if (form) form.addEventListener('submit', submitDelete);
+            function onBackdrop() {
+                closeModal();
+            }
+
+            function onCancel() {
+                closeModal();
+            }
+
+            let _isSubmitting = false;
+            async function onSubmit(ev) {
+                ev.preventDefault();
+                if (_isSubmitting) return;
+                _isSubmitting = true;
+                if (backdrop) backdrop.removeEventListener('click', onBackdrop);
+                if (btnCancel) btnCancel.disabled = true;
+                const statusToast = showToast('Deleting service...', 'info', 60000);
+                const fd = new FormData(form);
+                if (inputId && inputId.value) fd.set('id', inputId.value);
+                try {
+                    const resp = await fetch(form.action, {
+                        method: 'POST',
+                        body: fd
+                    });
+                    let data = null;
+                    try {
+                        data = await resp.json();
+                    } catch (err) {
+                        data = null;
+                    }
+                    if (resp.ok && data && data.success) {
+                        showToast(data.message || 'Deleted', 'success', 3000);
+                        setTimeout(() => location.reload(), 600);
+                    } else {
+                        const msg = data && data.message ? data.message : 'Delete failed';
+                        showToast(msg, 'error', 5000);
+                    }
+                } catch (err) {
+                    showToast('Network or server error', 'error', 5000);
+                } finally {
+                    _isSubmitting = false;
+                    try {
+                        const t = document.getElementById(statusToast);
+                        if (t) t.remove();
+                    } catch (e) {}
+                    if (backdrop) backdrop.addEventListener('click', onBackdrop);
+                    if (btnCancel) btnCancel.disabled = false;
+                }
+            }
+
+            if (backdrop) backdrop.addEventListener('click', onBackdrop);
+            if (btnCancel) btnCancel.addEventListener('click', onCancel);
+            if (form) form.addEventListener('submit', onSubmit);
+        });
     })();
 </script>

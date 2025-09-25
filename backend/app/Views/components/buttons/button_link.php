@@ -1,5 +1,7 @@
 <?php
-// Simple link button
-// $label, $href
+// Page: components/button/button_link
+// Data contract:
+// $href: string | null
+// $label: string | null
 ?>
-<a href="<?= esc($href ?? '#') ?>" class="text-blue-600 underline inline-block"><?php echo esc($label ?? 'Learn more') ?></a>
+<a href="<?= esc($href ?? '#') ?>" class="inline-block text-blue-600 underline"><?php echo esc($label ?? 'Learn more') ?></a>
