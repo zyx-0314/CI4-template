@@ -32,3 +32,29 @@ STA. MARIA - Pending
 ELIARDA - Done
 BUNDALIAN - Git Problem Practice, Partial
 </h2>
+
+<h2>
+Leo Miguel Seda - Partial, Git problem. 1
+*Jandell Seno - Pending
+Kurt John Lester Tan - Done
+Anthony Luis Ponce De Leon - Done
+DANIEL LING - Done
+*Yvan Rhay Solis - Pending
+KYLE ANGELO CARDENAS - Done. 1
+*Van Ryan Navarez - Pending
+ALLEJANDRO DANYAEL OBISPO - Done
+Justin Kirk Endozo - Done
+LANYER JOHN MABALOT - Pending
+*Nicole Pajarillaga - Pending
+MARIA FRANCESCA ALCARAZ - Done. 1
+Sheryll Anne Marie Baccay - Pending
+Mark Angelo Licmo-an - Pending
+*Mariah Julia Arellano - Pending
+Mary Arwen Quemuel - Done. 2
+Lawrence Blasco - Done. 1
+JAYVEE PANOL - Pending
+HILARY ASHLEY PAGADORA - Done
+*Adrian Guillermo - Done
+*AMILIA DANIELLE TANAJURA - Pending
+VIAN ROTCIV TIBAY - Done
+</h2>
