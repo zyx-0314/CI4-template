@@ -132,6 +132,7 @@
             }
         }
     ```
+- [ ] Make sure to have the files of `DatabaseSeeder.php` and `ClearDatabaseSeeder.php`
 - [ ] Update `DatabaseSeeder.php` adding our newly created seeder
     - [ ] revise the following format after the first call
         ```php
