@@ -24,7 +24,7 @@
         - [ ] Add Try Catch
         ```php
         try {
-            
+
         } catch (\Exception $e) {
 
         }
