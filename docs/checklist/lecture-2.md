@@ -132,10 +132,17 @@
             }
         }
     ```
+- [ ] Make sure to have the files of `DatabaseSeeder.php` and `ClearDatabaseSeeder.php`
 - [ ] Update `DatabaseSeeder.php` adding our newly created seeder
     - [ ] revise the following format after the first call
         ```php
             $this->call('App\\Database\\Seeds\\NameOfYourSeederHere');
+        ```
+- [ ] Update `ClearDatabaseSeeder.php` adding our newly created table
+    - [ ] revise the following format after the first call
+        ```php
+            <!-- Add the table name inside example "User" Table -->
+            $tablesInOrder = ['User'];
         ```
 - [ ] Run `Seed` command you can check the readme, it doesnt require composer or php
 - [ ] If no error you can check if the table has the value you added in the seed
@@ -157,14 +164,10 @@
 
 ## Activity time
 Create the following, with their own issues, branches and PR
-- [ ] Create a Login in Page
-    - [ ] Under `Controller` `Auth`
-- [ ] Create a Sign up Page
-    - [ ] Under `Controller` `Auth`
-- [ ] Dashboard A
-    - [ ] Under `Controller` `Employee`
-- [ ] Dashboard B
-    - [ ] Under `Controller` `Client`
+- [ ] Dashboard Admin
+    - [ ] Under `Controller` create `adminPage` function
+    - [ ] Under `Controller` create `servicePage` function (Rename this to the specific naming your using ex.: `Menu`, `Product` etc.)
+    - [ ] Under `Controller` create `requestPage` function (Rename this to the specific naming your using ex.: `Menu`, `Order` etc.)
 
 ## Backend Time
 [ ] 1. Model and Entity
