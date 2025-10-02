@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\ServicesModel;
 use App\Models\UsersModel;
 use App\Models\RequestsModel;
+use App\Models\ObituaryRequestModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Admin extends BaseController
@@ -146,6 +147,28 @@ class Admin extends BaseController
             'accountsCount' => $accountsCount ?? 0,
             'verifiedEmailAccountsCount' => $verifiedEmailAccountsCount ?? 0,
             'nonVerfiedEmailAccountsCount' => $nonVerfiedEmailAccountsCount ?? 0,
+        ]);
+    }
+
+    public function showObituariesPage()
+    {
+        try {
+            $obModel = new ObituaryRequestModel();
+
+            $obituaries = $obModel->orderBy('id', 'ASC')->findAll();
+
+            $obituariesCount = $obModel->countAllResults(false);
+
+            // pending = status = 'request'
+            $pendingCount = $obModel->where('status', 'request')->countAllResults(false);
+        } catch (\Exception $e) {
+            $obituaries = "Server Issue: " . $e;
+        }
+
+        return view('admin/obituaries', [
+            'obituaries' => $obituaries,
+            'obituariesCount' => $obituariesCount ?? 0,
+            'pendingObituariesCount' => $pendingCount ?? 0,
         ]);
     }
 
@@ -715,6 +738,66 @@ class Admin extends BaseController
         } catch (\Throwable $e) {
             return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
                 ->setJSON(['success' => false, 'message' => 'Server error while updating inquiry: ' . $e->getMessage()]);
+        }
+    }
+
+    public function updateObituary()
+    {
+        $request = service('request');
+        $session = session();
+
+        $obModel = new ObituaryRequestModel();
+
+        $validation = \Config\Services::validation();
+        $validation->setRule('id', 'ID', 'required|min_length[1]');
+
+        $post = $request->getPost();
+
+        if (! $validation->run($post)) {
+            $session->setFlashdata('errors', $validation->getErrors());
+            $session->setFlashdata('old', $post);
+            return redirect()->back()->withInput();
+        }
+
+        try {
+            $existing = $obModel->find($post['id']);
+            if (! $existing) {
+                return $this->response->setStatusCode(ResponseInterface::HTTP_NOT_FOUND)
+                    ->setJSON(['success' => false, 'message' => 'Obituary request not found']);
+            }
+
+            $payload = ['id' => $post['id']];
+            $allowed = ['status', 'first_name', 'last_name', 'middle_name', 'date_of_birth', 'date_of_death', 'profile_image', 'description', 'viewing_date_time', 'viewing_place', 'funeral_date_time', 'funeral_place', 'burial_date_time', 'burial_place', 'treasured_memories', 'family'];
+            foreach ($allowed as $k) {
+                if (array_key_exists($k, $post)) {
+                    $val = $post[$k] === '' ? null : $post[$k];
+                    // If editing JSON fields, ensure they're JSON strings
+                    if (in_array($k, ['treasured_memories', 'family']) && $val !== null) {
+                        // If user submitted a JSON string, keep it; if they submitted an array-like string, try to normalize
+                        if (is_array($val)) {
+                            $val = json_encode($val);
+                        } else {
+                            // try to decode to validate; if decodable, re-encode to normalize
+                            $decoded = json_decode($val, true);
+                            if (json_last_error() === JSON_ERROR_NONE && $decoded !== null) {
+                                $val = json_encode($decoded);
+                            }
+                        }
+                    }
+                    $payload[$k] = $val;
+                }
+            }
+
+            $ok = $obModel->save($payload);
+            if ($ok === false) {
+                throw new \RuntimeException('Model update failed');
+            }
+
+            return $this->response->setStatusCode(ResponseInterface::HTTP_OK)
+                ->setJSON(['success' => true, 'message' => 'Obituary updated', 'data' => ['id' => $post['id']]]);
+        } catch (\Throwable $e) {
+            return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
+                ->setJSON(['success' => false, 'message' => 'Server error while updating obituary: ' . $e->getMessage()]);
         }
     }
 }

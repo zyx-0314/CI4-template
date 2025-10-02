@@ -1,21 +1,19 @@
 <?php
-
-/**
- * Obituary Index Page
- * Shows listing of available obituary designs for demonstration
- */
+// Page: obituary/obituaryList
+// Data contract:
+// $obituary: object array
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-<?= view('components/head', ['title' => 'Obituary & Memorial Pages']) ?>
+<?= view('components/head', ['title' => 'Obituary Pages']) ?>
 
 <body class="bg-gray-50">
     <?= view('components/header') ?>
 
     <main class="mx-auto px-4 py-12 max-w-6xl">
         <div class="mb-12 text-center">
-            <h1 class="mb-4 font-bold text-gray-800 text-4xl">Obituary & Memorial Pages</h1>
+            <h1 class="mb-4 font-bold text-gray-800 text-4xl">Obituary Pages</h1>
             <p class="mx-auto max-w-3xl text-gray-600 text-xl">
                 Honor your loved ones with beautiful, personalized memorial pages. Choose from our collection of thoughtfully designed templates.
             </p>
@@ -44,6 +42,9 @@
                         class="block bg-gray-800 hover:bg-gray-900 px-4 py-3 rounded-lg w-full text-white text-center transition duration-300">
                         View Sample
                     </a>
+                    <a href="<?= base_url('/obituary/request/1') ?>" class="block bg-sage hover:bg-sage-dark mt-3 px-4 py-3 rounded-lg w-full text-white text-center transition duration-300">
+                        Request Obituary
+                    </a>
                 </div>
             </div>
 
@@ -67,6 +68,9 @@
                     <a href="<?= base_url('/obituary/modern/2') ?>"
                         class="block bg-slate-700 hover:bg-slate-800 px-4 py-3 rounded-lg w-full text-white text-center transition duration-300">
                         View Sample
+                    </a>
+                    <a href="<?= base_url('/obituary/request/2') ?>" class="block bg-sage hover:bg-sage-dark mt-3 px-4 py-3 rounded-lg w-full text-white text-center transition duration-300">
+                        Request Obituary
                     </a>
                 </div>
             </div>
@@ -92,6 +96,9 @@
                         class="block bg-rose-500 hover:bg-rose-600 px-4 py-3 rounded-lg w-full text-white text-center transition duration-300">
                         View Sample
                     </a>
+                    <a href="<?= base_url('/obituary/request/4') ?>" class="block bg-sage hover:bg-sage-dark mt-3 px-4 py-3 rounded-lg w-full text-white text-center transition duration-300">
+                        Request Obituary
+                    </a>
                 </div>
             </div>
 
@@ -116,6 +123,9 @@
                         class="block bg-gray-600 hover:bg-gray-700 px-4 py-3 rounded-lg w-full text-white text-center transition duration-300">
                         View Sample
                     </a>
+                    <a href="<?= base_url('/obituary/request/5') ?>" class="block bg-sage hover:bg-sage-dark mt-3 px-4 py-3 rounded-lg w-full text-white text-center transition duration-300">
+                        Request Obituary
+                    </a>
                 </div>
             </div>
 
@@ -139,6 +149,9 @@
                     <a href="<?= base_url('/obituary/timeline/5') ?>"
                         class="block bg-indigo-600 hover:bg-indigo-700 px-4 py-3 rounded-lg w-full text-white text-center transition duration-300">
                         View Sample
+                    </a>
+                    <a href="<?= base_url('/obituary/request/6') ?>" class="block bg-sage hover:bg-sage-dark mt-3 px-4 py-3 rounded-lg w-full text-white text-center transition duration-300">
+                        Request Obituary
                     </a>
                 </div>
             </div>
@@ -203,12 +216,16 @@
             </p>
             <div class="flex sm:flex-row flex-col justify-center gap-4">
                 <a href="<?= base_url('/services') ?>"
-                    class="bg-sage hover:bg-sage-dark px-8 py-4 rounded-lg text-white text-lg transition duration-300">
+                    class="bg-sage hover:bg-sage-dark px-5 py-2 rounded-lg text-white text-lg transition duration-300">
                     View Our Services
                 </a>
                 <a href="<?= base_url('/reservation/1') ?>"
-                    class="bg-white hover:bg-sage px-8 py-4 border-2 border-sage rounded-lg text-sage hover:text-white text-lg transition duration-300">
+                    class="bg-white hover:bg-sage px-8 py-2 border-2 border-sage rounded-lg text-sage hover:text-white text-lg transition duration-300">
                     Request Consultation
+                </a>
+                <a href="<?= base_url('/obituary/request') ?>"
+                    class="bg-sage hover:bg-sage-dark px-8 py-2 rounded-lg text-white text-lg transition duration-300">
+                    Request an Obituary
                 </a>
             </div>
         </div>

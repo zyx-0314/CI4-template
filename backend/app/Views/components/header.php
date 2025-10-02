@@ -30,7 +30,19 @@ $cta = ['label' => 'Request Assistance', 'href' => '/services'];
     <nav class="hidden md:flex items-center space-x-4 text-sm" aria-label="Primary navigation">
       <?php $session = session(); ?>
       <?php foreach ($nav ?? [] as $item):
-        if ((!$session->has('user') && $item['label'] === "Login") || $item['label'] !== "Login"): ?>
+        $label = $item['label'] ?? '';
+        $isLogin = strtolower($label) === 'login';
+        $isObituary = strtolower($label) === 'obituary';
+
+        $show = true;
+        if ($isLogin && $session->has('user')) {
+          $show = false;
+        }
+        if ($isObituary && !$session->has('user')) {
+          $show = false;
+        }
+
+        if ($show): ?>
           <a href="<?= esc($item['href'] ?? '#') ?>" class="<?= !empty($active ?? false && $active == $item['label']) ? 'text-sage-dark font-bold' : 'text-gray-700' ?>">
             <?= esc($item['label'] ?? '') ?>
           </a>
@@ -111,7 +123,19 @@ $cta = ['label' => 'Request Assistance', 'href' => '/services'];
 
       <nav class="space-y-4 px-4 py-6" role="menu" aria-orientation="vertical" aria-labelledby="mobile-menu-button">
         <?php foreach ($nav ?? [] as $item):
-          if ((!$session->has('user') && $item['label'] === "Login") || $item['label'] !== "Login"): ?>
+          $label = $item['label'] ?? '';
+          $isLogin = strtolower($label) === 'login';
+          $isObituary = strtolower($label) === 'obituary';
+
+          $show = true;
+          if ($isLogin && $session->has('user')) {
+            $show = false;
+          }
+          if ($isObituary && !$session->has('user')) {
+            $show = false;
+          }
+
+          if ($show): ?>
             <a
               href="<?= esc($item['href'] ?? '#') ?>"
               class="<?= !empty($active ?? false && $active == $item['label']) ? 'text-sage-dark font-bold' : 'text-gray-700' ?> block px-3 py-2 text-base font-medium hover:bg-gray-50 rounded-md"

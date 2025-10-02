@@ -1,244 +1,193 @@
 <?php
 
 /**
- * Minimalist Obituary Design
- * Clean, simple layout focusing on content and readability
+ * Minimalist obituary design
  */
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
-<?= view('components/head', ['title' => $obituary['name'] ?? 'Memorial']) ?>
+<?= view('components/head', ['title' => 'Minimalist - ' . ($obituary['first_name'] ?? '')]) ?>
 
-<body class="bg-gray-50 font-sans text-gray-800">
+<body class="bg-rose-50 text-gray-800 antialiased">
     <?= view('components/header') ?>
 
-    <main class="mx-auto px-4 py-16 max-w-4xl">
-        <!-- Header -->
-        <header class="mb-16 text-center">
-            <div class="inline-block">
-                <div class="bg-white shadow-lg mx-auto mb-8 rounded-full w-40 h-40 overflow-hidden">
-                    <img src="<?= esc($obituary['photo'] ?? '/logo/default-profile.jpg') ?>"
-                        alt="<?= esc($obituary['name'] ?? 'Memorial Photo') ?>"
-                        class="w-full h-full object-cover">
+    <main class="mx-auto px-6 py-12 max-w-4xl">
+        <section class="bg-white shadow-sm border rounded-lg overflow-hidden">
+            <!-- Hero: large background image that fades to white toward the bottom -->
+            <div class="relative">
+                <?php $hero = esc($obituary['profile_image'] ?? '/logo/avatar-placeholder.png'); ?>
+                <div class="bg-cover bg-center w-full" style="background-image: url('<?= $hero ?>'); height: 22rem;"></div>
+
+                <!-- gradient overlay that fades to white so the page content blends naturally -->
+                <div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(to bottom, rgba(255,255,255,0) 40%, rgba(255,255,255,1) 92%);"></div>
+
+                <!-- minimal hero text placed above the bottom of the image -->
+                <div class="right-0 bottom-6 left-0 absolute flex flex-col items-center px-6">
+                    <p class="drop-shadow-sm text-white/90 text-xs uppercase tracking-widest">In loving memory of</p>
+                    <h1 class="drop-shadow-md mt-1 font-bold text-white text-3xl" style="font-family: 'Brush Script MT', 'Lucida Handwriting', cursive;">
+                        <?= esc(trim(($obituary['first_name'] ?? '') . ' ' . ($obituary['middle_name'] ? $obituary['middle_name'] . ' ' : '') . ($obituary['last_name'] ?? ''))) ?>
+                    </h1>
+                    <p class="drop-shadow-sm mt-1 text-white/90 text-sm">
+                        <?= !empty($obituary['date_of_birth']) ? date('j F Y', strtotime($obituary['date_of_birth'])) : '—' ?> — <?= !empty($obituary['date_of_death']) ? date('j F Y', strtotime($obituary['date_of_death'])) : '—' ?>
+                    </p>
                 </div>
 
-                <h1 class="mb-4 font-light text-gray-900 text-4xl">
-                    <?= esc($obituary['name'] ?? 'Robert James Thompson') ?>
-                </h1>
-
-                <div class="space-x-2 text-gray-600 text-xl">
-                    <time><?= esc($obituary['birth_date'] ?? '1952') ?></time>
-                    <span>—</span>
-                    <time><?= esc($obituary['death_date'] ?? '2024') ?></time>
+                <!-- small actions tucked into the hero, minimal labels only -->
+                <div class="top-4 right-4 absolute">
+                    <a href="<?= base_url('/obituary/request') ?>" class="bg-white/90 px-3 py-1 rounded text-rose-600 text-sm">Request</a>
                 </div>
-
-                <?php if (!empty($obituary['age'])): ?>
-                    <p class="mt-2 text-gray-500 text-lg"><?= esc($obituary['age']) ?> years</p>
-                <?php endif ?>
             </div>
-        </header>
 
-        <!-- Content -->
-        <div class="space-y-16">
-            <!-- Obituary Text -->
-            <section class="max-w-none prose prose-xl prose-gray">
-                <div class="mb-12 text-center">
-                    <div class="bg-gray-300 mx-auto w-16 h-px"></div>
-                </div>
+            <div class="space-y-6 px-8 py-6 divide-y divide-gray-100">
+                <!-- About -->
+                <section class="py-4">
+                    <h2 class="font-semibold text-lg">About</h2>
+                    <p class="mt-3 text-gray-700 text-sm leading-relaxed"><?= nl2br(esc($obituary['description'] ?? 'No description available.')) ?></p>
+                </section>
 
-                <p class="mb-8 text-xl text-center leading-relaxed">
-                    <?= esc($obituary['opening'] ?? 'Robert James Thompson, beloved father, grandfather, and friend, passed away peacefully on December 15, 2024, at the age of 72.') ?>
-                </p>
-
-                <div class="space-y-6 mx-auto max-w-3xl text-lg leading-relaxed">
-                    <p>
-                        <?= esc($obituary['life_summary'] ?? 'Robert was born in Denver, Colorado, where he spent his childhood exploring the Rocky Mountains and developing a deep love for the outdoors. This passion would shape his entire life, leading him to a career in environmental conservation and countless adventures with family and friends.') ?>
-                    </p>
-
-                    <p>
-                        <?= esc($obituary['career_achievements'] ?? 'After graduating from Colorado State University with a degree in Environmental Science, Robert dedicated 40 years to protecting natural habitats and educating others about conservation. His work took him across the country, but he always considered Colorado home.') ?>
-                    </p>
-
-                    <p>
-                        <?= esc($obituary['personal_life'] ?? 'Robert married his college sweetheart, Linda, in 1975. Together, they raised two children, Sarah and Michael, instilling in them the same love for nature and respect for the environment that defined Robert\'s character. He was an avid hiker, photographer, and storyteller who could captivate audiences with tales of his wilderness adventures.') ?>
-                    </p>
-
-                    <p>
-                        <?= esc($obituary['legacy'] ?? 'Robert\'s legacy lives on through the national parks he helped preserve, the countless lives he touched through his environmental education programs, and most importantly, through his family who continue to share his passion for the natural world.') ?>
-                    </p>
-                </div>
-
-                <div class="mt-12 text-center">
-                    <div class="bg-gray-300 mx-auto w-16 h-px"></div>
-                </div>
-            </section>
-
-            <!-- Family Information -->
-            <section class="bg-white shadow-sm p-8 rounded-lg">
-                <h2 class="mb-8 font-light text-2xl text-center">Family</h2>
-
-                <div class="gap-8 grid md:grid-cols-2 text-center">
-                    <div>
-                        <h3 class="mb-4 font-medium text-gray-800 text-lg">Survived By</h3>
-                        <div class="space-y-2 text-gray-600">
-                            <?php
-                            $survivors = $obituary['survivors'] ?? [
-                                'Wife Linda Thompson',
-                                'Daughter Sarah Thompson-Miller (James)',
-                                'Son Michael Thompson (Jennifer)',
-                                'Grandchildren: Emma, Lucas, and Sophia',
-                                'Brother David Thompson (Mary)'
-                            ];
-                            ?>
-                            <?php foreach ($survivors as $survivor): ?>
-                                <p><?= esc($survivor) ?></p>
-                            <?php endforeach ?>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h3 class="mb-4 font-medium text-gray-800 text-lg">Preceded in Death By</h3>
-                        <div class="space-y-2 text-gray-600">
-                            <?php
-                            $preceded = $obituary['preceded_by'] ?? [
-                                'Parents James and Mary Thompson',
-                                'Sister Patricia Thompson-Lee'
-                            ];
-                            ?>
-                            <?php foreach ($preceded as $person): ?>
-                                <p><?= esc($person) ?></p>
-                            <?php endforeach ?>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Services -->
-            <section class="bg-white shadow-sm p-8 rounded-lg">
-                <h2 class="mb-8 font-light text-2xl text-center">Memorial Services</h2>
-
-                <div class="space-y-8">
-                    <div class="text-center">
-                        <h3 class="mb-4 font-medium text-gray-800 text-xl">Memorial Service</h3>
-                        <div class="space-y-2 text-gray-600">
-                            <p class="text-lg"><?= esc($obituary['service_date'] ?? 'Saturday, December 21, 2024 at 2:00 PM') ?></p>
-                            <p><?= esc($obituary['service_location'] ?? 'Mountain View Community Center') ?></p>
-                            <p><?= esc($obituary['service_address'] ?? '1234 Pine Street, Denver, CO 80202') ?></p>
-                        </div>
-                    </div>
-
-                    <?php if (!empty($obituary['reception'])): ?>
-                        <div class="pt-4 border-gray-200 border-t text-center">
-                            <h3 class="mb-2 font-medium text-gray-800 text-lg">Reception</h3>
-                            <p class="text-gray-600"><?= esc($obituary['reception']) ?></p>
-                        </div>
-                    <?php endif ?>
-
-                    <div class="pt-4 border-gray-200 border-t text-gray-500 text-sm text-center">
-                        <p>All are welcome to attend and celebrate Robert's life</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Memorial Donations -->
-            <section class="bg-white shadow-sm p-8 rounded-lg">
-                <h2 class="mb-8 font-light text-2xl text-center">Memorial Contributions</h2>
-
-                <div class="mx-auto max-w-2xl text-center">
-                    <p class="mb-6 text-gray-600">
-                        In lieu of flowers, the family requests that donations be made to organizations that were close to Robert's heart:
-                    </p>
-
-                    <div class="space-y-4">
-                        <?php
-                        $charities = $obituary['memorial_charities'] ?? [
-                            [
-                                'name' => 'National Park Foundation',
-                                'description' => 'Protecting America\'s national parks',
-                                'website' => 'www.nationalparks.org'
-                            ],
-                            [
-                                'name' => 'Colorado Environmental Coalition',
-                                'description' => 'Local environmental conservation efforts',
-                                'website' => 'www.ourcolorado.org'
-                            ]
-                        ];
-                        ?>
-                        <?php foreach ($charities as $charity): ?>
-                            <div class="p-4 border border-gray-200 rounded-lg">
-                                <h3 class="font-medium text-gray-800"><?= esc($charity['name']) ?></h3>
-                                <p class="mt-1 text-gray-600 text-sm"><?= esc($charity['description']) ?></p>
-                                <?php if (!empty($charity['website'])): ?>
-                                    <p class="mt-1 text-sage text-sm"><?= esc($charity['website']) ?></p>
-                                <?php endif ?>
-                            </div>
-                        <?php endforeach ?>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Condolences -->
-            <section class="bg-white shadow-sm p-8 rounded-lg">
-                <h2 class="mb-8 font-light text-2xl text-center">Share Your Memories</h2>
-
-                <!-- Form -->
-                <div class="mx-auto mb-12 max-w-2xl">
-                    <form class="space-y-6">
-                        <div class="gap-6 grid md:grid-cols-2">
-                            <input type="text" placeholder="Your Name"
-                                class="p-4 border border-gray-300 focus:border-sage rounded focus:ring-1 focus:ring-sage w-full">
-                            <input type="email" placeholder="Email (optional)"
-                                class="p-4 border border-gray-300 focus:border-sage rounded focus:ring-1 focus:ring-sage w-full">
-                        </div>
-                        <textarea placeholder="Share a memory or message..." rows="4"
-                            class="p-4 border border-gray-300 focus:border-sage rounded focus:ring-1 focus:ring-sage w-full"></textarea>
-                        <div class="text-center">
-                            <button type="submit" class="bg-gray-800 hover:bg-gray-900 px-8 py-3 rounded text-white transition duration-300">
-                                Share Memory
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Messages -->
-                <div class="mx-auto max-w-3xl">
-                    <?php $condolences = $obituary['condolences'] ?? [] ?>
-                    <?php if (empty($condolences)): ?>
-                        <p class="py-12 text-gray-500 text-center">No messages yet. Be the first to share your memory of Robert.</p>
+                <!-- Family -->
+                <section class="py-4">
+                    <h3 class="font-medium text-md">Family</h3>
+                    <?php if (!empty($obituary['family'])): ?>
+                        <ul class="space-y-2 mt-3 text-gray-700 text-sm">
+                            <?php foreach ($obituary['family'] as $f): ?>
+                                <li class="flex justify-between items-center">
+                                    <span class="font-medium"><?= esc(trim(($f['first_name'] ?? '') . ' ' . ($f['middle_initial'] ?? '') . ' ' . ($f['last_name'] ?? ''))) ?></span>
+                                    <span class="text-gray-500 text-xs uppercase tracking-wider"><?= esc(ucfirst($f['relation'] ?? '')) ?></span>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
                     <?php else: ?>
-                        <div class="space-y-8">
-                            <?php foreach ($condolences as $condolence): ?>
-                                <div class="pl-6 border-gray-200 border-l-2">
-                                    <p class="mb-3 text-gray-700"><?= esc($condolence['message']) ?></p>
-                                    <p class="text-gray-500 text-sm">
-                                        — <?= esc($condolence['name']) ?>, <?= esc($condolence['date']) ?>
-                                    </p>
-                                </div>
-                            <?php endforeach ?>
-                        </div>
-                    <?php endif ?>
-                </div>
-            </section>
+                        <p class="mt-2 text-gray-600 text-sm">No family information provided.</p>
+                    <?php endif; ?>
+                </section>
 
-            <!-- Footer Actions -->
-            <section class="space-y-4 text-center">
-                <div class="flex justify-center space-x-4">
-                    <button class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded text-white transition">
-                        Share on Facebook
-                    </button>
-                    <button class="bg-gray-600 hover:bg-gray-700 px-6 py-3 rounded text-white transition">
-                        Copy Link
-                    </button>
-                    <button class="bg-gray-600 hover:bg-gray-700 px-6 py-3 rounded text-white transition">
-                        Print Page
-                    </button>
-                </div>
-            </section>
-        </div>
+                <!-- Services & Events -->
+                <section class="py-4">
+                    <h3 class="font-medium text-md">Services & Events</h3>
+                    <?php $events = ['viewing' => ['date_time' => 'viewing_date_time', 'place' => 'viewing_place', 'label' => 'Viewing'], 'funeral' => ['date_time' => 'funeral_date_time', 'place' => 'funeral_place', 'label' => 'Funeral'], 'burial' => ['date_time' => 'burial_date_time', 'place' => 'burial_place', 'label' => 'Burial']]; ?>
+                    <div class="gap-4 grid grid-cols-1 md:grid-cols-3 mt-3 text-gray-700 text-sm">
+                        <?php foreach ($events as $key => $ev): ?>
+                            <div class="p-3 border border-gray-50 rounded">
+                                <div class="text-gray-500 text-xs uppercase tracking-wider"><?= $ev['label'] ?></div>
+                                <div class="mt-1 font-medium"><?= !empty($obituary[$ev['date_time']]) ? date('F j, Y, g:i A', strtotime($obituary[$ev['date_time']])) : 'TBA' ?></div>
+                                <div class="mt-1 text-gray-600 text-xs"><?= esc($obituary[$ev['place']] ?? 'No location provided') ?></div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </section>
+
+                <!-- Treasured Memories -->
+                <?php if (!empty($obituary['treasured_memories'])): ?>
+                    <section class="py-4">
+                        <h3 class="font-medium text-md">Treasured Memories</h3>
+                        <div class="gap-3 grid grid-cols-2 md:grid-cols-4 mt-3">
+                            <?php foreach ($obituary['treasured_memories'] as $m): ?>
+                                <figure class="text-sm text-center">
+                                    <div class="bg-gray-100 rounded w-full h-20 overflow-hidden">
+                                        <img src="<?= esc($m['img'] ?? '') ?>" alt="<?= esc($m['title'] ?? 'Memory') ?>" class="w-full h-full object-cover">
+                                    </div>
+                                    <figcaption class="mt-1 text-gray-700">
+                                        <div class="font-medium"><?= esc($m['title'] ?? '') ?></div>
+                                        <div class="text-gray-500 text-xs"><?= esc($m['descriptions'] ?? '') ?></div>
+                                    </figcaption>
+                                </figure>
+                            <?php endforeach; ?>
+                        </div>
+                    </section>
+                <?php endif; ?>
+
+                <!-- Messages & Share form -->
+                <section class="py-4">
+                    <h3 class="font-medium text-md">Messages & Shared Memories</h3>
+                    <?php if (!empty($obituary['shared_messages'])): ?>
+                        <div class="space-y-3 mt-3 text-sm">
+                            <?php foreach ($obituary['shared_messages'] as $s): ?>
+                                <blockquote class="bg-gray-50 p-3 border-gray-200 border-l-2 rounded">
+                                    <div class="text-gray-500 text-xs">
+                                        <strong><?= esc(!empty($s['anonymous']) ? 'Anonymous' : ($s['name'] ?? 'Guest')) ?></strong>
+                                        <span class="ml-2"><?= !empty($s['created_at']) ? date('F j, Y', strtotime($s['created_at'])) : '' ?></span>
+                                    </div>
+                                    <p class="mt-2 text-gray-700"><?= nl2br(esc($s['message'] ?? '')) ?></p>
+                                </blockquote>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <p class="mt-2 text-gray-600 text-sm">No messages yet. Be the first to share a memory.</p>
+                    <?php endif; ?>
+
+                    <div class="mt-4">
+                        <h4 class="font-medium text-sm">Share a memory or message</h4>
+                        <form method="post" action="<?= base_url('/obituary/share/' . ($obituary['id'] ?? '')) ?>" class="space-y-3 mt-3 text-sm">
+                            <div class="flex items-center gap-3">
+                                <label class="flex items-center gap-2 text-sm">
+                                    <input id="anonymousSwitch" type="checkbox" name="anonymous" checked class="w-4 h-4">
+                                    <span>Share anonymously</span>
+                                </label>
+                                <div id="nameInputContainer" class="hidden flex-1">
+                                    <input type="text" name="name" id="sharerName" placeholder="Your name" class="p-2 border rounded w-full text-sm">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="message" class="sr-only">Message</label>
+                                <textarea id="message" name="message" rows="4" class="p-3 border rounded w-full text-sm" placeholder="Write something about <?= esc($obituary['first_name'] ?? 'the person') ?>..."></textarea>
+                            </div>
+
+                            <div class="text-right">
+                                <button type="submit" class="bg-gray-900 px-4 py-2 rounded text-white text-sm">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Notes & Share links -->
+                <section class="py-4">
+                    <div class="flex md:flex-row flex-col md:justify-between gap-4">
+                        <div class="flex-1">
+                            <?php if (!empty($obituary['other_notes'])): ?>
+                                <h4 class="font-medium text-sm">Notes</h4>
+                                <p class="mt-2 text-gray-700 text-sm"><?= nl2br(esc($obituary['other_notes'])) ?></p>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="w-44">
+                            <h4 class="font-medium text-sm">Share & Support</h4>
+                            <div class="flex flex-col gap-2 mt-2 text-sm">
+                                <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode(current_url()) ?>" target="_blank" class="px-3 py-2 border border-gray-200 rounded text-center">Share on Facebook</a>
+                                <a href="mailto:?subject=Memorial for <?= rawurlencode(trim(($obituary['first_name'] ?? '') . ' ' . ($obituary['last_name'] ?? ''))) ?>&body=View: <?= rawurlencode(current_url()) ?>" class="px-3 py-2 border border-gray-200 rounded text-center">Share via Email</a>
+                                <a href="<?= base_url('/obituary/request') ?>" class="bg-gray-900 px-3 py-2 rounded text-white text-center">Request this design</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
     </main>
 
     <?= view('components/footer') ?>
+
+    <script>
+        // small JS to toggle name input when anonymous unchecked
+        (function() {
+            var anon = document.getElementById('anonymousSwitch');
+            var nameContainer = document.getElementById('nameInputContainer');
+            var nameInput = document.getElementById('sharerName');
+
+            function toggle() {
+                if (anon.checked) {
+                    nameContainer.classList.add('hidden');
+                    nameInput.value = '';
+                } else {
+                    nameContainer.classList.remove('hidden');
+                }
+            }
+            if (anon && nameContainer) {
+                anon.addEventListener('change', toggle);
+                toggle();
+            }
+        })();
+    </script>
 </body>
 
 </html>

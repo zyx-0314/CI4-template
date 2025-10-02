@@ -1,221 +1,361 @@
 <?php
 
 /**
- * Modern Obituary Design
- * Clean, contemporary layout with card-based design
+ * Modern obituary design
+ * Expects $obituary array from controller
  */
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
-<?= view('components/head', ['title' => $obituary['name'] ?? 'Memorial']) ?>
+<?= view('components/head', ['title' => 'Modern - ' . ($obituary['first_name'] ?? '')]) ?>
 
-<body class="bg-gradient-to-br from-slate-100 to-slate-200 font-sans">
+<body class="bg-white text-slate-800" style="background-color:#f8fafb;">
     <?= view('components/header') ?>
 
-    <main class="mx-auto px-4 py-8 max-w-6xl">
-        <!-- Hero Section -->
-        <div class="relative bg-white shadow-xl mb-8 rounded-2xl overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-r from-slate-900/90 to-slate-700/90"></div>
-            <div class="relative flex items-center h-96">
-                <div class="px-8 py-12 w-full">
-                    <div class="flex md:flex-row flex-col items-center gap-8">
-                        <div class="relative">
-                            <div class="shadow-2xl border-4 border-white/20 rounded-full w-40 h-40 overflow-hidden">
-                                <img src="<?= esc($obituary['photo'] ?? '/logo/default-profile.jpg') ?>"
-                                    alt="<?= esc($obituary['name'] ?? 'Memorial Photo') ?>"
-                                    class="w-full h-full object-cover">
-                            </div>
-                            <div class="-top-2 -right-2 absolute flex justify-center items-center bg-white/10 backdrop-blur-sm rounded-full w-16 h-16">
-                                <i class="text-white text-xl fas fa-star"></i>
-                            </div>
+    <style>
+        :root {
+            /* 3-color palette inspired by reference image: brand / accent / neutral */
+            --brand: #7B3F52;
+            /* wine */
+            --accent: #CFA6B6;
+            /* soft rose */
+            --neutral: #F7F4F6;
+            /* off-white */
+            --text: #22262a;
+            /* main text */
+            --muted: rgba(34, 38, 42, 0.45);
+            --card-radius: 12px;
+        }
+
+        body {
+            background: var(--brand);
+            color: var(--text);
+        }
+
+        .page-inner {
+            background: var(--neutral);
+            padding: 28px;
+            border-radius: 8px;
+            box-shadow: 0 6px 30px rgba(17, 20, 24, 0.06);
+        }
+
+        .brand {
+            color: var(--brand)
+        }
+
+        .brand-bg {
+            background-color: var(--brand)
+        }
+
+        .accent {
+            color: var(--accent)
+        }
+
+        .accent-bg {
+            background-color: var(--accent)
+        }
+
+        .muted {
+            color: var(--muted)
+        }
+
+        /* subtle card elevation and transitions */
+        .card {
+            transition: transform .18s ease, box-shadow .18s ease
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(17, 20, 24, 0.06)
+        }
+
+        /* tabs (icon + label) */
+        .tabs {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            border-bottom: 1px solid rgba(34, 38, 42, 0.06);
+            padding: 1rem 0;
+        }
+
+        .tab {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .35rem;
+            padding: .5rem .25rem;
+            color: var(--muted);
+            text-decoration: none
+        }
+
+        .tab svg {
+            width: 22px;
+            height: 22px;
+            opacity: .9
+        }
+
+        .tab.active {
+            color: var(--brand);
+            border-bottom: 3px solid var(--brand);
+            padding-bottom: .6rem
+        }
+
+        /* timeline */
+        .timeline {
+            position: relative;
+            padding-left: 1.25rem
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.625rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, rgba(123, 63, 82, 0.25), rgba(207, 166, 182, 0.12));
+            border-radius: 2px
+        }
+
+        .timeline-item {
+            position: relative;
+            padding: .5rem 0 1rem 1.5rem
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -0.2rem;
+            top: .6rem;
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: var(--brand);
+            box-shadow: 0 0 0 4px rgba(207, 166, 182, 0.12)
+        }
+
+        /* responsive sticky aside */
+        @media (min-width: 1024px) {
+            .sticky-aside {
+                position: sticky;
+                top: 4.5rem
+            }
+        }
+
+        /* header name sizing similar to image */
+        .obit-name {
+            font-size: 2rem;
+            line-height: 1.06;
+            font-weight: 600
+        }
+    </style>
+
+    <main class="mx-auto px-6 py-12 max-w-6xl">
+        <div class="items-start gap-8 grid lg:grid-cols-3">
+            <!-- Left column: visual + quick actions (personal & connected) -->
+            <aside class="sticky-aside lg:col-span-1">
+                <div class="bg-white shadow-md border rounded-lg overflow-hidden">
+                    <div class="relative">
+                        <img src="<?= esc($obituary['profile_image'] ?? '/logo/avatar-placeholder.png') ?>" alt="<?= esc($obituary['first_name'] . ' ' . $obituary['last_name']) ?>" class="w-full h-64 object-cover">
+                        <div class="bottom-4 left-4 absolute flex items-center gap-2 bg-white/90 backdrop-blur-sm px-3 py-1 border rounded-full">
+                            <svg class="w-4 h-4 brand" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h8m-8 4h6"></path>
+                            </svg>
+                            <span class="text-xs muted">Profile</span>
                         </div>
-                        <div class="text-white md:text-left text-center">
-                            <h1 class="mb-3 font-light text-5xl"><?= esc($obituary['name'] ?? 'Jane Smith') ?></h1>
-                            <div class="flex md:flex-row flex-col items-center md:items-start gap-2 mb-4">
-                                <span class="bg-white/20 px-4 py-2 rounded-full text-lg">
-                                    <?= esc($obituary['birth_date'] ?? 'March 15, 1955') ?>
-                                </span>
-                                <span class="font-light text-2xl">—</span>
-                                <span class="bg-white/20 px-4 py-2 rounded-full text-lg">
-                                    <?= esc($obituary['death_date'] ?? 'December 28, 2024') ?>
-                                </span>
+                    </div>
+
+                    <div class="p-4">
+                        <h1 class="font-semibold text-slate-900 text-2xl tracking-tight"><?= esc($obituary['first_name'] . ' ' . $obituary['last_name']) ?></h1>
+                        <p class="mt-1 text-sm muted"><?= date('F j, Y', strtotime($obituary['date_of_birth'] ?? '1970-01-01')) ?> — <?= date('F j, Y', strtotime($obituary['date_of_death'] ?? '1970-01-01')) ?></p>
+
+
+
+                        <div class="flex gap-3 mt-4">
+                            <a href="<?= base_url('/obituary/request') ?>" class="inline-flex flex-1 justify-center items-center gap-2 hover:opacity-95 px-3 py-2 rounded text-white brand-bg">Request</a>
+                            <a href="<?= base_url('/obituary') ?>" class="inline-flex justify-center items-center px-3 py-2 border rounded muted">Back</a>
+                        </div>
+
+                        <div class="flex items-center gap-2 mt-4 text-xs">
+                            <span class="uppercase tracking-wide muted">Connected</span>
+                            <div class="flex gap-3 ml-auto">
+                                <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode(current_url()) ?>" target="_blank" class="brand">Facebook</a>
+                                <a href="mailto:?subject=Memorial for <?= rawurlencode(trim(($obituary['first_name'] ?? '') . ' ' . ($obituary['last_name'] ?? ''))) ?>&body=View: <?= rawurlencode(current_url()) ?>" class="muted">Email</a>
                             </div>
-                            <p class="text-white/80 text-xl"><?= esc($obituary['subtitle'] ?? 'Beloved Mother, Teacher, and Friend') ?></p>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Content Grid -->
-        <div class="gap-8 grid lg:grid-cols-4">
-            <!-- Main Content -->
-            <div class="space-y-6 lg:col-span-3">
-                <!-- Life Story -->
-                <div class="bg-white shadow-lg p-8 rounded-xl">
-                    <div class="flex items-center mb-6">
-                        <div class="flex justify-center items-center bg-sage/10 mr-4 rounded-full w-12 h-12">
-                            <i class="text-sage text-xl fas fa-book-open"></i>
-                        </div>
-                        <h2 class="font-light text-gray-800 text-3xl">Her Story</h2>
-                    </div>
-                    <div class="max-w-none text-gray-600 prose prose-lg">
-                        <p class="mb-6 text-xl leading-relaxed">
-                            <?= esc($obituary['opening'] ?? 'Jane Smith, age 69, passed peacefully surrounded by loved ones on December 28, 2024. Her life was a testament to compassion, dedication, and the power of education to change lives.') ?>
-                        </p>
-                        <div class="gap-8 grid md:grid-cols-2">
-                            <div>
-                                <h4 class="mb-3 font-semibold text-gray-800 text-lg">Early Life & Career</h4>
-                                <p><?= esc($obituary['early_life'] ?? 'Born in Chicago, Jane dedicated over 30 years to teaching elementary school, touching the lives of hundreds of students. She believed every child had potential waiting to be unlocked.') ?></p>
-                            </div>
-                            <div>
-                                <h4 class="mb-3 font-semibold text-gray-800 text-lg">Family & Passions</h4>
-                                <p><?= esc($obituary['family_passions'] ?? 'A devoted mother of three and grandmother of seven, Jane loved gardening, painting watercolors, and volunteering at the local animal shelter.') ?></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="bg-white shadow-sm mt-6 p-4 border rounded-lg text-sm card">
+                    <nav class="tabs" role="tablist" aria-label="Obituary sections">
+                        <a href="#life-legacy" class="tab active" role="tab" aria-selected="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 2v20M3 7h18" />
+                            </svg>
+                            <span class="text-xs">About</span>
+                        </a>
 
-                <!-- Photo Gallery -->
-                <div class="bg-white shadow-lg p-8 rounded-xl">
-                    <div class="flex items-center mb-6">
-                        <div class="flex justify-center items-center bg-sage/10 mr-4 rounded-full w-12 h-12">
-                            <i class="text-sage text-xl fas fa-images"></i>
-                        </div>
-                        <h3 class="font-light text-gray-800 text-2xl">Treasured Memories</h3>
-                    </div>
-                    <div class="gap-4 grid grid-cols-2 md:grid-cols-4">
-                        <?php
-                        $gallery_images = $obituary['gallery'] ?? [
-                            ['src' => '/logo/default-profile.jpg', 'caption' => 'Teaching days'],
-                            ['src' => '/logo/default-profile.jpg', 'caption' => 'Family vacation'],
-                            ['src' => '/logo/default-profile.jpg', 'caption' => 'Graduation ceremony'],
-                            ['src' => '/logo/default-profile.jpg', 'caption' => 'Garden flowers']
-                        ];
-                        ?>
-                        <?php foreach ($gallery_images as $image): ?>
-                            <div class="group cursor-pointer">
-                                <div class="bg-gray-100 rounded-lg aspect-square overflow-hidden">
-                                    <img src="<?= esc($image['src']) ?>"
-                                        alt="<?= esc($image['caption']) ?>"
-                                        class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                                </div>
-                                <p class="mt-2 text-gray-600 text-sm text-center"><?= esc($image['caption']) ?></p>
-                            </div>
-                        <?php endforeach ?>
-                    </div>
-                </div>
+                        <?php if (!empty($obituary['description'])): ?>
+                            <a href="#life-legacy" class="tab" role="tab">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h8M8 12h8M8 17h8" />
+                                </svg>
+                                <span class="text-xs">Obituary</span>
+                            </a>
+                        <?php endif; ?>
 
-                <!-- Memorial Messages -->
-                <div class="bg-white shadow-lg p-8 rounded-xl">
-                    <div class="flex items-center mb-6">
-                        <div class="flex justify-center items-center bg-sage/10 mr-4 rounded-full w-12 h-12">
-                            <i class="text-sage text-xl fas fa-comments"></i>
-                        </div>
-                        <h3 class="font-light text-gray-800 text-2xl">Messages of Love</h3>
-                    </div>
+                        <?php if (!empty($obituary['treasured_memories'])): ?>
+                            <a href="#" class="tab" role="tab">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7h18v10H3z" />
+                                </svg>
+                                <span class="text-xs">Memories</span>
+                            </a>
+                        <?php endif; ?>
 
-                    <!-- Add Message Form -->
-                    <div class="bg-gray-50 mb-8 p-6 rounded-lg">
-                        <form class="space-y-4">
-                            <div class="gap-4 grid md:grid-cols-2">
-                                <input type="text" placeholder="Your name"
-                                    class="p-3 border border-gray-300 focus:border-sage rounded-lg focus:ring-1 focus:ring-sage">
-                                <input type="email" placeholder="Email (optional)"
-                                    class="p-3 border border-gray-300 focus:border-sage rounded-lg focus:ring-1 focus:ring-sage">
-                            </div>
-                            <textarea placeholder="Share your memory or condolences..." rows="3"
-                                class="p-3 border border-gray-300 focus:border-sage rounded-lg focus:ring-1 focus:ring-sage w-full"></textarea>
-                            <button type="submit" class="bg-sage hover:bg-sage-dark px-8 py-3 rounded-lg text-white transition duration-300">
-                                <i class="mr-2 fas fa-heart"></i>Share Message
-                            </button>
-                        </form>
-                    </div>
+                        <?php if (!empty($obituary['flowers'])): ?>
+                            <a href="#" class="tab" role="tab">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 2s4 3 4 6-1 4-4 6-4 3-4 6" />
+                                </svg>
+                                <span class="text-xs">Flowers</span>
+                            </a>
+                        <?php endif; ?>
 
-                    <!-- Messages -->
-                    <div class="space-y-6">
-                        <?php $messages = $obituary['messages'] ?? [] ?>
-                        <?php if (empty($messages)): ?>
-                            <p class="py-8 text-gray-500 text-center">No messages yet. Be the first to share your memory.</p>
-                        <?php else: ?>
-                            <?php foreach ($messages as $message): ?>
-                                <div class="py-4 pl-6 border-sage/30 border-l-4">
-                                    <p class="mb-3 text-gray-700"><?= esc($message['content']) ?></p>
-                                    <div class="flex items-center text-gray-500 text-sm">
-                                        <div class="flex justify-center items-center bg-sage/10 mr-3 rounded-full w-8 h-8">
-                                            <i class="text-sage fas fa-user"></i>
-                                        </div>
-                                        <span class="font-medium"><?= esc($message['name']) ?></span>
-                                        <span class="mx-2">•</span>
-                                        <span><?= esc($message['date']) ?></span>
+                        <?php if (!empty($obituary['viewing_date_time']) || !empty($obituary['funeral_date_time']) || !empty($obituary['burial_date_time']) || !empty($obituary['other_events'])): ?>
+                            <a href="#" class="tab" role="tab">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7v10M16 7v10M3 12h18" />
+                                </svg>
+                                <span class="text-xs">Events</span>
+                            </a>
+                        <?php endif; ?>
+                    </nav>
+
+                    <div class="mt-4">
+                        <h4 class="font-medium text-slate-800">Quick Highlights</h4>
+                        <ul class="space-y-3 mt-3 muted">
+                            <?php foreach ($obituary['highlights'] ?? ($obituary['treasured_memories'] ?? []) as $m): ?>
+                                <li class="flex items-start gap-3">
+                                    <span class="flex-none mt-2 rounded-full w-2 h-2 brand-bg" style="box-shadow:0 4px 10px rgba(123,63,82,0.06)"></span>
+                                    <div>
+                                        <div class="font-medium text-slate-800 text-sm"><?= esc($m['title'] ?? ($m['name'] ?? '')) ?></div>
+                                        <div class="text-slate-500 text-xs"><?= esc($m['descriptions'] ?? $m['description'] ?? '') ?></div>
                                     </div>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main content: dynamic, personal timeline & family -->
+            <section class="space-y-6 lg:col-span-2">
+                <div id="life-legacy" class="bg-white shadow-md p-5 border rounded-lg">
+                    <h3 class="font-semibold text-slate-900 text-lg">Life & Legacy</h3>
+                    <div class="mt-3 text-slate-700 text-sm leading-relaxed">
+                        <?= nl2br(esc($obituary['description'] ?? 'No description available.')) ?>
+                    </div>
+                    <div class="gap-4 grid md:grid-cols-2 mt-4">
+                        <div>
+                            <h4 class="font-medium text-slate-800 text-sm">Family & Relations</h4>
+                            <div class="mt-3 text-slate-700 text-sm">
+                                <?php if (!empty($obituary['family'])): ?>
+                                    <ul class="space-y-3">
+                                        <?php foreach ($obituary['family'] as $f): ?>
+                                            <li class="flex items-center gap-3">
+                                                <div class="flex-none bg-gray-100 rounded-full w-10 h-10 overflow-hidden">
+                                                    <img src="<?= esc($f['avatar'] ?? '/logo/avatar-placeholder.png') ?>" alt="<?= esc($f['first_name'] . ' ' . $f['last_name']) ?>" class="w-full h-full object-cover">
+                                                </div>
+                                                <div class="flex-1">
+                                                    <div class="font-medium text-slate-800 text-sm"><?= esc(trim(($f['first_name'] ?? '') . ' ' . ($f['last_name'] ?? ''))) ?></div>
+                                                    <div class="text-xs uppercase tracking-wide muted"><?= esc(ucfirst($f['relation'] ?? '')) ?></div>
+                                                </div>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                <?php else: ?>
+                                    <p class="text-slate-500">No family data available.</p>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="font-medium text-slate-800 text-sm">Events</h4>
+                            <div class="mt-3 text-slate-700 text-sm timeline">
+                                <div class="timeline-item">
+                                    <div class="font-medium">Viewing</div>
+                                    <div class="text-xs muted"><?= !empty($obituary['viewing_date_time']) ? date('F j, Y, g:i A', strtotime($obituary['viewing_date_time'])) : 'TBA' ?></div>
                                 </div>
-                            <?php endforeach ?>
-                        <?php endif ?>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sidebar -->
-            <div class="space-y-6">
-                <!-- Service Details -->
-                <div class="bg-white shadow-lg p-6 rounded-xl">
-                    <h4 class="mb-4 font-semibold text-gray-800 text-xl">
-                        <i class="mr-2 text-sage fas fa-calendar-alt"></i>Services
-                    </h4>
-                    <div class="space-y-4">
-                        <div class="bg-sage/5 p-4 rounded-lg">
-                            <h5 class="font-medium text-gray-800">Visitation</h5>
-                            <p class="mt-1 text-gray-600 text-sm"><?= esc($obituary['visitation'] ?? 'January 3, 2025, 4-8 PM') ?></p>
-                            <p class="text-gray-600 text-sm"><?= esc($obituary['visitation_location'] ?? 'Sunset Funeral Home') ?></p>
-                        </div>
-                        <div class="bg-sage/5 p-4 rounded-lg">
-                            <h5 class="font-medium text-gray-800">Memorial Service</h5>
-                            <p class="mt-1 text-gray-600 text-sm"><?= esc($obituary['memorial_service'] ?? 'January 4, 2025, 2:00 PM') ?></p>
-                            <p class="text-gray-600 text-sm"><?= esc($obituary['memorial_location'] ?? 'First Presbyterian Church') ?></p>
+                                <div class="timeline-item">
+                                    <div class="font-medium">Funeral</div>
+                                    <div class="text-xs muted"><?= !empty($obituary['funeral_date_time']) ? date('F j, Y, g:i A', strtotime($obituary['funeral_date_time'])) : 'TBA' ?></div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="font-medium">Burial</div>
+                                    <div class="text-xs muted"><?= !empty($obituary['burial_date_time']) ? date('F j, Y, g:i A', strtotime($obituary['burial_date_time'])) : 'TBA' ?></div>
+                                </div>
+                                <?php if (!empty($obituary['other_events'])): ?>
+                                    <?php foreach ($obituary['other_events'] as $e): ?>
+                                        <div class="timeline-item">
+                                            <div class="font-medium"><?= esc($e['title'] ?? 'Event') ?></div>
+                                            <div class="text-xs muted"><?= !empty($e['date_time']) ? date('F j, Y, g:i A', strtotime($e['date_time'])) : 'TBA' ?></div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Memorial Fund -->
-                <div class="bg-white shadow-lg p-6 rounded-xl">
-                    <h4 class="mb-4 font-semibold text-gray-800 text-xl">
-                        <i class="mr-2 text-sage fas fa-seedling"></i>Memorial Fund
-                    </h4>
-                    <p class="mb-4 text-gray-600 text-sm">
-                        Honor Jane's memory with a donation to causes she loved.
-                    </p>
-                    <div class="space-y-3">
-                        <div class="p-3 border border-gray-200 rounded-lg">
-                            <p class="font-medium text-gray-800">Education Foundation</p>
-                            <p class="text-gray-600 text-sm">Supporting local schools</p>
+                <?php if (!empty($obituary['treasured_memories'])): ?>
+                    <div class="bg-white shadow-md p-5 border rounded-lg card">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-semibold text-slate-900 text-lg">Treasured Memories</h3>
+                            <div class="text-xs muted">Captured moments</div>
                         </div>
-                        <div class="p-3 border border-gray-200 rounded-lg">
-                            <p class="font-medium text-gray-800">Animal Shelter</p>
-                            <p class="text-gray-600 text-sm">Helping rescue animals</p>
+                        <div class="gap-4 grid grid-cols-2 md:grid-cols-3 mt-4">
+                            <?php foreach ($obituary['treasured_memories'] as $m): ?>
+                                <figure class="bg-white border rounded overflow-hidden">
+                                    <div class="bg-gray-50 h-44 overflow-hidden">
+                                        <img src="<?= esc($m['img'] ?? '') ?>" alt="<?= esc($m['title'] ?? 'Memory') ?>" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+                                    </div>
+                                    <figcaption class="p-3 text-slate-700 text-sm">
+                                        <div class="font-medium text-slate-800"><?= esc($m['title'] ?? '') ?></div>
+                                        <div class="text-xs muted"><?= esc($m['descriptions'] ?? '') ?></div>
+                                    </figcaption>
+                                </figure>
+                            <?php endforeach; ?>
                         </div>
                     </div>
-                </div>
+                <?php endif; ?>
 
-                <!-- Actions -->
-                <div class="bg-white shadow-lg p-6 rounded-xl">
-                    <h4 class="mb-4 font-semibold text-gray-800 text-xl">
-                        <i class="mr-2 text-sage fas fa-share-alt"></i>Share
-                    </h4>
-                    <div class="space-y-3">
-                        <button class="bg-blue-600 hover:bg-blue-700 px-4 py-3 rounded-lg w-full text-white transition">
-                            <i class="mr-2 fab fa-facebook"></i>Share on Facebook
-                        </button>
-                        <button class="bg-gray-100 hover:bg-gray-200 px-4 py-3 rounded-lg w-full text-gray-800 transition">
-                            <i class="mr-2 fas fa-link"></i>Copy Memorial Link
-                        </button>
-                        <button class="bg-gray-100 hover:bg-gray-200 px-4 py-3 rounded-lg w-full text-gray-800 transition">
-                            <i class="mr-2 fas fa-download"></i>Download Program
-                        </button>
+                <div class="bg-white shadow-md p-5 border rounded-lg card">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-semibold text-slate-900 text-lg">Messages & Tributes</h3>
+                        <div class="text-xs muted">Share a memory</div>
+                    </div>
+                    <?php if (!empty($obituary['shared_messages'])): ?>
+                        <div class="space-y-4 mt-4">
+                            <?php foreach ($obituary['shared_messages'] as $s): ?>
+                                <div class="hover:shadow-sm p-3 border rounded transition">
+                                    <div class="flex justify-between items-center">
+                                        <div class="font-medium text-slate-800 text-sm"><?= esc(!empty($s['anonymous']) ? 'Anonymous' : ($s['name'] ?? 'Guest')) ?></div>
+                                        <div class="text-xs muted"><?= !empty($s['created_at']) ? date('F j, Y', strtotime($s['created_at'])) : '' ?></div>
+                                    </div>
+                                    <p class="mt-2 text-slate-700 text-sm"><?= nl2br(esc($s['message'] ?? '')) ?></p>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <p class="mt-2 text-slate-500">No messages yet. Be the first to share a tribute.</p>
+                    <?php endif; ?>
+                    <div class="flex gap-2 mt-4">
+                        <a href="<?= base_url('/obituary/tribute/' . ($obituary['id'] ?? '')) ?>" class="px-3 py-2 rounded text-white text-sm brand-bg">Leave a tribute</a>
+                        <a href="#" class="px-3 py-2 border rounded text-sm muted">Share</a>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
     </main>
 
@@ -223,3 +363,23 @@
 </body>
 
 </html>
+<script>
+    // Smooth scroll for internal links (simple, unobtrusive)
+    (function() {
+        document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+            a.addEventListener('click', function(e) {
+                var href = this.getAttribute('href');
+                if (!href || href === '#') return;
+                var target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    history.replaceState && history.replaceState(null, null, href);
+                }
+            });
+        });
+    })();
+</script>

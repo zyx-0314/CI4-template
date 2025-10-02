@@ -16,7 +16,7 @@ $user = $session->get('user') ?? null;
             <a href="/admin/employees" class="block py-2 px-3 rounded <?php echo $active === 'employees' ? 'bg-gray-100 font-medium' : 'hover:bg-gray-50'; ?>">Employees / Payroll</a>
             <a href="/admin/inquiries" class="block py-2 px-3 rounded <?php echo $active === 'inquiries' ? 'bg-gray-100 font-medium' : 'hover:bg-gray-50'; ?>">Inquiries</a>
             <a href="/admin/services" class="block py-2 px-3 rounded <?php echo $active === 'services' ? 'bg-gray-100 font-medium' : 'hover:bg-gray-50'; ?>">Services</a>
-            <a href="/admin/obituaries" class="block py-2 px-3 rounded <?php echo $active === 'obituaries' ? 'bg-gray-100 font-medium' : 'hover:bg-gray-50'; ?>">Obituary &amp; Memorials</a>
+            <a href="/admin/obituaries" class="block py-2 px-3 rounded <?php echo $active === 'obituaries' ? 'bg-gray-100 font-medium' : 'hover:bg-gray-50'; ?>">Obituary</a>
             <a href="/admin/accounts" class="block py-2 px-3 rounded <?php echo $active === 'accounts' ? 'bg-gray-100 font-medium' : 'hover:bg-gray-50'; ?>">Accounts</a>
             <a href="/admin/assignments" class="block py-2 px-3 rounded <?php echo $active === 'assignments' ? 'bg-gray-100 font-medium' : 'hover:bg-gray-50'; ?>">Work Assignment</a>
         </nav>

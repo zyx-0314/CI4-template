@@ -1,256 +1,246 @@
 <?php
 
 /**
- * Elegant Obituary Design
- * Sophisticated layout with floral elements and soft colors
+ * Elegant obituary design
  */
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
-<?= view('components/head', ['title' => $obituary['name'] ?? 'Memorial']) ?>
+<?= view('components/head', ['title' => 'Elegant - ' . ($obituary['first_name'] ?? '')]) ?>
 
-<body class="bg-gradient-to-b from-rose-50 to-pink-50 font-serif">
+<body class="bg-rose-50 antialiased">
     <?= view('components/header') ?>
 
-    <main class="mx-auto px-4 py-12 max-w-5xl">
-        <!-- Header with Decorative Border -->
-        <div class="relative bg-white shadow-2xl mb-12 rounded-3xl overflow-hidden">
-            <!-- Decorative top border -->
-            <div class="bg-gradient-to-r from-rose-300 via-pink-300 to-rose-300 h-2"></div>
+    <main class="mx-auto px-6 py-12 max-w-5xl">
+        <div class="relative">
+            <!-- floral corner accents (decorative only) -->
+            <svg class="top-0 left-0 absolute opacity-70 w-48 h-48 text-gray-300 pointer-events-none" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g fill="none" stroke="currentColor" stroke-width="1">
+                    <path d="M10 80 C 40 10, 140 10, 190 80" />
+                    <path d="M20 100 C 50 140, 120 160, 180 140" />
+                </g>
+            </svg>
+            <svg class="top-0 right-0 absolute opacity-70 w-48 h-48 text-gray-300 rotate-180 pointer-events-none transform" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g fill="none" stroke="currentColor" stroke-width="1">
+                    <path d="M10 80 C 40 10, 140 10, 190 80" />
+                    <path d="M20 100 C 50 140, 120 160, 180 140" />
+                </g>
+            </svg>
 
-            <div class="p-12">
-                <div class="mb-8 text-center">
-                    <!-- Decorative flourish -->
-                    <div class="mb-4 text-rose-300 text-6xl">❀</div>
-                    <h1 class="mb-4 font-light text-gray-800 text-5xl"><?= esc($obituary['name'] ?? 'Margaret Rose Williams') ?></h1>
-                    <div class="flex justify-center items-center space-x-4 text-gray-600 text-xl">
-                        <span><?= esc($obituary['birth_date'] ?? 'June 12, 1945') ?></span>
-                        <span class="text-rose-300">✦</span>
-                        <span><?= esc($obituary['death_date'] ?? 'December 20, 2024') ?></span>
-                    </div>
-                    <p class="mt-4 font-light text-rose-600 text-2xl italic">
-                        "<?= esc($obituary['quote'] ?? 'Love never ends') ?>"
-                    </p>
+            <article class="bg-white shadow mx-4 p-10 rounded-xl text-center">
+                <div class="-mt-20">
+                    <img src="<?= esc($obituary['profile_image'] ?? '/logo/avatar-placeholder.png') ?>" alt="Profile" class="shadow-lg mx-auto border-8 border-white rounded-full w-44 h-44 object-cover">
                 </div>
 
-                <div class="flex lg:flex-row flex-col items-center gap-12">
-                    <!-- Photo with decorative frame -->
-                    <div class="relative flex-shrink-0">
-                        <div class="shadow-xl border-8 border-rose-100 rounded-full w-64 h-64 overflow-hidden">
-                            <img src="<?= esc($obituary['photo'] ?? '/logo/default-profile.jpg') ?>"
-                                alt="<?= esc($obituary['name'] ?? 'Memorial Photo') ?>"
-                                class="w-full h-full object-cover">
-                        </div>
-                        <!-- Decorative corner elements -->
-                        <div class="-top-4 -left-4 absolute text-rose-200 text-4xl">❀</div>
-                        <div class="-top-4 -right-4 absolute text-rose-200 text-4xl">❀</div>
-                        <div class="-bottom-4 -left-4 absolute text-rose-200 text-4xl">❀</div>
-                        <div class="-right-4 -bottom-4 absolute text-rose-200 text-4xl">❀</div>
-                    </div>
+                <p class="mt-6 font-semibold text-gray-500 text-sm uppercase tracking-widest">In loving memory of</p>
 
-                    <!-- Intro Text -->
-                    <div class="lg:text-left text-center">
-                        <div class="space-y-4 text-gray-700 text-xl leading-relaxed">
-                            <p class="italic">
-                                <?= esc($obituary['intro'] ?? 'With profound sadness and beautiful memories, we announce the peaceful passing of our beloved Margaret Rose Williams.') ?>
-                            </p>
-                            <p>
-                                <?= esc($obituary['summary'] ?? 'Margaret was a beacon of love, grace, and wisdom who touched countless lives throughout her 79 years. Her legacy of compassion and joy will forever bloom in the hearts of those who knew her.') ?>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                <h1 class="mt-2 text-gray-900 text-4xl" style="font-family: 'Brush Script MT', 'Lucida Handwriting', cursive; font-weight:700;">
+                    <?= esc(trim(($obituary['first_name'] ?? '') . ' ' . ($obituary['middle_name'] ? $obituary['middle_name'] . ' ' : '') . ($obituary['last_name'] ?? ''))) ?>
+                </h1>
 
-        <!-- Content Sections -->
-        <div class="gap-8 grid lg:grid-cols-3">
-            <!-- Main Content -->
-            <div class="space-y-8 lg:col-span-2">
-                <!-- Life Journey -->
-                <div class="bg-white/80 shadow-lg backdrop-blur p-8 rounded-2xl">
-                    <div class="mb-8 text-center">
-                        <div class="mb-2 text-rose-300 text-4xl">🌸</div>
-                        <h2 class="font-light text-gray-800 text-3xl">A Beautiful Life</h2>
-                        <div class="bg-rose-300 mx-auto mt-4 w-24 h-px"></div>
-                    </div>
+                <p class="mx-auto mt-3 max-w-2xl text-gray-600" style="line-height:1.6;">
+                    <?= nl2br(esc($obituary['description'] ?? '')) ?>
+                </p>
 
-                    <div class="space-y-6 text-gray-700 text-lg leading-relaxed">
-                        <p>
-                            <?= esc($obituary['early_life'] ?? 'Born in the spring of 1945 in Portland, Oregon, Margaret grew up surrounded by the beauty of nature that would inspire her lifelong love of gardening and flowers. She was the eldest of four children and learned early the values of care and responsibility.') ?>
-                        </p>
-
-                        <p>
-                            <?= esc($obituary['career'] ?? 'After graduating from Oregon State University with a degree in Elementary Education, Margaret devoted 35 years to teaching young minds. Her classroom was known for its warmth, creativity, and the small garden where children learned to nurture both plants and friendships.') ?>
-                        </p>
-
-                        <p>
-                            <?= esc($obituary['family'] ?? 'In 1968, she married her college sweetheart, Robert Williams, and together they built a loving home filled with laughter, music, and the aroma of her famous apple pies. They were blessed with three children: Elizabeth, Michael, and Sarah, and later with eight grandchildren who were the light of her eyes.') ?>
-                        </p>
-                    </div>
+                <!-- decorative divider -->
+                <div class="flex justify-center items-center mt-6">
+                    <span class="border-gray-300 border-t w-1/4"></span>
+                    <svg class="mx-3 w-6 h-6 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 5v14" />
+                        <path d="M5 12h14" />
+                    </svg>
+                    <span class="border-gray-300 border-t w-1/4"></span>
                 </div>
 
-                <!-- Memories & Tributes -->
-                <div class="bg-white/80 shadow-lg backdrop-blur p-8 rounded-2xl">
-                    <div class="mb-8 text-center">
-                        <div class="mb-2 text-rose-300 text-4xl">💝</div>
-                        <h3 class="font-light text-gray-800 text-3xl">Memories & Tributes</h3>
-                        <div class="bg-rose-300 mx-auto mt-4 w-24 h-px"></div>
-                    </div>
+                <p class="mt-4 font-semibold text-gray-800">
+                    <?= !empty($obituary['date_of_birth']) ? date('j F Y', strtotime($obituary['date_of_birth'])) : '—' ?> — <?= !empty($obituary['date_of_death']) ? date('j F Y', strtotime($obituary['date_of_death'])) : '—' ?>
+                </p>
 
-                    <!-- Add Memory Form -->
-                    <div class="bg-rose-50/50 mb-8 p-6 border border-rose-100 rounded-xl">
-                        <h4 class="mb-4 font-light text-gray-800 text-xl">Share a Memory</h4>
-                        <form class="space-y-4">
-                            <div class="gap-4 grid md:grid-cols-2">
-                                <input type="text" placeholder="Your name"
-                                    class="bg-white/70 p-4 border-2 border-rose-100 focus:border-rose-300 rounded-lg focus:ring-0">
-                                <select class="bg-white/70 p-4 border-2 border-rose-100 focus:border-rose-300 rounded-lg focus:ring-0">
-                                    <option>Relationship to Margaret</option>
-                                    <option>Family</option>
-                                    <option>Friend</option>
-                                    <option>Former Student</option>
-                                    <option>Colleague</option>
-                                    <option>Neighbor</option>
-                                </select>
-                            </div>
-                            <textarea placeholder="Share your favorite memory of Margaret..." rows="4"
-                                class="bg-white/70 p-4 border-2 border-rose-100 focus:border-rose-300 rounded-lg focus:ring-0 w-full"></textarea>
-                            <button type="submit" class="bg-rose-400 hover:bg-rose-500 px-8 py-3 rounded-lg font-light text-white transition duration-300">
-                                <i class="mr-2 fas fa-heart"></i>Share Memory
-                            </button>
-                        </form>
-                    </div>
+                <div class="mt-6">
+                    <a href="<?= base_url('/obituary/request') ?>" class="inline-block bg-rose-500 hover:bg-rose-600 px-5 py-2 rounded text-white">Request this design</a>
+                    <a href="<?= base_url('/obituary') ?>" class="inline-block ml-3 text-rose-600">Back to templates</a>
+                </div>
+            </article>
 
-                    <!-- Memory Cards -->
-                    <div class="space-y-6">
-                        <?php
-                        $memories = $obituary['memories'] ?? [
-                            [
-                                'name' => 'Former Student',
-                                'relationship' => 'Student',
-                                'memory' => 'Mrs. Williams taught me in 3rd grade. She made learning magical and always believed in every student. Her flower garden lessons taught me more than just botany - they taught me patience and care.',
-                                'date' => '2 days ago'
-                            ]
-                        ];
-                        ?>
-                        <?php if (empty($memories)): ?>
-                            <div class="py-12 text-center">
-                                <div class="mb-4 text-rose-200 text-6xl">🌹</div>
-                                <p class="text-gray-500 italic">Be the first to share a memory of Margaret...</p>
-                            </div>
-                        <?php else: ?>
-                            <?php foreach ($memories as $memory): ?>
-                                <div class="bg-white/70 shadow-sm p-6 border border-rose-100 rounded-xl">
-                                    <div class="flex items-start gap-4">
-                                        <div class="flex justify-center items-center bg-rose-100 rounded-full w-12 h-12">
-                                            <i class="text-rose-400 fas fa-user"></i>
-                                        </div>
-                                        <div class="flex-1">
-                                            <div class="flex items-center gap-2 mb-2">
-                                                <h5 class="font-semibold text-gray-800"><?= esc($memory['name']) ?></h5>
-                                                <span class="bg-rose-100 px-2 py-1 rounded text-rose-700 text-sm">
-                                                    <?= esc($memory['relationship']) ?>
-                                                </span>
-                                            </div>
-                                            <p class="mb-2 text-gray-700 italic">"<?= esc($memory['memory']) ?>"</p>
-                                            <p class="text-gray-500 text-sm"><?= esc($memory['date']) ?></p>
-                                        </div>
-                                    </div>
+            <!-- Content sections - single page stacked layout -->
+            <div class="space-y-6 mt-10">
+                <section class="bg-white p-6 border border-gray-100 rounded text-left">
+                    <h2 class="font-semibold text-gray-800 text-xl">About</h2>
+                    <p class="mt-3 text-gray-700 leading-relaxed"><?= nl2br(esc($obituary['description'] ?? 'No description available.')) ?></p>
+                </section>
+
+                <!-- decorative divider (reuse style) -->
+                <div class="flex justify-center items-center">
+                    <span class="border-gray-300 border-t w-1/4"></span>
+                    <svg class="mx-3 w-6 h-6 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 5v14" />
+                        <path d="M5 12h14" />
+                    </svg>
+                    <span class="border-gray-300 border-t w-1/4"></span>
+                </div>
+
+                <section class="bg-white p-4 border border-gray-100 rounded">
+                    <h3 class="font-medium text-lg">Family</h3>
+                    <?php if (!empty($obituary['family'])): ?>
+                        <ul class="space-y-2 mt-3 text-gray-700">
+                            <?php foreach ($obituary['family'] as $f): ?>
+                                <li class="flex justify-between items-center">
+                                    <span class="text-gray-800 text-sm"><?= esc(trim(($f['first_name'] ?? '') . ' ' . ($f['middle_initial'] ?? '') . ' ' . ($f['last_name'] ?? ''))) ?></span>
+                                    <span class="text-gray-500 text-xs uppercase tracking-wider"><?= esc(ucfirst($f['relation'] ?? '')) ?></span>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <p class="mt-2 text-gray-600">No family information provided.</p>
+                    <?php endif; ?>
+                </section>
+
+                <div class="flex justify-center items-center">
+                    <span class="border-gray-300 border-t w-1/4"></span>
+                    <svg class="mx-3 w-6 h-6 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 5v14" />
+                        <path d="M5 12h14" />
+                    </svg>
+                    <span class="border-gray-300 border-t w-1/4"></span>
+                </div>
+
+                <section class="bg-white p-4 border border-gray-100 rounded">
+                    <h3 class="font-medium text-lg">Services & Events</h3>
+                    <?php $events = ['viewing' => ['date_time' => 'viewing_date_time', 'place' => 'viewing_place', 'label' => 'Viewing'], 'funeral' => ['date_time' => 'funeral_date_time', 'place' => 'funeral_place', 'label' => 'Funeral'], 'burial' => ['date_time' => 'burial_date_time', 'place' => 'burial_place', 'label' => 'Burial']]; ?>
+                    <div class="space-y-3 mt-3">
+                        <?php foreach ($events as $key => $ev): ?>
+                            <div class="flex items-start gap-3">
+                                <div class="mt-1 text-gray-400">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M7 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M10 16h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
                                 </div>
-                            <?php endforeach ?>
-                        <?php endif ?>
+                                <div>
+                                    <h4 class="font-medium text-sm"><?= $ev['label'] ?></h4>
+                                    <p class="text-gray-500 text-xs"><?= !empty($obituary[$ev['date_time']]) ? date('F j, Y, g:i A', strtotime($obituary[$ev['date_time']])) : 'TBA' ?></p>
+                                    <p class="mt-1 text-gray-700 text-sm"><?= esc($obituary[$ev['place']] ?? 'No location provided') ?></p>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
-                </div>
-            </div>
+                </section>
 
-            <!-- Sidebar -->
-            <div class="space-y-6">
-                <!-- Service Information -->
-                <div class="bg-white/80 shadow-lg backdrop-blur p-6 rounded-2xl">
-                    <div class="mb-6 text-center">
-                        <div class="mb-2 text-rose-300 text-3xl">⚘</div>
-                        <h4 class="font-light text-gray-800 text-2xl">Celebration of Life</h4>
-                        <div class="bg-rose-300 mx-auto mt-2 w-16 h-px"></div>
+                <?php if (!empty($obituary['treasured_memories'])): ?>
+                    <div class="flex justify-center items-center">
+                        <span class="border-gray-300 border-t w-1/4"></span>
+                        <svg class="mx-3 w-6 h-6 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M12 5v14" />
+                            <path d="M5 12h14" />
+                        </svg>
+                        <span class="border-gray-300 border-t w-1/4"></span>
                     </div>
 
-                    <div class="space-y-6">
-                        <div class="bg-rose-50/50 p-4 border border-rose-100 rounded-lg text-center">
-                            <h5 class="mb-2 font-semibold text-gray-800">Visitation</h5>
-                            <p class="text-gray-600"><?= esc($obituary['visitation_date'] ?? 'December 23, 2024') ?></p>
-                            <p class="text-gray-600"><?= esc($obituary['visitation_time'] ?? '2:00 PM - 7:00 PM') ?></p>
-                            <p class="mt-2 text-gray-500 text-sm"><?= esc($obituary['visitation_location'] ?? 'Sunset Funeral Home') ?></p>
+                    <section class="bg-white p-4 border border-gray-100 rounded">
+                        <h3 class="font-medium text-lg">Treasured Memories</h3>
+                        <div class="gap-3 grid grid-cols-2 md:grid-cols-3 mt-3">
+                            <?php foreach ($obituary['treasured_memories'] as $m): ?>
+                                <figure class="bg-gray-50 border rounded overflow-hidden">
+                                    <div class="bg-gray-100 h-28 overflow-hidden">
+                                        <img src="<?= esc($m['img'] ?? '') ?>" alt="<?= esc($m['title'] ?? 'Memory') ?>" class="w-full h-full object-cover">
+                                    </div>
+                                    <figcaption class="p-2 text-gray-700 text-xs">
+                                        <div class="font-medium text-sm"><?= esc($m['title'] ?? '') ?></div>
+                                        <div class="text-gray-500 text-xs"><?= esc($m['descriptions'] ?? '') ?></div>
+                                    </figcaption>
+                                </figure>
+                            <?php endforeach; ?>
                         </div>
+                    </section>
+                <?php endif; ?>
 
-                        <div class="bg-rose-50/50 p-4 border border-rose-100 rounded-lg text-center">
-                            <h5 class="mb-2 font-semibold text-gray-800">Memorial Service</h5>
-                            <p class="text-gray-600"><?= esc($obituary['service_date'] ?? 'December 24, 2024') ?></p>
-                            <p class="text-gray-600"><?= esc($obituary['service_time'] ?? '11:00 AM') ?></p>
-                            <p class="mt-2 text-gray-500 text-sm"><?= esc($obituary['service_location'] ?? 'Grace Community Church') ?></p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- In Lieu of Flowers -->
-                <div class="bg-white/80 shadow-lg backdrop-blur p-6 rounded-2xl">
-                    <div class="mb-4 text-center">
-                        <div class="mb-2 text-rose-300 text-3xl">🌻</div>
-                        <h4 class="font-light text-gray-800 text-xl">In Lieu of Flowers</h4>
-                        <div class="bg-rose-300 mx-auto mt-2 w-16 h-px"></div>
-                    </div>
-
-                    <p class="mb-4 text-gray-600 text-center italic">
-                        Margaret would be honored by donations to:
-                    </p>
-
-                    <div class="space-y-3">
-                        <div class="bg-rose-50/50 p-3 border border-rose-100 rounded-lg text-center">
-                            <h6 class="font-semibold text-gray-800"><?= esc($obituary['charity1'] ?? 'Children\'s Education Fund') ?></h6>
-                            <p class="text-gray-600 text-sm"><?= esc($obituary['charity1_desc'] ?? 'Supporting local schools') ?></p>
-                        </div>
-                        <div class="bg-rose-50/50 p-3 border border-rose-100 rounded-lg text-center">
-                            <h6 class="font-semibold text-gray-800"><?= esc($obituary['charity2'] ?? 'Community Garden Project') ?></h6>
-                            <p class="text-gray-600 text-sm"><?= esc($obituary['charity2_desc'] ?? 'Beautifying neighborhoods') ?></p>
-                        </div>
-                    </div>
+                <div class="flex justify-center items-center">
+                    <span class="border-gray-300 border-t w-1/4"></span>
+                    <svg class="mx-3 w-6 h-6 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 5v14" />
+                        <path d="M5 12h14" />
+                    </svg>
+                    <span class="border-gray-300 border-t w-1/4"></span>
                 </div>
 
-                <!-- Family -->
-                <div class="bg-white/80 shadow-lg backdrop-blur p-6 rounded-2xl">
-                    <div class="mb-4 text-center">
-                        <div class="mb-2 text-rose-300 text-3xl">👑</div>
-                        <h4 class="font-light text-gray-800 text-xl">Survived By</h4>
-                        <div class="bg-rose-300 mx-auto mt-2 w-16 h-px"></div>
-                    </div>
-
-                    <div class="space-y-3 text-sm">
-                        <div class="bg-rose-50/50 p-3 rounded-lg text-center">
-                            <p class="text-gray-700"><?= esc($obituary['survived_by'] ?? 'Loving husband Robert of 56 years; Children: Elizabeth (James), Michael (Sarah), Sarah (David); 8 grandchildren; 2 great-grandchildren; Sister Helen and brother Thomas.') ?></p>
+                <section class="bg-white p-4 border border-gray-100 rounded">
+                    <h3 class="font-medium text-lg">Messages & Shared Memories</h3>
+                    <?php if (!empty($obituary['shared_messages'])): ?>
+                        <div class="space-y-3 mt-3">
+                            <?php foreach ($obituary['shared_messages'] as $s): ?>
+                                <blockquote class="bg-gray-50 p-3 pl-3 border-gray-200 border-l-2 rounded text-gray-700">
+                                    <div class="text-gray-500 text-xs">
+                                        <strong><?= esc(!empty($s['anonymous']) ? 'Anonymous' : ($s['name'] ?? 'Guest')) ?></strong>
+                                        <span class="ml-2"><?= !empty($s['created_at']) ? date('F j, Y', strtotime($s['created_at'])) : '' ?></span>
+                                    </div>
+                                    <p class="mt-2 text-sm"><?= nl2br(esc($s['message'] ?? '')) ?></p>
+                                </blockquote>
+                            <?php endforeach; ?>
                         </div>
-                    </div>
+                    <?php else: ?>
+                        <p class="mt-2 text-gray-600">No messages yet. Be the first to share a memory.</p>
+                    <?php endif; ?>
+                </section>
+
+                <div class="flex justify-center items-center">
+                    <span class="border-gray-300 border-t w-1/4"></span>
+                    <svg class="mx-3 w-6 h-6 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 5v14" />
+                        <path d="M5 12h14" />
+                    </svg>
+                    <span class="border-gray-300 border-t w-1/4"></span>
                 </div>
 
-                <!-- Share Memorial -->
-                <div class="bg-white/80 shadow-lg backdrop-blur p-6 rounded-2xl">
-                    <div class="mb-4 text-center">
-                        <div class="mb-2 text-rose-300 text-3xl">💌</div>
-                        <h4 class="font-light text-gray-800 text-xl">Share Memorial</h4>
-                        <div class="bg-rose-300 mx-auto mt-2 w-16 h-px"></div>
-                    </div>
+                <section class="bg-white p-4 border border-gray-100 rounded">
+                    <h3 class="font-medium text-lg">Share a memory or message</h3>
+                    <form method="post" action="<?= base_url('/obituary/share/' . ($obituary['id'] ?? '')) ?>" class="space-y-3 mt-3">
+                        <div class="flex items-center gap-3">
+                            <label class="flex items-center gap-2 text-sm">
+                                <input id="anonymousSwitch" type="checkbox" name="anonymous" checked class="w-4 h-4">
+                                <span>Share anonymously</span>
+                            </label>
+                            <div id="nameInputContainer" class="hidden flex-1">
+                                <input type="text" name="name" id="sharerName" placeholder="Your name" class="p-2 border rounded w-full text-sm">
+                            </div>
+                        </div>
 
-                    <div class="space-y-3">
-                        <button class="bg-rose-400 hover:bg-rose-500 px-4 py-3 rounded-lg w-full font-light text-white transition">
-                            <i class="mr-2 fab fa-facebook"></i>Share on Facebook
-                        </button>
-                        <button class="bg-rose-100 hover:bg-rose-200 px-4 py-3 rounded-lg w-full font-light text-rose-700 transition">
-                            <i class="mr-2 fas fa-envelope"></i>Send via Email
-                        </button>
-                        <button class="bg-rose-100 hover:bg-rose-200 px-4 py-3 rounded-lg w-full font-light text-rose-700 transition">
-                            <i class="mr-2 fas fa-print"></i>Print Memorial
-                        </button>
-                    </div>
+                        <div>
+                            <label for="message" class="sr-only">Message</label>
+                            <textarea id="message" name="message" rows="4" class="p-3 border rounded w-full text-sm" placeholder="Write something about <?= esc($obituary['first_name'] ?? 'the person') ?>..."></textarea>
+                        </div>
+
+                        <div class="text-right">
+                            <button type="submit" class="bg-gray-900 px-4 py-2 rounded text-white text-sm">Submit</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Moved aside content to bottom -->
+                <div class="flex justify-center items-center">
+                    <span class="border-gray-300 border-t w-1/4"></span>
+                    <svg class="mx-3 w-6 h-6 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 5v14" />
+                        <path d="M5 12h14" />
+                    </svg>
+                    <span class="border-gray-300 border-t w-1/4"></span>
                 </div>
+
+                <section class="bg-white p-4 border border-gray-100 rounded text-sm">
+                    <h4 class="font-medium">Share & Support</h4>
+                    <div class="flex flex-col gap-2 mt-3">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode(current_url()) ?>" target="_blank" class="px-3 py-2 border border-gray-200 rounded text-sm text-center">Share on Facebook</a>
+                        <a href="mailto:?subject=Memorial for <?= rawurlencode(trim(($obituary['first_name'] ?? '') . ' ' . ($obituary['last_name'] ?? ''))) ?>&body=View: <?= rawurlencode(current_url()) ?>" class="px-3 py-2 border border-gray-200 rounded text-sm text-center">Share via Email</a>
+                        <a href="<?= base_url('/obituary/request') ?>" class="bg-gray-900 px-3 py-2 rounded text-white text-sm text-center">Request this design</a>
+                    </div>
+                </section>
+
+                <?php if (!empty($obituary['other_notes'])): ?>
+                    <section class="bg-white p-4 border border-gray-100 rounded text-gray-700 text-sm">
+                        <h4 class="font-medium">Notes</h4>
+                        <p class="mt-2 text-sm"><?= nl2br(esc($obituary['other_notes'])) ?></p>
+                    </section>
+                <?php endif; ?>
             </div>
         </div>
     </main>

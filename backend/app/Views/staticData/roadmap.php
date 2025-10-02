@@ -60,7 +60,7 @@ $roadmapItemsDone = [
 $roadmapItems = [
     [
         'id' => 'obituary',
-        'title' => 'Obituary & Memorial pages',
+        'title' => 'Obituary pages',
         'desc' => 'Clients with accounts can create memorial pages, upload images and moderate guestbook entries.',
         'status' => 'Planned',
         'priority' => 'Medium',

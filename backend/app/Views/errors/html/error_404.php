@@ -15,10 +15,10 @@ $user = $session->get('user') ?? null;
     <main class="mx-auto px-6 py-10 max-w-6xl">
         <div class="md:flex md:space-x-6">
 
-            <?php if ($user !== null && $user['type'] !== 'client') : ?>
-                <?= view('components/aside/employee', ['active' => '']) ?>
-            <?php elseif ($user !== null && $user['type'] === 'manager') : ?>
+            <?php if ($user !== null && $user['type'] === 'manager') : ?>
                 <?= view('components/aside/admin_manager', ['active' => '']) ?>
+            <?php elseif ($user !== null && $user['type'] !== 'client') : ?>
+                <?= view('components/aside/employee', ['active' => '']) ?>
             <?php endif; ?>
 
             <section class="flex-1">

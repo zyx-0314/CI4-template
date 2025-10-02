@@ -61,7 +61,7 @@ Included examples and behavior:
 
 - Service listing (public pages showing offered services)
 - Service scheduling (request form, preferred date/time, admin assignment)
-- Obituary & memorial pages (two visual treatments)
+- Obituary pages (two visual treatments)
 - Admin dashboard (DB health, management UI)
 - Employee assignment by scheduled service
 - Simple calendar view for scheduled services
@@ -77,7 +77,7 @@ These are the main features implemented or intended for the demo site:
 |-----------------------------------------|-----------------|
 | Service listing                         | Public listing of offered services and prices
 | Service scheduling                      | Request form + scheduling flow with preferred date/time
-| Obituary & Memorial pages (2 designs)   | Two layout templates for memorial pages (simple / gallery)
+| Obituary pages (2 designs)   | Two layout templates for memorial pages (simple / gallery)
 | Admin dashboard & functionality         | Admin view with DB health card and basic management
 | Employee assignment per schedule        | Assign staff to scheduled service requests (admin)
 | Calendar system                         | Simple calendar view to visualize scheduled services

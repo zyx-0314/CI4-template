@@ -16,13 +16,17 @@ $routes->get('/services/(:segment)', 'Users::showSpecificService/$1');
 $routes->get('/reservation/(:num)', 'Reservation::showReservationRequestPage/$1');
 $routes->post('/reservation/(:num)', 'Reservation::createRequest/$1');
 
-// Obituary & Memorial Pages
+// Obituary Pages
 $routes->get('/obituary', 'Obituary::index');
 $routes->get('/obituary/classic/(:num)', 'Obituary::showClassic/$1');
 $routes->get('/obituary/modern/(:num)', 'Obituary::showModern/$1');
 $routes->get('/obituary/elegant/(:num)', 'Obituary::showElegant/$1');
 $routes->get('/obituary/minimalist/(:num)', 'Obituary::showMinimalist/$1');
 $routes->get('/obituary/timeline/(:num)', 'Obituary::showTimeline/$1');
+// Obituary request form & submission
+$routes->get('/obituary/request', 'Obituary::requestForm');
+$routes->get('/obituary/request/(:num)', 'Obituary::requestForm/$1');
+$routes->post('/obituary/request', 'Obituary::submitRequest');
 
 // Auth
 $routes->get('/login', 'Auth::showLoginPage');
@@ -43,12 +47,15 @@ $routes->get('/admin/dashboard', 'Admin::showDashboardPage');
 $routes->get('/admin/inquiries', 'Admin::showInquiriesPage');
 $routes->get('/admin/services', 'Admin::showServicesPage');
 $routes->get('/admin/accounts', 'Admin::showAccountsPage');
+$routes->get('/admin/obituaries', 'Admin::showObituariesPage');
 // Create service (AJAX)
 $routes->post('/admin/services/create', 'Admin::createService');
 // Create account (AJAX)
 $routes->post('/admin/accounts/create', 'Admin::createAccounts');
 // Update request (AJAX)
 $routes->post('/admin/requests/update', 'Admin::updateRequest');
+// Update obituary (AJAX)
+$routes->post('/admin/obituaries/update', 'Admin::updateObituary');
 // Update service (AJAX)
 $routes->post('/admin/services/update', 'Admin::updateService');
 // Update account (AJAX)
