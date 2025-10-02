@@ -22,7 +22,7 @@ docs(readme): Updated the `readme`
 
 [ ] 2. Create your personal landing page
 - [ ] Create `Issue` named Landing Page, can add description if you want to.
-- [ ] Create `Branch` name it `frontend/landingPage`. make sure that you are in right branch looking at the bottom left you should see `frontend/landingPage` not `main`
+- [ ] Create `Branch` name it `frontend/landingPage`. make sure that you are in right branch looking at the bottom left you should see `frontend/landingPage` not `main`, `development`
 - [ ] Add new `View` with basics html requirements under the `user` folder with name `landing.php`
 - [ ] Add new `Controller` named `Users` using command found on templates(requires php and composer) readme or coding your own
 ```php
@@ -77,7 +77,7 @@ feat(landing page): Added a new landing page
 
 [ ] 3. Create your Login Page
 - [ ] Create `Issue` named Login Page, can add description if you want to.
-- [ ] Create `Branch` name it `frontend/loginPage`. make sure that you are in right branch looking at the bottom left you should see `frontend/loginPage` not `main`, `frontend/landingPage`
+- [ ] Create `Branch` name it `frontend/loginPage`. make sure that you are in right branch looking at the bottom left you should see `frontend/loginPage` not `main`, `frontend/landingPage`, `development`
 - [ ] Add new `View` with basics html requirements under the `user` folder with name `loginPage.php`
 - [ ] Update new `Controller` named `Users` using command found on templates(requires php and composer) readme or coding your own
 ```php
