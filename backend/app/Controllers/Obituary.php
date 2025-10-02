@@ -257,6 +257,12 @@ class Obituary extends BaseController
                     'date_of_birth' => '1960-01-01',
                     'date_of_death' => '2024-01-01',
                     'description' => 'Dr. Emily Catherine Johnson was a physician, mother, and humanitarian.',
+                    'viewing_date_time' => '2025-02-10 14:00:00',
+                    'viewing_place' => 'Harborview Funeral Home Chapel',
+                    'funeral_date_time' => '2025-02-11 10:00:00',
+                    'funeral_place' => 'St. Luke\'s Church',
+                    'burial_date_time' => '2025-02-11 12:00:00',
+                    'burial_place' => 'Greenwood Cemetery',
                     'treasured_memories' => [
                         [
                             'img' => '/uploads/memories/timeline/1.png',
