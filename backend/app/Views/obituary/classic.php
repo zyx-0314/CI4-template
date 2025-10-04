@@ -4,6 +4,20 @@
  * Classic obituary design
  * Expects $obituary array from controller
  */
+
+$age = '';
+if (!empty($obituary['date_of_birth'])) {
+    try {
+        $dob = new \DateTime($obituary['date_of_birth']);
+        $end = !empty($obituary['date_of_death']) ? new \DateTime($obituary['date_of_death']) : new \DateTime();
+        $diff = $dob->diff($end);
+        $age = $diff->y;
+    } catch (\Exception $e) {
+        $age = '';
+    }
+};
+
+$events = ['viewing' => ['date_time' => 'viewing_date_time', 'place' => 'viewing_place', 'label' => 'Viewing'], 'funeral' => ['date_time' => 'funeral_date_time', 'place' => 'funeral_place', 'label' => 'Funeral'], 'burial' => ['date_time' => 'burial_date_time', 'place' => 'burial_place', 'label' => 'Burial']];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,21 +40,6 @@
                 </h1>
                 <p class="mt-1 text-gray-600 text-sm tracking-widest">In loving memory</p>
 
-                <?php
-                // Age calculation preserved
-                $age = '';
-                if (!empty($obituary['date_of_birth'])) {
-                    try {
-                        $dob = new \DateTime($obituary['date_of_birth']);
-                        $end = !empty($obituary['date_of_death']) ? new \DateTime($obituary['date_of_death']) : new \DateTime();
-                        $diff = $dob->diff($end);
-                        $age = $diff->y;
-                    } catch (\Exception $e) {
-                        $age = '';
-                    }
-                }
-                ?>
-
                 <div class="flex md:flex-row flex-col md:justify-center gap-2 md:gap-6 mt-4 text-gray-700 text-sm">
                     <span><strong>Born</strong> <?= !empty($obituary['date_of_birth']) ? date('F j, Y', strtotime($obituary['date_of_birth'])) : '—' ?></span>
                     <span><strong>Passed</strong> <?= !empty($obituary['date_of_death']) ? date('F j, Y', strtotime($obituary['date_of_death'])) : '—' ?></span>
@@ -56,12 +55,12 @@
 
                 <div class="gap-6 grid grid-cols-1 md:grid-cols-3 mt-8">
                     <div class="space-y-6 md:col-span-2">
-                        <section class="bg-white p-4 border border-gray-100 rounded">
-                            <h3 class="font-medium text-lg">Family</h3>
+                        <section class="bg-white p-4 px-10 border border-gray-100 rounded">
+                            <h3 class="font-medium text-lg text-center">Family</h3>
                             <?php if (!empty($obituary['family'])): ?>
                                 <ul class="space-y-2 mt-3 text-gray-700">
                                     <?php foreach ($obituary['family'] as $f): ?>
-                                        <li class="flex justify-between items-center">
+                                        <li class="flex justify-evenly items-center gap-6">
                                             <span class="text-gray-800 text-sm"><?= esc(trim(($f['first_name'] ?? '') . ' ' . ($f['middle_initial'] ?? '') . ' ' . ($f['last_name'] ?? ''))) ?></span>
                                             <span class="text-gray-500 text-xs uppercase tracking-wider"><?= esc(ucfirst($f['relation'] ?? '')) ?></span>
                                         </li>
@@ -72,26 +71,9 @@
                             <?php endif; ?>
                         </section>
 
-                        <section class="space-y-4">
-                            <?php $events = ['viewing' => ['date_time' => 'viewing_date_time', 'place' => 'viewing_place', 'label' => 'Viewing'], 'funeral' => ['date_time' => 'funeral_date_time', 'place' => 'funeral_place', 'label' => 'Funeral'], 'burial' => ['date_time' => 'burial_date_time', 'place' => 'burial_place', 'label' => 'Burial']]; ?>
-                            <?php foreach ($events as $key => $ev): ?>
-                                <div class="bg-white p-4 border border-gray-100 rounded">
-                                    <div class="flex items-start gap-3">
-                                        <div class="mt-1 text-gray-400">
-                                            <!-- subtle icon -->
-                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M12 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path d="M7 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path d="M10 16h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <h4 class="font-medium text-sm"><?= $ev['label'] ?></h4>
-                                            <p class="text-gray-500 text-xs"><?= !empty($obituary[$ev['date_time']]) ? date('F j, Y, g:i A', strtotime($obituary[$ev['date_time']])) : 'TBA' ?></p>
-                                            <p class="mt-1 text-gray-700 text-sm"><?= esc($obituary[$ev['place']] ?? 'No location provided') ?></p>
-                                        </div>
-                                    </div>
-                                </div>
+                        <section class="flex gap-3 space-y-4 w-full">
+                            <?php foreach ($events as $key => $event): ?>
+                                <?= view('components/cards/funeral_service_card', ['event' => $event]) ?>
                             <?php endforeach; ?>
                         </section>
 
@@ -99,16 +81,8 @@
                             <section class="bg-white p-4 border border-gray-100 rounded">
                                 <h3 class="font-medium text-lg">Treasured Memories</h3>
                                 <div class="gap-3 grid grid-cols-2 md:grid-cols-3 mt-3">
-                                    <?php foreach ($obituary['treasured_memories'] as $m): ?>
-                                        <figure class="bg-gray-50 border rounded overflow-hidden">
-                                            <div class="bg-gray-100 h-28 overflow-hidden">
-                                                <img src="<?= esc($m['img'] ?? '') ?>" alt="<?= esc($m['title'] ?? 'Memory') ?>" class="w-full h-full object-cover">
-                                            </div>
-                                            <figcaption class="p-2 text-gray-700 text-xs">
-                                                <div class="font-medium text-sm"><?= esc($m['title'] ?? '') ?></div>
-                                                <div class="text-gray-500 text-xs"><?= esc($m['descriptions'] ?? '') ?></div>
-                                            </figcaption>
-                                        </figure>
+                                    <?php foreach ($obituary['treasured_memories'] as $memories): ?>
+                                        <?= view('components/cards/memory_card', ['memories' => $memories]) ?>
                                     <?php endforeach; ?>
                                 </div>
                             </section>
@@ -133,29 +107,7 @@
                             <?php endif; ?>
                         </section>
 
-                        <section class="bg-white p-4 border border-gray-100 rounded">
-                            <h3 class="font-medium text-lg">Share a memory or message</h3>
-                            <form method="post" action="<?= base_url('/obituary/share/' . ($obituary['id'] ?? '')) ?>" class="space-y-3 mt-3">
-                                <div class="flex items-center gap-3">
-                                    <label class="flex items-center gap-2 text-sm">
-                                        <input id="anonymousSwitch" type="checkbox" name="anonymous" checked class="w-4 h-4">
-                                        <span>Share anonymously</span>
-                                    </label>
-                                    <div id="nameInputContainer" class="hidden flex-1">
-                                        <input type="text" name="name" id="sharerName" placeholder="Your name" class="p-2 border rounded w-full text-sm">
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label for="message" class="sr-only">Message</label>
-                                    <textarea id="message" name="message" rows="4" class="p-3 border rounded w-full text-sm" placeholder="Write something about <?= esc($obituary['first_name'] ?? 'the person') ?>..."></textarea>
-                                </div>
-
-                                <div class="text-right">
-                                    <button type="submit" class="bg-gray-900 px-4 py-2 rounded text-white text-sm">Submit</button>
-                                </div>
-                            </form>
-                        </section>
+                        <?= view('components/cards/share_memory_input_card', ['obituary' => $obituary]) ?>
                     </div>
 
                     <aside class="space-y-4">
@@ -207,26 +159,6 @@
                     });
                 });
             });
-        })();
-
-        // Anonymous toggle for share form (unchanged behavior)
-        (function() {
-            var anon = document.getElementById('anonymousSwitch');
-            var nameContainer = document.getElementById('nameInputContainer');
-            var nameInput = document.getElementById('sharerName');
-            if (anon) {
-                function updateName() {
-                    if (anon.checked) {
-                        nameContainer.classList.add('hidden');
-                        if (nameInput) nameInput.removeAttribute('required');
-                    } else {
-                        nameContainer.classList.remove('hidden');
-                        if (nameInput) nameInput.setAttribute('required', 'required');
-                    }
-                }
-                anon.addEventListener('change', updateName);
-                updateName();
-            }
         })();
     </script>
 

@@ -7,9 +7,6 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class Obituary extends BaseController
 {
-    /**
-     * Show obituary listing page
-     */
     public function index()
     {
         // Sample obituary data for demonstration using ObituaryRequestModel structure

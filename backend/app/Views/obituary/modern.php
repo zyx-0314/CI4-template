@@ -168,21 +168,6 @@
                     <div class="p-4">
                         <h1 class="font-semibold text-slate-900 text-2xl tracking-tight"><?= esc($obituary['first_name'] . ' ' . $obituary['last_name']) ?></h1>
                         <p class="mt-1 text-sm muted"><?= date('F j, Y', strtotime($obituary['date_of_birth'] ?? '1970-01-01')) ?> — <?= date('F j, Y', strtotime($obituary['date_of_death'] ?? '1970-01-01')) ?></p>
-
-
-
-                        <div class="flex gap-3 mt-4">
-                            <a href="<?= base_url('/obituary/request') ?>" class="inline-flex flex-1 justify-center items-center gap-2 hover:opacity-95 px-3 py-2 rounded text-white brand-bg">Request</a>
-                            <a href="<?= base_url('/obituary') ?>" class="inline-flex justify-center items-center px-3 py-2 border rounded muted">Back</a>
-                        </div>
-
-                        <div class="flex items-center gap-2 mt-4 text-xs">
-                            <span class="uppercase tracking-wide muted">Connected</span>
-                            <div class="flex gap-3 ml-auto">
-                                <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode(current_url()) ?>" target="_blank" class="brand">Facebook</a>
-                                <a href="mailto:?subject=Memorial for <?= rawurlencode(trim(($obituary['first_name'] ?? '') . ' ' . ($obituary['last_name'] ?? ''))) ?>&body=View: <?= rawurlencode(current_url()) ?>" class="muted">Email</a>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -315,16 +300,8 @@
                             <div class="text-xs muted">Captured moments</div>
                         </div>
                         <div class="gap-4 grid grid-cols-2 md:grid-cols-3 mt-4">
-                            <?php foreach ($obituary['treasured_memories'] as $m): ?>
-                                <figure class="bg-white border rounded overflow-hidden">
-                                    <div class="bg-gray-50 h-44 overflow-hidden">
-                                        <img src="<?= esc($m['img'] ?? '') ?>" alt="<?= esc($m['title'] ?? 'Memory') ?>" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
-                                    </div>
-                                    <figcaption class="p-3 text-slate-700 text-sm">
-                                        <div class="font-medium text-slate-800"><?= esc($m['title'] ?? '') ?></div>
-                                        <div class="text-xs muted"><?= esc($m['descriptions'] ?? '') ?></div>
-                                    </figcaption>
-                                </figure>
+                            <?php foreach ($obituary['treasured_memories'] as $memories): ?>
+                                <?= view('components/cards/memory_card', ['memories' => $memories]) ?>
                             <?php endforeach; ?>
                         </div>
                     </div>
@@ -350,11 +327,11 @@
                     <?php else: ?>
                         <p class="mt-2 text-slate-500">No messages yet. Be the first to share a tribute.</p>
                     <?php endif; ?>
-                    <div class="flex gap-2 mt-4">
-                        <a href="<?= base_url('/obituary/tribute/' . ($obituary['id'] ?? '')) ?>" class="px-3 py-2 rounded text-white text-sm brand-bg">Leave a tribute</a>
-                        <a href="#" class="px-3 py-2 border rounded text-sm muted">Share</a>
-                    </div>
                 </div>
+                <div class="bg-white shadow-md p-1 border rounded-lg card">
+                    <?= view('components/cards/share_memory_input_card', ['obituary' => $obituary]) ?>
+                </div>
+
             </section>
         </div>
     </main>
