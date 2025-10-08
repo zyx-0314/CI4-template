@@ -138,6 +138,21 @@
             $this->call('App\\Database\\Seeds\\NameOfYourSeederHere');
         ```
 - [ ] Run `Seed` command you can check the readme, it doesnt require composer or php
+    - [ ] Run your `phpmyadmin` or `vs code: db extensions(DBCode)` or other DB tools
+        - DBCode
+        - [ ]`Add Connection Button` Click it
+        - [ ] Select `MySQL`
+        - [ ] Name it. Example: `ItoAyDatabaseKongMalupet`
+        - [ ] Set it host as `localhost` and `3390` since that is our default port
+        - [ ] For password you can check or change in `compose.yml` or use the default `app` for both `username` and `password`
+        - [ ] In `Database` click the `refresh icon` then `app` should appear or the name of the database in `compose.yml`
+        - [ ] Click `Save`
+        - phpmyadmin A
+        - [ ] Go to `Docker Desktop`
+        - [ ] Click Play button near the `phpmyadmin`
+        - [ ] Port will turn blue click it
+        - phpmyadmin B
+        - [ ] In cmd use this command `docker compose up phpmyadmin`
 - [ ] If no error you can check if the table has the value you added in the seed
 - [ ] Once all working you can start adding your `label` in your source control.
     - [ ] Since we created Users Table Seeder. We could say we added a new feature
@@ -298,10 +313,6 @@ Create the following, with their own issues, branches and PR
             ```php
                 $email = $request->getPost('email');
             ```
-        - [ ] Extract Email value to email variable
-            ```php
-                $email = $request->getPost('email');
-            ```
         - [ ] Using model we will call the database and query
             ```php
                 $userModel = new \App\Models\UsersModel();
@@ -318,14 +329,6 @@ Create the following, with their own issues, branches and PR
         - [ ] Converting to useable array
             ```php
                 $userArr = is_array($user) ? $user : (method_exists($user, 'toArray') ? $user->toArray() : (array) $user);
-            ```
-        - [ ] Condition to check using hash the password
-            ```php
-                if (! password_verify($request->getPost('password'), $userArr['password_hash'] ?? '')) {
-                    $session->setFlashdata('errors', ['password' => 'Incorrect password']);
-                    $session->setFlashdata('old', ['email' => $email]);
-                    return redirect()->back()->withInput();
-                }
             ```
         - [ ] Condition to check using hash the password
             ```php
@@ -394,9 +397,11 @@ Create the following, with their own issues, branches and PR
             ```
         - [ ] Now prepare your data. below is an example.
             ```php
+            <!-- This should be based on data from database table -->
+            <!-- Make sure that required datas are specified while some should be expecting null so have catcher for it -->
             $data = [
                 'first_name' => $post['first_name'],
-                'middle_name' => $post['middle_name'] ?? null,
+                'middle_name' => $post['middle_name'] ?? null, <!-- This is the sample for nullable data -->
                 'last_name' => $post['last_name'],
                 'email' => $post['email'],
                 'password_hash' => password_hash($post['password'], PASSWORD_DEFAULT),
