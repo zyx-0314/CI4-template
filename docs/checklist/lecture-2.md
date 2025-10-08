@@ -2,6 +2,8 @@
 ## Migration -> Seeding -> Truncate*
 
 [ ] 1. Migration
+- [ ] Make sure that you copy the .env.sample
+- [ ] Rename `.env copy.sample` -> `.env`
 - [ ] Check in Docker is MySQL is working,
     - [ ] You can run phpmyadmin if you want a interface/GUI
     - [ ] Or add this docker command and change the `<SQL Command>`
@@ -13,7 +15,7 @@
         docker compose exec -T mysql mysql -uroot -proot app -N -e "SHOW TABLES;"
         ```
 - [ ] Create `Issue` named Users Table, can add description if you want to.
-- [ ] Create `Branch` name it `database/users`
+- [ ] Create `Branch` name it `database/users`. make sure that you are in right branch looking at the bottom left you should see `frontend/loginPage` not `main`, `frontend/landingPage`, `development`
 - [ ] Add new `Migration` named `CreateUsersTable` using command found on templates(requires php and composer) readme or coding your own, if you code your own the format name is, `YYYY-MM-DD-XXXXXX_Name`.
 > Y = Year, M = Month Number, D = Day Number, X = any number of your choice, then migration name example `CreateUsersTable`
     ```php
@@ -37,11 +39,11 @@
             $this->forge->addField([
                 'column_name' => [
                     'type'           => 'INT',  // important
-                    'constraint'     => 11,     // important, but some doesnt need this
-                    'unsigned'       => true,   // optional
+                    'constraint'     => 11,     // important, but some doesnt need this. this is used to control the bit size
+                    'unsigned'       => true,   // optional, it means all positive value
                     'auto_increment' => true,   // optional if you want auto counting, but important for the id
-                    'null'           => false,  // not needed for id, but needed for most
-                    'default'        => 1,      // optional
+                    'null'           => false,  // not needed for id, but needed for most, it means it can be empty
+                    'default'        => 1,      // optional, used if you want to have default value
                 ]
             ])
         ```
@@ -61,11 +63,94 @@
                 'null' => true,
             ],
         ```
+    - Example:
+        ```php
+        $this->forge->addField([
+            'id' => [
+                'type'           => 'INT',
+                'constraint'     => 11,
+                'unsigned'       => true,
+                'auto_increment' => true,
+            ],
+            'first_name' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 100,
+                'null'       => false,
+            ],
+            'middle_name' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 100,
+                'null'       => true,
+            ],
+            'last_name' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 100,
+                'null'       => false,
+            ],
+            'email' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 255,
+                'null'       => false,
+            ],
+            'password_hash' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 255,
+                'null'       => false,
+            ],
+            'type' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 50,
+                'default'    => 'client',
+                'null'       => false,
+            ],
+            'account_status' => [
+                'type'       => 'TINYINT',
+                'constraint' => 1,
+                'default'    => 1, // 1 = active, 0 = inactive
+                'null'       => false,
+            ],
+            'email_activated' => [
+                'type'       => 'TINYINT',
+                'constraint' => 1,
+                'default'    => 0,
+                'null'       => false,
+            ],
+            'newsletter' => [
+                'type'       => 'TINYINT',
+                'constraint' => 1,
+                'default'    => 1,
+                'null'       => false,
+            ],
+            'gender' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 20,
+                'null'       => true,
+            ],
+            // You use Var Char for images directory
+            'profile_image' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 255,
+                'null'       => true,
+            ],
+            'deleted_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'created_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+        ]);
+        ```
     - [ ] Add Primary key
         ```php
             $this->forge->addKey('name_of_the_column_you_want_as_primary_key', true);
         ```
-    - [ ] Add Unique key constraint
+    - [ ] Add Unique key constraint, this is optional
         ```php
             $this->forge->addUniqueKey('name_of_the_column_you_want_constraint');
         ```
@@ -90,7 +175,7 @@
 
 [ ] 2. Seeding
 - [ ] Create `Issue` named Users Table Seeding, can add description if you want to.
-- [ ] Using same `Branch`, `database/users`
+- [ ] Using same `Branch`, `database/users`. make sure that you are in right branch looking at the bottom left you should see `frontend/loginPage` not `main`, `frontend/landingPage`, `development`
 - [ ] Add new `Seed` named `UsersSeeder` using command found on templates(requires php and composer) readme or coding your own
 - [ ] Making contents of seeder
     ```php
@@ -132,10 +217,17 @@
             }
         }
     ```
+- [ ] Make sure to have the files of `DatabaseSeeder.php` and `ClearDatabaseSeeder.php`
 - [ ] Update `DatabaseSeeder.php` adding our newly created seeder
     - [ ] revise the following format after the first call
         ```php
             $this->call('App\\Database\\Seeds\\NameOfYourSeederHere');
+        ```
+- [ ] Update `ClearDatabaseSeeder.php` adding our newly created table
+    - [ ] revise the following format after the first call
+        ```php
+            <!-- Add the table name inside example "User" Table -->
+            $tablesInOrder = ['User'];
         ```
 - [ ] Run `Seed` command you can check the readme, it doesnt require composer or php
     - [ ] Run your `phpmyadmin` or `vs code: db extensions(DBCode)` or other DB tools
@@ -172,14 +264,10 @@
 
 ## Activity time
 Create the following, with their own issues, branches and PR
-- [ ] Create a Login in Page
-    - [ ] Under `Controller` `Auth`
-- [ ] Create a Sign up Page
-    - [ ] Under `Controller` `Auth`
-- [ ] Dashboard A
-    - [ ] Under `Controller` `Employee`
-- [ ] Dashboard B
-    - [ ] Under `Controller` `Client`
+- [ ] Dashboard Admin
+- [ ] Services Page (or something similar name)
+- [ ] Accounts Page
+- [ ] Request Page (or something similar)
 
 ## Backend Time
 [ ] 1. Model and Entity
@@ -269,7 +357,7 @@ Create the following, with their own issues, branches and PR
 
 [ ] 2. Updating Controller and Route
 - [ ] Create `Issue` named Functions for Login, can add description if you want to.
-- [ ] Using same `Branch`, `backend/users`
+- [ ] Using same `Branch`, `backend/users`. make sure that you are in right branch looking at the bottom left you should see `frontend/loginPage` not `main`, `frontend/landingPage`, `development`
 - [ ] Update `Controller` to add certain functions
     - [ ] Login:
         - [ ] Create `login` function
@@ -432,7 +520,7 @@ Create the following, with their own issues, branches and PR
 
 [ ] 3. Wiring up frontend to backend
 - [ ] Create `Issue` named Wiring up frontend to backend, can add description if you want to.
-- [ ] Using same `Branch`, `backend/users`
+- [ ] Using same `Branch`, `backend/users`. make sure that you are in right branch looking at the bottom left you should see `frontend/loginPage` not `main`, `frontend/landingPage`, `development`
 - [ ] Updating the `Forms`. In `Login`
     ```php
         <!-- set actions to the endpoint name, this time /login -->

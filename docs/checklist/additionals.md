@@ -2,8 +2,8 @@
 - [ ] Add assets in `public` folder
 - [ ] Visit the page you want to use the assets
 - [ ] Get the directory from public to the assets
-    - example: the image in folder `logo` the `src="<?= base_url('logo/logo.svg') ?>"`
-    - example: the js in folder `js` the `src="<?= base_url('js/toast.js') ?>"`
+    - example: the image in folder `logo` the `src="/logo/logo.svg"`
+    - example: the js in folder `js` the `src="/js/toast.js"`
 
 # How to use Toast
 - [ ] Make sure you have the code: `backend\public\js\toast.js`

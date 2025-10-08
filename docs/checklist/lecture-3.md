@@ -26,7 +26,7 @@
         - [ ] Encapsulate with Try Catch
         ```php
         try {
-            
+
         } catch (\Exception $e) {
 
         }
