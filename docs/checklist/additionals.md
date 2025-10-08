@@ -7,7 +7,7 @@
 
 # How to use Toast
 - [ ] Make sure you have the code: `backend\public\js\toast.js`
-- [ ] Call it before other js: <script src="<?= base_url('js/toast.js') ?>"></script>
+- [ ] Call it before other js: <script src="/js/toast.js"></script>
 - [ ] Inside your JS use it like this:
     ```js
         document.addEventListener('keydown', function(e) {
@@ -24,7 +24,7 @@
 - ✅ It has Font Awsome Ready
 - ✅ It has Google Font Ready Sample
 
-#  Adding Email Sending
+# Adding Email Sending
 - [ ] Setup Email SMTP using gmail(Google as provider)
     - [ ] Go to `Email` under `Config`
     - [ ] Change `$protocol` value to `smtp`
@@ -66,3 +66,5 @@
                 echo 'failed';
             }
         ```
+
+# Upload Image

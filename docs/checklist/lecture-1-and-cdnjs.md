@@ -141,7 +141,7 @@ Create the following, with their own issues, branches and PR
 - [ ] Create Mood Board Page. It must contain the following
     - [ ] Color palette: min of 3
     - [ ] Typography: 2 fonts
-    - [ ] Buttons set: Primary, secondary, borderm, disabled
+    - [ ] Buttons set: Primary, secondary, border, disabled
     - [ ] Card set: Card Sample
     - [ ] Logos: Circle and Square format
 - [ ] Create Road Map Page
