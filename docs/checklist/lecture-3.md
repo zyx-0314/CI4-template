@@ -148,21 +148,21 @@
         }
     ```
     - [ ] Encapsulating it with try catch
-        ```php
-            try {
-
-            } catch (\Exception $e) {
-
-            }
-        ```
-        - [ ] Inside the catch make a feed back that there is issue
-        ```php
+    ```php
         try {
-        } catch (\Throwable $e) {
-            return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                ->setJSON(['success' => false, 'message' => 'Server error while updating account: ' . $e->getMessage()]);
+
+        } catch (\Exception $e) {
+
         }
-        ```
+    ```
+    - [ ] Inside the catch make a feed back that there is issue
+    ```php
+    try {
+    } catch (\Throwable $e) {
+        return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
+            ->setJSON(['success' => false, 'message' => 'Server error while updating account: ' . $e->getMessage()]);
+    }
+    ```
     - [ ] Using the Query Builder check the the id provided if it exist
     ```php
         $account = $userModel->where('id', $post['id'])->first();
@@ -198,7 +198,7 @@
     ```
 - [ ] Connect in route
 
-5. Soft Deletion to the database
+[ ] 4. Soft Deletion to the database
 > why `post` ci4 is not capable yet in using `put`, `patch` and `delete`
 - [ ] Create `user_update.php` inside folder named `test` for view
     - [ ] Add inputs here depends on your columns
@@ -229,21 +229,21 @@
         }
     ```
     - [ ] Encapsulating it with try catch
-        ```php
-            try {
-
-            } catch (\Exception $e) {
-
-            }
-        ```
-        - [ ] Inside the catch make a feed back that there is issue
-        ```php
+    ```php
         try {
-        } catch (\Throwable $e) {
-            return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                ->setJSON(['success' => false, 'message' => 'Server error while deleting account: ' . $e->getMessage()]);
+
+        } catch (\Exception $e) {
+
         }
-        ```
+    ```
+    - [ ] Inside the catch make a feed back that there is issue
+    ```php
+    try {
+    } catch (\Throwable $e) {
+        return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
+            ->setJSON(['success' => false, 'message' => 'Server error while deleting account: ' . $e->getMessage()]);
+    }
+    ```
     - [ ] Using the Query Builder check the the id provided if it exist
     ```php
         $account = $userModel->where('id', $post['id'])->first();
