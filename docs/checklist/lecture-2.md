@@ -26,7 +26,6 @@
         {
             // code
         }
-
         public function down()
         {
             // code
@@ -173,6 +172,8 @@
 - [ ] Start `pushing` directly to the `branch` in `stagged`. If any changes is needed then add another `push`.
 - [ ] Once satisfied a `publish` or `sync`, click it to push from `stagged` to the `remote`
 
+---
+
 [ ] 2. Seeding
 - [ ] Create `Issue` named Users Table Seeding, can add description if you want to.
 - [ ] Using same `Branch`, `database/users`. make sure that you are in right branch looking at the bottom left you should see `frontend/loginPage` not `main`, `frontend/landingPage`, `development`
@@ -257,10 +258,14 @@
     - [ ] Make sure `PR` is from your completed branch which this time is `database/users` and going to `development`
 - [ ] Once `PR` is created if there is other member who need to review it you can set them to review and click `merge` if all goods, else you can comment and provide feedback.
 
+---
+
 [ ] 3. Wrapping Up
 - [ ] Test truncate if all data inside the table is gone
 - [ ] Test your development branch
 - [ ] Make PR to `main`/`master` branch then `merge`
+
+---
 
 ## Activity time
 Create the following, with their own issues, branches and PR
@@ -268,6 +273,8 @@ Create the following, with their own issues, branches and PR
 - [ ] Services Page (or something similar name)
 - [ ] Accounts Page
 - [ ] Request Page (or something similar)
+
+---
 
 ## Backend Time
 [ ] 1. Model and Entity
