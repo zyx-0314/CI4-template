@@ -109,12 +109,16 @@
         ```
 - [ ] Connect in route
 
+---
+
 [ ] 2. Creating to the database
 - Check Module 2
     - `Sign Up`
 - [ ] Redo it by Creating `user_create.php` inside folder named `test` for view
 - [ ] Add new function under the `Controller` named `CRUDTesting`
 - [ ] Connect in route
+
+---
 
 [ ] 3. Update using `Post`
 > why `post` ci4 is not capable yet in using `put`, `patch` and `delete`
@@ -197,6 +201,8 @@
             ->setJSON(['success' => true, 'message' => 'Account Type Updated', 'data' => ['id' => $post['id']]]);
     ```
 - [ ] Connect in route
+
+---
 
 [ ] 4. Soft Deletion to the database
 > why `post` ci4 is not capable yet in using `put`, `patch` and `delete`

@@ -68,3 +68,73 @@
         ```
 
 # Upload Image
+- [ ] Catch data from the post
+    - [ ] Depends on your data name
+    ```php
+        $request = service('request');
+        <!-- I'm using banner_image in input name and id-->
+        $file = $request->getFile('banner_image');
+    ```
+- [ ] Create try catch wrapping the whole logic. If it happens there is error we are catching the 
+```php
+    try {
+        // code here
+    } catch (\Exception $e) {
+        return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
+            ->setJSON(['success' => false, 'message' => 'Failed to process banner image']);
+    }
+```
+- [ ] Verify if the data is valid and cached
+```php
+    if ($file && $file->isValid() && ! $file->hasMoved()) {
+        // Code
+    }
+```
+- [ ] Verify the type specifics and size
+```php
+    $allowed = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+    $mime = $file->getClientMimeType();
+
+    // Check if valid image format
+    if (! in_array($mime, $allowed)) {
+        return $this->response->setStatusCode(ResponseInterface::HTTP_UNSUPPORTED_MEDIA_TYPE)
+            ->setJSON(['success' => false, 'message' => 'Invalid image type']);
+    }
+
+    $maxBytes = 5 * 1024 * 1024;
+
+    // Check if valid size
+    if ($file->getSize() > $maxBytes) {
+        return $this->response->setStatusCode(413)
+            ->setJSON(['success' => false, 'message' => 'Image too large']);
+    }
+```
+- [ ] Format Directory
+    - [ ] For my directories I want it that based on `public` -> `uploads` -> `service` -> <year> -> <month> -> <file>
+```php
+    //  Format Directory
+    $sub = date('Y') . DIRECTORY_SEPARATOR . date('m');
+    $publicUploadDir = FCPATH . 'uploads' . DIRECTORY_SEPARATOR . 'services' . DIRECTORY_SEPARATOR . $sub . DIRECTORY_SEPARATOR;
+```
+- [ ] Check if they file directory doesn't exist create the file
+```php
+    //  if the folder doesnt exist create it
+    if (! is_dir($publicUploadDir)) mkdir($publicUploadDir, 0755, true);
+```
+- [ ] Create Random name
+```php
+    // Generate random name
+    $newName = $file->getRandomName();
+```
+- [ ] Move it
+```php
+    // Move the file
+    $moved = $file->move($publicUploadDir, $newName);
+```
+- [ ] Check if the file is move
+```php
+    // If successfully moved save the directory
+    if ($moved) {
+        $bannerImagePath = 'uploads/services/' . str_replace(DIRECTORY_SEPARATOR, '/', $sub) . '/' . $newName;
+    }
+```
