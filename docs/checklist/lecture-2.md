@@ -215,9 +215,13 @@
                         'updated_at' => $now,
                     ]
                 ]
+
+                $this->db->table('table_name')->insertBatch($dataYouWannaInsert );
             }
         }
     ```
+- [ ] Change the `column` based on your migration
+- [ ] Change the `table_name` based on table you want to add it
 - [ ] Make sure to have the files of `DatabaseSeeder.php` and `ClearDatabaseSeeder.php`
 - [ ] Update `DatabaseSeeder.php` adding our newly created seeder
     - [ ] revise the following format after the first call
