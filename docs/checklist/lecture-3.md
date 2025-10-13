@@ -1,7 +1,10 @@
 # Read -> Create -> Update -> Delete
 
+> Note: should add the database already
 [ ] 1. Reading from the database
-- [ ] Since we have db controlls already, we use seeding to have data inside making sure that connection is established
+- [ ] Create `Issue` named read database data and display in page, can add description if you want to.
+- [ ] Create `Branch` name it `frontend/showUsersPage`. make sure that you are in right branch looking at the bottom left you should see `frontend/showUsersPage` not `main`, `frontend/landingPage`, `development` etc.
+- [ ] Since we have db controlls already with user db, we use seeding to have data inside making sure that connection is established
     - [ ] Do Seeding
     - [ ] Run your `phpmyadmin` or `vs code: db extensions(DBCode)` or other DB tools
         - DBCode
@@ -21,39 +24,24 @@
     - [ ] Check if it contains data
 - [ ] Create `user.php` inside folder named `test` for view
     - [ ] Add table here depends on your columns
+    - [ ] In the last column add the following `Actions` which specify that you can edit or delete the said information
+    ```php
+    <td class="flex gap-2 p-3">
+        <div class="flex justify-end mb-4">
+            <!-- This access to the edit page -->
+            <a class="bg-gray-600/70 hover:bg-gray-600/60 px-3 py-2 rounded text-white duration-200 cursor-pointer" href="<?php echo site_url('test/update/' . urlencode($service->id)); ?>">
+                edit
+            </a>
+            <!-- This access to the delete funtion -->
+            <a class="bg-gray-600/70 hover:bg-gray-600/60 px-3 py-2 rounded text-white duration-200 cursor-pointer" href="<?php echo site_url('test/delete/' . urlencode($service->id)); ?>">
+                edit
+            </a>
+        </div>
+    </td>
+    ```
 - [ ] Create `Controller` named `CRUDTesting`
     - [ ] Create function named `showUsersPage` and below it wire up the fetching of data
-        - [ ] Encapsulate with Try Catch
-        ```php
-        try {
-
-        } catch (\Exception $e) {
-
-        }
-        ```
-        - [ ] Inside the catch make a feed back that there is issue
-        ```php
-        try {
-        } catch (\Exception $e) {
-            $listOfUser = "There is issue in DB";
-        }
-        ```
-        - [ ] Inside the Try is your code which
-            - [ ] Fetch the Data structure from model
-            ```php
-            $model = new App\Models\UsersModel;
-            ```
-            - [ ] Fetch the Data from DB using the model
-            ```php
-            $listOfUser = $model->where('is_active', 1)->where('is_available', 1)->orderBy('id', 'ASC')->findAll();
-            <!-- My code SQL or Query Builder Commands state to feth only the is_active that is true, is_available that is true, sort(orderBy) id in ascending -->
-            ```
-            - [ ] Then send it to the frontend. its bit different from usual view. this is how we use to connect backend that fetches data to frontend, aside from this demo we can add more than 1
-            ```php
-            <!-- The `test/user` is the view file while the ['key' => `value`] is the way to transfer data -->
-            return view('test/user', ['listOfUser' => $listOfUser]);
-            ```
-- [ ] Update the view
+- [ ] Create a new view Design and add this following codes
     - [ ] Add this as a error catcher at top before the table
         ```php
         <?php if (is_string($ListOfUser)): ?>
@@ -98,8 +86,16 @@
                                             <i class="fa-solid fa-eye"></i>
                                         </a>
                                     </div>
-                                    <?= view('components/modal/services/delete', ['service' => $it]) ?>
-                                    <?= view('components/modal/services/update', ['service' => $it]) ?>
+                                    <div class="flex justify-end mb-4">
+                                        <a class="bg-gray-600/70 hover:bg-gray-600/60 px-3 py-2 rounded text-white duration-200 cursor-pointer" href="<?php echo site_url('services/' . urlencode($it->id)); ?>">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </a>
+                                    </div>
+                                    <div class="flex justify-end mb-4">
+                                        <a class="bg-gray-600/70 hover:bg-gray-600/60 px-3 py-2 rounded text-white duration-200 cursor-pointer" href="<?php echo site_url('services/' . urlencode($it->id)); ?>">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -108,23 +104,135 @@
             </table>
         ```
 - [ ] Connect in route
+```php
+$routes->get('/test/show', 'CRUDTesting::functionYouCreated');
+```
+- [ ] Once all working you can start adding your `label` in your source control.
+    - [ ] Since we created user data page. We could say we added a new feature
+        ```bash
+        feat(user dashboard list): Added a new page for displaying user list data
+
+        - added view
+        - added controller
+        - added route
+        ```
+- [ ] Start `pushing` directly to the `branch` in `stagged`. If any changes is needed then add another `push`.
+- [ ] Once satisfied a `publish` or `sync`, click it to push from `stagged` to the `remote`
+- [ ] Create `Issue` named read database data and display in page, can add description if you want to.
+- [ ] Create `Branch` name it `backend/showUsersPage`. make sure that you are in right branch looking at the bottom left you should see `backend/showUsersPage` not `main`, `frontend/landingPage`, `development` etc.
+- [ ] Update `Controller` named `CRUDTesting`
+    - [ ] Update function named `showUsersPage` and below it wire up the fetching of data
+        - [ ] Encapsulate with Try Catch
+        ```php
+        try {
+
+        } catch (\Exception $e) {
+
+        }
+        ```
+        - [ ] Inside the catch make a feed back that there is issue
+        ```php
+        try {
+        } catch (\Exception $e) {
+            $listOfUser = "There is issue in DB";
+        }
+        ```
+        - [ ] Inside the Try is your code which
+            - [ ] Fetch the Data structure from model
+            ```php
+            $model = new App\Models\UsersModel;
+            ```
+            - [ ] Fetch the Data from DB using the model
+            ```php
+            $listOfUser = $model->where('is_active', 1)->where('is_available', 1)->orderBy('id', 'ASC')->findAll();
+            <!-- My code SQL or Query Builder Commands state to feth only the is_active that is true, is_available that is true, sort(orderBy) id in ascending -->
+            ```
+            - [ ] Then send it to the frontend. its bit different from usual view. this is how we use to connect backend that fetches data to frontend, aside from this demo we can add more than 1
+            ```php
+            <!-- The `test/user` is the view file while the ['key' => `value`] is the way to transfer data -->
+            return view('test/user', ['listOfUser' => $listOfUser]);
+            ```
+- [ ] Check the `/test/show` if it has the same data from dbCode/phpmyadmin
+- [ ] Once all working you can start adding your `label` in your source control.
+    - [ ] Since we updated the logic of user data page.
+        ```bash
+        refactor(user dashboard list): Updated the controller
+
+        - wire up the model, fetch all active, available and order it by id in ascending
+        ```
+- [ ] Start `pushing` directly to the `branch` in `stagged`. If any changes is needed then add another `push`.
+- [ ] Once satisfied a `publish` or `sync`, click it to push from `stagged` to the `remote`
 
 ---
 
 [ ] 2. Creating to the database
+- [ ] Create `Issue` named create data to database, can add description if you want to.
+- [ ] Using same `Branch` name it `backend/createUserPage` for backend and a `Branch` named `frontend/createUserPage` for frontend. make sure that you are in right branch looking at the bottom left you should see `backend/createUserPage`/`frontend/createUserPage` not `main`, `frontend/landingPage`, `development` etc.
 - Check Module 2
     - `Sign Up`
 - [ ] Redo it by Creating `user_create.php` inside folder named `test` for view
 - [ ] Add new function under the `Controller` named `CRUDTesting`
-- [ ] Connect in route
+- [ ] Connect in route. create your own route
+> This ia part of evaluation testing your comprehension skills in coding. Understanding which is which, recreating and owning the code and relating to the needs of the problem
 
 ---
 
 [ ] 3. Update using `Post`
+- [ ] Create `Issue` named read database data based on id, display in update page and be able to update the page, can add description if you want to.
+- [ ] Create `Branch` name it `frontend/updateUserDataPage`. make sure that you are in right branch looking at the bottom left you should see `frontend/updateUserDataPage` not `main`, `frontend/landingPage`, `development` etc.
 > why `post` ci4 is not capable yet in using `put`, `patch` and `delete`
 - [ ] Create `user_update.php` inside folder named `test` for view
     - [ ] Add inputs here depends on your columns
 - [ ] Add new function under the `Controller` named `CRUDTesting`
+    - [ ] Display the page for updating
+- [ ] Connect in route
+```php
+$routes->get('/test/update/(:num)', 'CRUDTesting::functionYouCreated/$1');
+```
+- [ ] Once all working you can start adding your `label` in your source control.
+    - [ ] Since we created update user page. We could say we added a new feature
+        ```bash
+        feat(update user data): Create page to update data
+        ```
+- [ ] Start `pushing` directly to the `branch` in `stagged`. If any changes is needed then add another `push`.
+- [ ] Once satisfied a `publish` or `sync`, click it to push from `stagged` to the `remote`
+- [ ] Create `Branch` name it `backend/updateUserDataPage`. make sure that you are in right branch looking at the bottom left you should see `backend/updateUserDataPage` not `main`, `frontend/landingPage`, `development` etc.
+- [ ] Update the same function under the `Controller` named `CRUDTesting`. Adding some logic to viewing the update page.
+    > sample logic
+    - [ ] I want to fetch the data from the id provided at the url
+    ```php
+        public function functionYouCreated($id = null)
+    ```
+    - [ ] If id is null state that it has issue
+    ```php
+    if (!$id) {
+        $user = "Missing requirements: ID";
+    }
+    ```
+    - [ ] Access the db
+    ```php
+    $userModel = new UsersModel();
+    ```
+    - [ ] Find the data
+    ```php
+    try {
+    $user = $userModel->find($id);
+    } catch (\Exception $e) {
+    }
+    ```
+    - [ ] Catch if it has issue
+    ```php
+    try {
+    $user = $userModel->find($id);
+    } catch (\Exception $e) {
+        $user = "Server Issue: " . $e;
+    }
+    ```
+    - [ ] show the page
+    ```php
+    return view('<your view directory here>', ['user' => $user]);
+    ```
+- [ ] Create another new function under the `Controller` named `CRUDTesting`. now for the updating the database.
     - [ ] Set recieved value as variable
     ```php
         $request = service('request');
@@ -200,14 +308,24 @@
         return $this->response->setStatusCode(ResponseInterface::HTTP_OK)
             ->setJSON(['success' => true, 'message' => 'Account Type Updated', 'data' => ['id' => $post['id']]]);
     ```
-- [ ] Connect in route
+- [ ] Connect in route, instead of get we are now using post but access the other function
+```php
+$routes->post('/test/update/(:num)', 'CRUDTesting::functionYouCreated/$1');
+```
+- [ ] Once all working you can start adding your `label` in your source control.
+    - [ ] Since we another function that recieves the data, validate and store. We could say we added a new feature
+        ```bash
+        feat(update user data): Add function that recieves and store input
+        ```
+- [ ] Start `pushing` directly to the `branch` in `stagged`. If any changes is needed then add another `push`.
+- [ ] Once satisfied a `publish` or `sync`, click it to push from `stagged` to the `remote`
 
 ---
 
 [ ] 4. Soft Deletion to the database
+- [ ] Create `Issue` named delete data, can add description if you want to.
+- [ ] Create `Branch` name it `backend/deleteUserData`. make sure that you are in right branch looking at the bottom left you should see `backend/deleteUserData` not `main`, `frontend/landingPage`, `development` etc.
 > why `post` ci4 is not capable yet in using `put`, `patch` and `delete`
-- [ ] Create `user_update.php` inside folder named `test` for view
-    - [ ] Add inputs here depends on your columns
 - [ ] Add new function under the `Controller` named `CRUDTesting`
     - [ ] Set recieved value as variable
     ```php
@@ -284,3 +402,10 @@
         return $this->response->setStatusCode(ResponseInterface::HTTP_OK)
             ->setJSON(['success' => true, 'message' => 'Account Deleted', 'data' => ['id' => $post['id']]]);
     ```
+- [ ] Once all working you can start adding your `label` in your source control.
+    - [ ] Since we another function that deletes a data, validate and store. We could say we added a new feature
+        ```bash
+        feat(delete user data): Add function that deletes and store input
+        ```
+- [ ] Start `pushing` directly to the `branch` in `stagged`. If any changes is needed then add another `push`.
+- [ ] Once satisfied a `publish` or `sync`, click it to push from `stagged` to the `remote`
