@@ -5,7 +5,7 @@
 - [ ] Make sure that you copy the .env.sample
 - [ ] Rename `.env copy.sample` -> `.env`
 - [ ] Check in Docker is MySQL is working,
-    - [ ] You can run phpmyadmin if you want a interface/GUI
+    - [ ] You can run phpMyAdmin if you want an interface (GUI)
     - [ ] Or add this docker command and change the `<SQL Command>`
         ```cmd
         docker compose exec -T mysql mysql -uroot -proot app -N -e "<SQL Command>"
@@ -25,11 +25,12 @@
         public function up()
         {
             // code
-        }
+        };
+
         public function down()
         {
             // code
-        }
+        };
     }
     ```
 - [ ] Making a table inside up
@@ -38,7 +39,7 @@
             $this->forge->addField([
                 'column_name' => [
                     'type'           => 'INT',  // important
-                    'constraint'     => 11,     // important, but some doesnt need this. this is used to control the bit size
+                    'constraint'     => 11,     // important, but some fields don't require this. This controls the field size.
                     'unsigned'       => true,   // optional, it means all positive value
                     'auto_increment' => true,   // optional if you want auto counting, but important for the id
                     'null'           => false,  // not needed for id, but needed for most, it means it can be empty
@@ -56,7 +57,7 @@
                 'type' => 'DATETIME',
                 'null' => true,
             ],
-            <!-- Soft Delete -->
+            // Soft Delete
             'deleted_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
@@ -161,7 +162,7 @@
     ```php
         $this->forge->dropTable('table_name_here', true);
     ```
-- [ ] Run `Migration` command you can check the readme, it doesnt require composer or php
+- [ ] Run `Migration` command you can check the readme, it doesn't require composer or php
 - [ ] If no error you can check if the `migration` table has the name of the migration file you created and if the table exists
     - if migration exist but no table means format is in correct
 - [ ] Once all working you can start adding your `label` in your source control.
@@ -189,12 +190,12 @@
         class NameOfSeeder extends Seeder
         {
             $now = date('Y-m-d H:i:s');
-            <!-- if you want password that is hashed -->
+            // if you want password that is hashed
             $password = password_hash('Password123!', PASSWORD_DEFAULT);
 
             public function run()
             {
-                <!-- no need to add id since its auto increment -->
+                // no need to add id since its auto increment
                 $dataYouWannaInsert = [
                     [
                         'column_1' => 'data_1',
@@ -214,7 +215,7 @@
                         'created_at' => $now,
                         'updated_at' => $now,
                     ]
-                ]
+                ];
 
                 $this->db->table('table_name')->insertBatch($dataYouWannaInsert );
             }
@@ -231,18 +232,18 @@
 - [ ] Update `ClearDatabaseSeeder.php` adding our newly created table
     - [ ] revise the following format after the first call
         ```php
-            <!-- Add the table name inside example "User" Table -->
+           // Add the table name inside example "User" Table
             $tablesInOrder = ['User'];
         ```
-- [ ] Run `Seed` command you can check the readme, it doesnt require composer or php
+- [ ] Run `Seed` command you can check the readme, it doesn't require composer or php
     - [ ] Run your `phpmyadmin` or `vs code: db extensions(DBCode)` or other DB tools
         - DBCode
         - [ ]`Add Connection Button` Click it
         - [ ] Select `MySQL`
         - [ ] Name it. Example: `ItoAyDatabaseKongMalupet`
         - [ ] Set it host as `localhost` and `3390` since that is our default port
-        - [ ] For password you can check or change in `compose.yml` or use the default `app` for both `username` and `password`
-        - [ ] In `Database` click the `refresh icon` then `app` should appear or the name of the database in `compose.yml`
+        - [ ] For password you can check or change in `compose.yaml` or use the default `app` for both `username` and `password`
+        - [ ] In `Database` click the `refresh icon` then `app` should appear or the name of the database in `compose.yaml`
         - [ ] Click `Save`
         - phpmyadmin A
         - [ ] Go to `Docker Desktop`
@@ -287,7 +288,7 @@ Create the following, with their own issues, branches and PR
 - [ ] Add new `Model` named `UsersModel` using command found on templates(requires php and composer) readme or coding your own.
 - [ ] Modifying Model
     ```php
-    <!-- Template -->
+    // Template
     <?php
 
     namespace App\Models;
@@ -358,7 +359,7 @@ Create the following, with their own issues, branches and PR
 - [ ] Once all done you can start adding your `label` in your source control.
     - [ ] Since we created Model and Entity. We could say we added a new feature
         ```bash
-        feat: Added a Enity and Model
+        feat: Added a Entity and Model
         ```
 - [ ] Start `pushing` directly to the `branch` in `stagged`. If any changes is needed then add another `push`.
 - [ ] Once satisfied a `publish` or `sync`, click it to push from `stagged` to the `remote`
@@ -368,7 +369,7 @@ Create the following, with their own issues, branches and PR
 
 [ ] 2. Updating Controller and Route
 - [ ] Create `Issue` named Functions for Login, can add description if you want to.
-- [ ] Using same `Branch`, `backend/users`. make sure that you are in right branch looking at the bottom left you should see `frontend/loginPage` not `main`, `frontend/landingPage`, `development`
+- [ ] Using same `Branch`, `backend/users`. make sure that you are in right branch looking at the bottom left you should see `backend/users` not `main`, `frontend/landingPage`, `development`
 - [ ] Update `Controller` to add certain functions
     - [ ] Login:
         - [ ] Create `login` function
@@ -381,16 +382,16 @@ Create the following, with their own issues, branches and PR
             ```
         - [ ] Create Validation Rules. This depends on your logic
             ```php
-                <!-- Here i created rules for email and password -->
+                // Here i created rules for email and password
                 $validation = \Config\Services::validation();
-                <!-- Variable comes from the htnm the id from the input -->
-                <!-- Format: variable, human readable name, rules seperated by | -->
-                <!-- So this following rule means variable email is Email which means it should not be null and has valid email format -->
+                // Variable comes from the html the id from the input
+                // Format: variable, human readable name, rules seperated by |
+                // So this following rule means variable email is Email which means it should not be null and has valid email format
                 $validation->setRule('email', 'Email', 'required|valid_email');
-                <!-- The following rule means variable password, ma,ed Password and it should not be null -->
+                // The following rule means variable password, ma,ed Password and it should not be null
                 $validation->setRule('password', 'Password', 'required');
 
-                <!-- Other Rules -->
+                // Other Rules
                 min_length[]
                 max_length[]
                 permit_empty
@@ -467,6 +468,10 @@ Create the following, with their own issues, branches and PR
 > now you do the other functions with your own logics
 - [ ] Logout
     - [ ] In `Controller`
+        - [ ] Create `logout` function
+        ```php
+            public function logout() {}
+        ```
         - [ ] Destroy from session.
             ```php
             session()->destroy();
@@ -480,7 +485,10 @@ Create the following, with their own issues, branches and PR
             ```php
             return redirect()->to('/');
             ```
-    - [ ] In `Routes`
+- [ ] Update `Routes` to add certain end point
+    ```php
+        $routes->post('logout', 'Auth::logout');
+    ```
 - [ ] Sign Up
     - [ ] In `Controller`
         - [ ] Create Session
@@ -496,8 +504,8 @@ Create the following, with their own issues, branches and PR
             ```
         - [ ] Now prepare your data. below is an example.
             ```php
-            <!-- This should be based on data from database table -->
-            <!-- Make sure that required datas are specified while some should be expecting null so have catcher for it -->
+            // This should be based on data from database table
+            // Make sure that required datas are specified while some should be expecting null so have catcher for it
             $data = [
                 'first_name' => $post['first_name'],
                 'middle_name' => $post['middle_name'] ?? null, <!-- This is the sample for nullable data -->
@@ -514,7 +522,10 @@ Create the following, with their own issues, branches and PR
             $inserted = $userModel->insert($data);
             ```
         - [ ] Redirect if success or not
-    - [ ] In `Routes`
+- [ ] Update `Routes` to add certain end point
+    ```php
+        $routes->post('signup', 'Auth::signup');
+    ```
 - [ ] Once all done you can start adding your `label` in your source control.
     - [ ] Since we updated Controller and Routes. We could say we added a new feature
         ```bash
@@ -531,11 +542,11 @@ Create the following, with their own issues, branches and PR
 
 [ ] 3. Wiring up frontend to backend
 - [ ] Create `Issue` named Wiring up frontend to backend, can add description if you want to.
-- [ ] Using same `Branch`, `backend/users`. make sure that you are in right branch looking at the bottom left you should see `frontend/loginPage` not `main`, `frontend/landingPage`, `development`
+- [ ] Using same `Branch`, `frontend/users`. make sure that you are in right branch looking at the bottom left you should see `frontend/users` not `main`, `frontend/landingPage`, `development`
 - [ ] Updating the `Forms`. In `Login`
     ```php
-        <!-- set actions to the endpoint name, this time /login -->
-        <!-- set method to use, this time since we are sending data we are using `post` -->
+        // set actions to the endpoint name, this time /login
+        // set method to use, this time since we are sending data we are using `post`
         <form class="space-y-6 mt-8" action="/login" method="post" novalidate>
     ```
 - [ ] Add data catchers, add at top
