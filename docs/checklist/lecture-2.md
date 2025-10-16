@@ -15,8 +15,8 @@
         docker compose exec -T mysql mysql -uroot -proot app -N -e "SHOW TABLES;"
         ```
 - [ ] Create `Issue` named Users Table, can add description if you want to.
-- [ ] Create `Branch` name it `database/users`. make sure that you are in right branch looking at the bottom left you should see `frontend/loginPage` not `main`, `frontend/landingPage`, `development`
-- [ ] Add new `Migration` named `CreateUsersTable` using command found on templates(requires php and composer) readme or coding your own, if you code your own the format name is, `YYYY-MM-DD-XXXXXX_Name`.
+- [ ] Create `Branch` name it `database/users`. make sure that you are in right branch looking at the bottom left you should see `database/users` not `main`, `frontend/landingPage`, `development`
+- [ ] Add new `Migration` named `CreateUsersTable` using command found on templates readme or coding your own, if you code your own the format name is, `YYYY-MM-DD-XXXXXX_Name`.
 > Y = Year, M = Month Number, D = Day Number, X = any number of your choice, then migration name example `CreateUsersTable`
     ```php
     // Migration template
@@ -33,7 +33,7 @@
         };
     }
     ```
-- [ ] Making a table inside up
+- [ ] Making a table inside `up` function
     - [ ] Add fields
         ```php
             $this->forge->addField([
@@ -42,7 +42,7 @@
                     'constraint'     => 11,     // important, but some fields don't require this. This controls the field size.
                     'unsigned'       => true,   // optional, it means all positive value
                     'auto_increment' => true,   // optional if you want auto counting, but important for the id
-                    'null'           => false,  // not needed for id, but needed for most, it means it can be empty
+                    'null'           => false,  // needed for most, it means it can be empty
                     'default'        => 1,      // optional, used if you want to have default value
                 ]
             ])
@@ -177,7 +177,7 @@
 
 [ ] 2. Seeding
 - [ ] Create `Issue` named Users Table Seeding, can add description if you want to.
-- [ ] Using same `Branch`, `database/users`. make sure that you are in right branch looking at the bottom left you should see `frontend/loginPage` not `main`, `frontend/landingPage`, `development`
+- [ ] Using same `Branch`, `database/users`. make sure that you are in right branch looking at the bottom left you should see `database/users` not `main`, `frontend/landingPage`, `development`
 - [ ] Add new `Seed` named `UsersSeeder` using command found on templates(requires php and composer) readme or coding your own
 - [ ] Making contents of seeder
     ```php
